@@ -1,0 +1,89 @@
+{
+  "business": {
+    "brandName": "Oscar Carregal",
+    "brandTagline": "Fontanería & Reformas",
+    "phoneNumber": "600670867",
+    "email": "info@oscarcarregal.com",
+    "instagram": {
+      "url": "https://www.instagram.com/oscar.carregal/",
+      "handle": "@oscar.carregal"
+    },
+    "schedule": {
+      "days": "Lunes a Viernes",
+      "hours": "8:00 – 20:00",
+      "compact": "Lun – Vie · 8:00 – 20:00"
+    },
+    "location": {
+      "city": "San Sebastián, Gipuzkoa",
+      "serviceArea": "San Sebastián y alrededores",
+      "region": "Gipuzkoa, País Vasco"
+    },
+    "responseTime": "Respondemos en menos de 24 h",
+    "experience": "Más de 15 años de experiencia"
+  },
+  "storeAddress": {
+    "street": "",
+    "postalCode": "20001",
+    "city": "San Sebastián, Gipuzkoa",
+    "region": "Gipuzkoa, País Vasco",
+    "mapsQuery": "San+Sebasti%C3%A1n,+Gipuzkoa,+Espa%C3%B1a"
+  },
+  "storePhotos": [
+    { "src": "/reformas/r7/649242813_18202566358336143_2216143741377536573_n.jpg", "alt": "Reforma de cocina realizada por Oscar Carregal" },
+    { "src": "/reformas/r1/649752060_18083580851256789_5363909234336201049_n.jpg", "alt": "Reforma integral de baño" },
+    { "src": "/reformas/r4/649215219_18122403535584103_3756221307340920678_n.jpg", "alt": "Montaje y acabados de baño" }
+  ],
+  "footer": {
+    "description": "Fontanería, gas, calefacción y reformas integrales en San Sebastián y alrededores. Más de 15 años de experiencia al servicio de tu hogar.",
+    "copyrightLine": "© 2026 Oscar Carregal · Fontanería & Reformas",
+    "copyrightNote": "Todos los derechos reservados"
+  },
+  "tags": [
+    "Baño",
+    "Cocina",
+    "Fontanería",
+    "Gas",
+    "Reforma",
+    "Alicatado",
+    "Accesibilidad",
+    "Ducha",
+    "Diseño"
+  ],
+  "featuredReformas": [
+    "r7",
+    "r2",
+    "r1"
+  ],
+  "heroCarousel": [
+    {
+      "reforma": "r7",
+      "image": "649242813_18202566358336143_2216143741377536573_n.jpg",
+      "caption": "Reforma de cocina — San Sebastián"
+    },
+    {
+      "reforma": "r1",
+      "image": "649752060_18083580851256789_5363909234336201049_n.jpg",
+      "caption": "Reforma integral de baño — San Sebastián"
+    },
+    {
+      "reforma": "r2",
+      "image": "645763577_18078275783372927_4412121755727874191_n.jpg",
+      "caption": "Reforma sorpresa — Vigo"
+    },
+    {
+      "reforma": "r4",
+      "image": "649215219_18122403535584103_3756221307340920678_n.jpg",
+      "caption": "Montaje de baños — Los Arcos, Navarra"
+    },
+    {
+      "reforma": "r5",
+      "image": "642536368_18109665931682588_570576482457070043_n.jpg",
+      "caption": "Lavabo y ducha doble — Galicia"
+    },
+    {
+      "reforma": "r3",
+      "image": "651040578_18094187738087863_3816698131263710886_n.jpg",
+      "caption": "Cambio bañera por ducha — Vigo"
+    }
+  ]
+}
