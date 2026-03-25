@@ -21,6 +21,15 @@ function sanitizeString(str: unknown, maxLen = 2000): string {
   return str.slice(0, maxLen).trim();
 }
 
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function isValidPhone(phone: string) {
+  const digits = String(phone).replace(/\D/g, "");
+  return digits.length >= 9 && digits.length <= 15;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -31,11 +40,28 @@ export async function POST(req: NextRequest) {
     const servicio = sanitizeString(body.servicio, 100);
     const descripcion = sanitizeString(body.descripcion, 5000);
 
-    if (!nombre || !telefono || !servicio || !descripcion) {
+    // At least one contact method required (telefono o email)
+    const fieldErrors: Record<string, string> = {};
+    if (!nombre || !servicio || !descripcion) {
       return NextResponse.json(
         { error: "Campos obligatorios incompletos" },
         { status: 400 }
       );
+    }
+
+    if (!telefono && !email) {
+      fieldErrors.contacto = "Indica al menos un método de contacto: teléfono o email.";
+    } else {
+      if (telefono && !isValidPhone(telefono)) {
+        fieldErrors.telefono = "El teléfono no tiene un formato válido.";
+      }
+      if (email && !isValidEmail(email)) {
+        fieldErrors.email = "El email no tiene un formato válido.";
+      }
+    }
+
+    if (Object.keys(fieldErrors).length > 0) {
+      return NextResponse.json({ error: "Validación", fieldErrors }, { status: 400 });
     }
 
     const presupuesto: StoredPresupuesto = {

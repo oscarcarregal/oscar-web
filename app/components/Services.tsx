@@ -9,28 +9,28 @@ const services = [
     icon: Droplets,
     title: "Fontanería",
     description:
-      "Instalaciones, reparaciones y mantenimiento de tuberías, grifos, desatascos y sistemas de agua.",
+      "instalaciones sanitarias en viviendas y locales, montantes de agua, bajantes comunitarias.",
     accent: "copper",
   },
   {
     icon: Flame,
     title: "Gas",
     description:
-      "Instalación y revisión de gas natural y butano. Certificados oficiales y puesta en marcha.",
+      "Empresa autorizada, Instalacion de calderas y calentadores de gas, certificados y alta en industria.",
     accent: "steel-blue",
   },
   {
     icon: Thermometer,
-    title: "Calefacción",
+    title: "Calefacción y climatización",
     description:
-      "Calderas, radiadores, suelo radiante y climatización. Confort térmico todo el año.",
+      "Instalacion de radiadores, suelo radiante y aire acondicionado.",
     accent: "copper",
   },
   {
     icon: Hammer,
-    title: "Reformas",
+    title: "Reformas generales",
     description:
-      "Reformas integrales de baños, cocinas y viviendas. Diseño, albañilería y acabados premium.",
+      "Reformas de cuartos de baños, cocinas pisos y locales, coordinación de gremios.",
     accent: "steel-blue",
   },
 ];

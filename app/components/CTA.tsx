@@ -27,8 +27,8 @@ export default function CTA({ phoneNumber }: { phoneNumber: string }) {
           <span className="text-gradient-copper">tu hogar?</span>
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/50">
-          Cuéntanos tu proyecto y recibe un presupuesto detallado sin
-          compromiso en menos de 24 horas.
+          Cuéntame tu proyecto y me pondré en contacto contigo para darte una
+          respuesta personalizada y adaptada a lo que necesitas.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
@@ -43,7 +43,7 @@ export default function CTA({ phoneNumber }: { phoneNumber: string }) {
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-8 py-4 text-base font-medium text-white backdrop-blur-sm transition-all duration-300 hover:border-white/30 hover:bg-white/10"
           >
             <Mail size={18} />
-            Pedir Presupuesto
+            Tu Proyecto
           </Link>
         </div>
       </div>

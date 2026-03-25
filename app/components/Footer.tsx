@@ -72,7 +72,7 @@ export default function Footer() {
               {[
                 { label: "Servicios", href: "/#servicios" },
                 { label: "Trabajos", href: "/trabajos" },
-                { label: "Pedir Presupuesto", href: "/presupuesto" },
+                { label: "Tu Proyecto", href: "/presupuesto" },
                 { label: "Sobre Nosotros", href: "/#nosotros" },
                 { label: "Ubicación", href: "/#ubicacion" },
                 { label: "Contacto", href: "/#contacto" },

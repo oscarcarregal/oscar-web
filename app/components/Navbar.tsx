@@ -188,7 +188,7 @@ export default function Navbar() {
             href="/presupuesto"
             className="group ml-4 inline-flex items-center gap-2 rounded-full bg-carbon px-6 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-copper hover:shadow-lg hover:shadow-copper/20"
           >
-            Presupuesto
+            Tu Proyecto
             <ArrowUpRight
               size={14}
               className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -232,7 +232,7 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
             className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-carbon py-3.5 text-sm font-semibold text-white transition-all hover:bg-copper"
           >
-            Pedir Presupuesto
+            Tu Proyecto
             <ArrowUpRight size={14} />
           </Link>
         </div>

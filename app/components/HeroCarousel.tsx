@@ -80,7 +80,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
             className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-copper px-8 py-4 text-base font-semibold text-white shadow-lg shadow-copper/25 transition-all duration-300 hover:bg-copper-light hover:shadow-xl hover:shadow-copper/30"
           >
             <span className="relative z-10 flex items-center gap-2">
-              Solicitar Presupuesto
+              Cuéntame tu proyecto
               <ArrowRight
                 size={16}
                 className="transition-transform duration-300 group-hover:translate-x-1"
@@ -102,7 +102,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
             { value: "+500", label: "Proyectos" },
             { value: "15+", label: "Años exp." },
             { value: "100%", label: "Garantía" },
-            { value: "24h", label: "Respuesta" },
+            { value: "1:1", label: "Atención" },
           ].map((item) => (
             <div key={item.label} className="text-center group">
               <p className="relative text-2xl font-bold text-white drop-shadow md:text-3xl">

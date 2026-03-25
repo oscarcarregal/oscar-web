@@ -1,0 +1,69 @@
+<h2>Selector de reformas destacadas</h2>
+<p class="subtitle">Necesitas 3 slots fijos arriba del panel de Reformas. ¿Cómo se comporta el selector al hacer clic en un slot vacío?</p>
+
+<div class="options">
+  <div class="option" data-choice="modal-grid" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Modal con grid de reformas <span style="font-size:11px;opacity:0.5;font-weight:normal">— Recomendado</span></h3>
+      <p>Al hacer clic en el "+" se abre un modal con todas las reformas disponibles como tarjetas visuales (foto + título). Click para seleccionar.</p>
+      <div style="margin-top:12px;background:#111;border-radius:8px;padding:12px;border:1px solid rgba(255,255,255,0.08)">
+        <!-- 3 slots -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+          <!-- Slot lleno -->
+          <div style="aspect-ratio:4/3;border-radius:8px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);overflow:hidden;position:relative">
+            <div style="position:absolute;inset:0;background:linear-gradient(135deg,#2a1a0a,#3a2a1a);display:flex;align-items:flex-end;padding:6px">
+              <span style="font-size:9px;color:#b87333;font-weight:700">REFORMA BAÑO</span>
+            </div>
+            <div style="position:absolute;top:4px;right:4px;width:14px;height:14px;background:rgba(0,0,0,0.6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,0.5)">✕</div>
+          </div>
+          <!-- Slot vacío -->
+          <div style="aspect-ratio:4/3;border-radius:8px;background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer">
+            <div style="width:20px;height:20px;border-radius:50%;background:rgba(184,115,51,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;color:#b87333">+</div>
+            <span style="font-size:8px;color:rgba(255,255,255,0.2)">Añadir</span>
+          </div>
+          <!-- Slot vacío -->
+          <div style="aspect-ratio:4/3;border-radius:8px;background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer">
+            <div style="width:20px;height:20px;border-radius:50%;background:rgba(184,115,51,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;color:#b87333">+</div>
+            <span style="font-size:8px;color:rgba(255,255,255,0.2)">Añadir</span>
+          </div>
+        </div>
+        <!-- Mini modal -->
+        <div style="background:#1a1a1a;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.1)">
+          <p style="font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.1em">Seleccionar reforma ↓</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            <div style="aspect-ratio:4/3;border-radius:6px;background:linear-gradient(135deg,#1a2a1a,#2a3a2a);border:1.5px solid transparent;cursor:pointer;display:flex;align-items:flex-end;padding:4px;transition:all 0.2s"></div>
+            <div style="aspect-ratio:4/3;border-radius:6px;background:linear-gradient(135deg,#1a1a2a,#2a2a3a);border:1.5px solid #b87333;cursor:pointer;display:flex;align-items:flex-end;padding:4px"></div>
+            <div style="aspect-ratio:4/3;border-radius:6px;background:linear-gradient(135deg,#2a1a1a,#3a2a2a);border:1.5px solid transparent;cursor:pointer;display:flex;align-items:flex-end;padding:4px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="inline-dropdown" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Dropdown inline</h3>
+      <p>Al hacer clic en el "+" aparece un desplegable justo debajo del slot con la lista de reformas disponibles (texto + miniatura).</p>
+      <div style="margin-top:12px;background:#111;border-radius:8px;padding:12px;border:1px solid rgba(255,255,255,0.08)">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
+          <div style="aspect-ratio:4/3;border-radius:8px;background:linear-gradient(135deg,#2a1a0a,#3a2a1a);border:1px solid rgba(255,255,255,0.08)"></div>
+          <!-- Slot activo con dropdown -->
+          <div style="position:relative">
+            <div style="aspect-ratio:4/3;border-radius:8px;background:rgba(255,255,255,0.03);border:1.5px dashed #b87333;display:flex;align-items:center;justify-content:center;font-size:14px;color:#b87333">+</div>
+            <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;background:#1a1a1a;border-radius:6px;border:1px solid rgba(255,255,255,0.12);z-index:10;overflow:hidden">
+              <div style="padding:6px 8px;display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,0.5);cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.06)">
+                <div style="width:24px;height:18px;background:#2a2a3a;border-radius:3px;flex-shrink:0"></div>Reforma Cocina
+              </div>
+              <div style="padding:6px 8px;display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,0.5);cursor:pointer">
+                <div style="width:24px;height:18px;background:#1a2a1a;border-radius:3px;flex-shrink:0"></div>Reforma Baño 2
+              </div>
+            </div>
+          </div>
+          <div style="aspect-ratio:4/3;border-radius:8px;background:rgba(255,255,255,0.03);border:1.5px dashed rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.2)">+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

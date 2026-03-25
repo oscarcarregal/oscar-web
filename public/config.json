@@ -3,7 +3,7 @@
     "brandName": "Oscar Carregal",
     "brandTagline": "Fontanería & Reformas",
     "phoneNumber": "600670867",
-    "email": "info@oscarcarregal.com",
+    "email": "fontaneriacarregal@gmail.com",
     "instagram": {
       "url": "https://www.instagram.com/oscar.carregal/",
       "handle": "@oscar.carregal"
@@ -14,24 +14,59 @@
       "compact": "Lun – Vie · 8:00 – 20:00"
     },
     "location": {
-      "city": "San Sebastián, Gipuzkoa",
-      "serviceArea": "San Sebastián y alrededores",
-      "region": "Gipuzkoa, País Vasco"
+      "city": "Avenida de Tolosa 89, 20018 San Sebastian",
+      "serviceArea": "San Sebastián, Irún Tolosa y alrededores",
+      "region": "Avenida de Tolosa 89, 20018 San Sebastian"
     },
-    "responseTime": "Respondemos en menos de 24 h",
+    "responseTime": "Contacto directo y personalizado",
     "experience": "Más de 15 años de experiencia"
   },
   "storeAddress": {
-    "street": "",
-    "postalCode": "20001",
-    "city": "San Sebastián, Gipuzkoa",
+    "street": "Avenida de Tolosa 89",
+    "postalCode": "20018",
+    "city": "San Sebastian",
     "region": "Gipuzkoa, País Vasco",
-    "mapsQuery": "San+Sebasti%C3%A1n,+Gipuzkoa,+Espa%C3%B1a"
+    "mapsQuery": "43.30739782667964,-2.0075817173451656",
+    "mapsUrl": "",
+    "mapsEmbedUrl": ""
   },
   "storePhotos": [
-    { "src": "/reformas/r7/649242813_18202566358336143_2216143741377536573_n.jpg", "alt": "Reforma de cocina realizada por Oscar Carregal" },
-    { "src": "/reformas/r1/649752060_18083580851256789_5363909234336201049_n.jpg", "alt": "Reforma integral de baño" },
-    { "src": "/reformas/r4/649215219_18122403535584103_3756221307340920678_n.jpg", "alt": "Montaje y acabados de baño" }
+    {
+      "src": "/tienda/WhatsApp%20Image%202026-03-24%20at%2022.44.24%20(8).jpeg",
+      "alt": "Fachada de la tienda"
+    },
+    {
+      "src": "/tienda/WhatsApp%20Image%202026-03-24%20at%2022.44.24%20(5).jpeg",
+      "alt": "Interior del showroom de baño"
+    },
+    {
+      "src": "/tienda/WhatsApp%20Image%202026-03-24%20at%2022.44.24.jpeg",
+      "alt": "Muestrario de griferías en tienda"
+    },
+    {
+      "src": "/tienda/WhatsApp%20Image%202026-03-24%20at%2022.44.24%20(9).jpeg",
+      "alt": "Detalle exterior de la tienda"
+    },
+    {
+      "src": "/tienda/WhatsApp%20Image%202026-03-24%20at%2022.44.24%20(6).jpeg",
+      "alt": "Zona de exposición en tienda"
+    },
+    {
+      "src": "/tienda/WhatsApp%20Image%202026-03-24%20at%2022.44.24%20(4).jpeg",
+      "alt": "Acabados y materiales expuestos"
+    },
+    {
+      "src": "/tienda/WhatsApp%20Image%202026-03-24%20at%2022.44.24%20(3).jpeg",
+      "alt": "Productos de fontanería en exposición"
+    },
+    {
+      "src": "/tienda/WhatsApp%20Image%202026-03-24%20at%2022.44.24%20(2).jpeg",
+      "alt": "Detalles de equipamiento en tienda"
+    },
+    {
+      "src": "/tienda/WhatsApp%20Image%202026-03-24%20at%2022.44.24%20(1).jpeg",
+      "alt": "Vista adicional del showroom"
+    }
   ],
   "footer": {
     "description": "Fontanería, gas, calefacción y reformas integrales en San Sebastián y alrededores. Más de 15 años de experiencia al servicio de tu hogar.",

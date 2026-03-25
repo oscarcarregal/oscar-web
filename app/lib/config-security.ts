@@ -65,12 +65,14 @@ function asSafePhone(value: unknown): string {
   return allowed.test(phone) ? phone : "";
 }
 
-/* Valida rutas de imagen (solo nombre de fichero, sin directorios) */
+/* Valida rutas de imagen estáticas del proyecto */
 function asSafeImagePath(value: unknown): string {
   const raw = asString(value, 300);
   if (!raw) return "";
-  // Permitir rutas relativas tipo /reformas/r1/foto.jpg
+  // /reformas/r1/foto.jpg
   if (/^\/reformas\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9._-]+$/.test(raw)) return raw;
+  // /tienda/foto.jpg — permite nombres con URL-encoding (%20, paréntesis, etc.)
+  if (/^\/tienda\/[a-zA-Z0-9._%()\-]+$/.test(raw)) return raw;
   return "";
 }
 
@@ -91,6 +93,8 @@ interface SanitizedStoreAddress {
   city: string;
   region: string;
   mapsQuery: string;
+  mapsUrl: string;
+  mapsEmbedUrl: string;
 }
 
 interface SanitizedConfig {
@@ -152,6 +156,8 @@ export function sanitizeConfigPayload(input: unknown): ValidationResult<Sanitize
     city: asString(storeAddressRaw.city, 120),
     region: asString(storeAddressRaw.region, 180),
     mapsQuery: asString(storeAddressRaw.mapsQuery, 500),
+    mapsUrl: asSafeHttpUrl(storeAddressRaw.mapsUrl),
+    mapsEmbedUrl: asSafeHttpUrl(storeAddressRaw.mapsEmbedUrl),
   };
 
   // Fotos de la tienda (máx 10 fotos)

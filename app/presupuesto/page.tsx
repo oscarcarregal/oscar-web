@@ -15,6 +15,7 @@ import {
   Hammer,
   HelpCircle,
   ArrowRight,
+  AlertCircle,
 } from "lucide-react";
 
 import Navbar from "../components/Navbar";
@@ -42,6 +43,47 @@ const servicios = [
   { value: "otro", label: "Otro", icon: HelpCircle },
 ];
 
+/* ─────────────────────── VALIDATION ─────────────────────── */
+
+type FieldErrors = Partial<
+  Record<
+    "nombre" | "contacto" | "servicio" | "descripcion" | "submit" | "telefono" | "email",
+    string
+  >
+>;
+
+function isValidEmail(email: string) {
+  // Simple RFC-like check
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function isValidPhone(phone: string) {
+  const digits = phone.replace(/\D/g, "");
+  // Allow local 9-digit numbers or international up to 15 digits
+  return digits.length >= 9 && digits.length <= 15;
+}
+
+function validate(form: FormData): FieldErrors {
+  const errs: FieldErrors = {};
+  if (!form.nombre.trim()) errs.nombre = "El nombre es obligatorio.";
+
+  // Contact validation: at least one method
+  if (!form.telefono && !form.email) {
+    errs.contacto = "Indica al menos un método de contacto: teléfono o email.";
+  } else {
+    if (form.telefono && !isValidPhone(form.telefono)) {
+      errs.telefono = "El teléfono no tiene un formato válido.";
+    }
+    if (form.email && !isValidEmail(form.email)) {
+      errs.email = "El email no tiene un formato válido.";
+    }
+  }
+
+  if (!form.servicio) errs.servicio = "Selecciona el tipo de servicio.";
+  if (!form.descripcion.trim()) errs.descripcion = "Describe brevemente tu proyecto.";
+  return errs;
+}
+
 /* ─────────────────────── FORM ─────────────────────── */
 
 function PresupuestoForm() {
@@ -54,15 +96,38 @@ function PresupuestoForm() {
   });
   const [sent, setSent] = useState(false);
   const [focused, setFocused] = useState<string | null>(null);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  // Campos que el usuario ya ha tocado (blur), para mostrar su error antes del submit
+  const [blurred, setBlurred] = useState<Set<string>>(new Set());
+  const [submitted, setSubmitted] = useState(false);
 
-  const update = (field: keyof FormData, value: string) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const update = (field: keyof FormData, value: string) => {
+    const updated = { ...form, [field]: value };
+    setForm(updated);
+    // Re-validar en vivo si el campo ya fue tocado o ya se intentó enviar
+    if (submitted || blurred.has(field) || blurred.has("contacto")) {
+      setErrors(validate(updated));
+    }
+  };
 
-  const [error, setError] = useState("");
+  const handleBlur = (field: string) => {
+    setFocused(null);
+    const next = new Set(blurred).add(field);
+    // telefono y email comparten el error "contacto"; también almacenamos blur individual
+    if (field === "telefono" || field === "email") {
+      next.add("contacto");
+      next.add(field);
+    }
+    setBlurred(next);
+    setErrors(validate(form));
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError("");
+    setSubmitted(true);
+    const errs = validate(form);
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) return;
 
     const servicioLabel =
       servicios.find((s) => s.value === form.servicio)?.label ?? form.servicio;
@@ -79,12 +144,36 @@ function PresupuestoForm() {
           descripcion: form.descripcion,
         }),
       });
-      if (!res.ok) throw new Error("Error al enviar");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        // If server returned fieldErrors, show them
+        if (data?.fieldErrors) {
+          setErrors((prev) => ({ ...prev, ...(data.fieldErrors as FieldErrors) }));
+          return;
+        }
+        throw new Error("Error al enviar");
+      }
       setSent(true);
     } catch {
-      setError("Hubo un error al enviar la solicitud. Por favor, inténtalo de nuevo.");
+      setErrors((prev) => ({
+        ...prev,
+        submit: "Hubo un error al enviar la consulta. Por favor, inténtalo de nuevo.",
+      }));
     }
   };
+
+  // Devuelve el mensaje de error de un campo solo si debe mostrarse
+  const fieldErr = (key: keyof FieldErrors) =>
+    submitted || blurred.has(key) ? errors[key] : undefined;
+
+  const inputClass = (field: string, hasError?: boolean) =>
+    `w-full rounded-xl border bg-white px-4 py-3.5 text-sm text-carbon outline-none transition-all duration-300 placeholder:text-silver/60 ${
+      hasError
+        ? "border-red-400 ring-2 ring-red-100 shadow-sm"
+        : focused === field
+          ? "border-copper/50 ring-2 ring-copper/10 shadow-sm"
+          : "border-gray-200 hover:border-gray-300"
+    }`;
 
   if (sent) {
     return (
@@ -93,32 +182,24 @@ function PresupuestoForm() {
           <CheckCircle className="text-green-600" size={32} />
         </div>
         <h3 className="mt-6 font-heading text-2xl text-carbon">
-          ¡Solicitud enviada!
+          ¡Mensaje recibido!
         </h3>
         <p className="mt-3 max-w-md text-sm leading-relaxed text-silver">
-          Hemos recibido tu solicitud de presupuesto correctamente. Nos
-          pondremos en contacto contigo lo antes posible, normalmente en menos
-          de 24 horas.
+          He recibido tu consulta. Me pondré en contacto contigo personalmente
+          para hablar de tu proyecto en detalle.
         </p>
         <button
           onClick={() => setSent(false)}
           className="mt-6 rounded-full border border-gray-200 px-6 py-2.5 text-sm font-medium text-gray-dark transition-colors hover:bg-cream"
         >
-          Enviar otra solicitud
+          Enviar otra consulta
         </button>
       </div>
     );
   }
 
-  const inputClass = (field: string) =>
-    `w-full rounded-xl border bg-white px-4 py-3.5 text-sm text-carbon outline-none transition-all duration-300 placeholder:text-silver/60 ${
-      focused === field
-        ? "border-copper/50 ring-2 ring-copper/10 shadow-sm"
-        : "border-gray-200 hover:border-gray-300"
-    }`;
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} noValidate className="space-y-6">
       {/* Nombre */}
       <div>
         <label
@@ -130,55 +211,79 @@ function PresupuestoForm() {
         <input
           id="nombre"
           type="text"
-          required
           placeholder="Tu nombre y apellidos"
           value={form.nombre}
           onChange={(e) => update("nombre", e.target.value)}
           onFocus={() => setFocused("nombre")}
-          onBlur={() => setFocused(null)}
-          className={inputClass("nombre")}
+          onBlur={() => handleBlur("nombre")}
+          className={inputClass("nombre", !!fieldErr("nombre"))}
         />
+        {fieldErr("nombre") && (
+          <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+            <AlertCircle size={12} className="shrink-0" />
+            {fieldErr("nombre")}
+          </p>
+        )}
       </div>
 
-      {/* Teléfono + Email */}
-      <div className="grid gap-6 sm:grid-cols-2">
-        <div>
-          <label
-            htmlFor="telefono"
-            className="mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-gray-dark"
-          >
-            Teléfono <span className="text-copper">*</span>
-          </label>
-          <input
-            id="telefono"
-            type="tel"
-            required
-            placeholder="600 00 00 00"
-            value={form.telefono}
-            onChange={(e) => update("telefono", e.target.value)}
-            onFocus={() => setFocused("telefono")}
-            onBlur={() => setFocused(null)}
-            className={inputClass("telefono")}
-          />
+      {/* Teléfono + Email — al menos uno obligatorio */}
+      <div>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-gray-dark">
+          Método de contacto <span className="text-copper">*</span>
+          <span className="ml-2 font-normal normal-case tracking-normal text-silver">
+            (teléfono, email o ambos)
+          </span>
+        </p>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div>
+            <label htmlFor="telefono" className="mb-2 block text-xs text-silver">
+              Teléfono
+            </label>
+            <input
+              id="telefono"
+              type="tel"
+              placeholder="600 00 00 00"
+              value={form.telefono}
+              onChange={(e) => update("telefono", e.target.value)}
+              onFocus={() => setFocused("telefono")}
+              onBlur={() => handleBlur("telefono")}
+              className={inputClass("telefono", !!fieldErr("telefono") || (!!fieldErr("contacto") && !form.telefono))}
+            />
+            {fieldErr("telefono") && (
+              <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+                <AlertCircle size={12} className="shrink-0" />
+                {fieldErr("telefono")}
+              </p>
+            )}
+          </div>
+          <div>
+            <label htmlFor="email" className="mb-2 block text-xs text-silver">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              placeholder="tu@email.com"
+              value={form.email}
+              onChange={(e) => update("email", e.target.value)}
+              onFocus={() => setFocused("email")}
+              onBlur={() => handleBlur("email")}
+              className={inputClass("email", !!fieldErr("email") || (!!fieldErr("contacto") && !form.email))}
+            />
+            {fieldErr("email") && (
+              <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+                <AlertCircle size={12} className="shrink-0" />
+                {fieldErr("email")}
+              </p>
+            )}
+          </div>
         </div>
-        <div>
-          <label
-            htmlFor="email"
-            className="mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-gray-dark"
-          >
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            placeholder="tu@email.com"
-            value={form.email}
-            onChange={(e) => update("email", e.target.value)}
-            onFocus={() => setFocused("email")}
-            onBlur={() => setFocused(null)}
-            className={inputClass("email")}
-          />
-        </div>
+        {fieldErr("contacto") && (
+          <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+            <AlertCircle size={12} className="shrink-0" />
+            {fieldErr("contacto")}
+          </p>
+        )}
       </div>
 
       {/* Servicio */}
@@ -192,12 +297,11 @@ function PresupuestoForm() {
         <div className="relative">
           <select
             id="servicio"
-            required
             value={form.servicio}
             onChange={(e) => update("servicio", e.target.value)}
             onFocus={() => setFocused("servicio")}
-            onBlur={() => setFocused(null)}
-            className={`${inputClass("servicio")} appearance-none pr-10`}
+            onBlur={() => handleBlur("servicio")}
+            className={`${inputClass("servicio", !!fieldErr("servicio"))} appearance-none pr-10`}
           >
             {servicios.map((s) => (
               <option key={s.value} value={s.value} disabled={s.value === ""}>
@@ -210,6 +314,12 @@ function PresupuestoForm() {
             className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-silver"
           />
         </div>
+        {fieldErr("servicio") && (
+          <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+            <AlertCircle size={12} className="shrink-0" />
+            {fieldErr("servicio")}
+          </p>
+        )}
       </div>
 
       {/* Descripción */}
@@ -222,15 +332,20 @@ function PresupuestoForm() {
         </label>
         <textarea
           id="descripcion"
-          required
           rows={5}
           placeholder="Cuéntanos qué necesitas: tipo de trabajo, medidas aproximadas, materiales preferidos, plazo deseado…"
           value={form.descripcion}
           onChange={(e) => update("descripcion", e.target.value)}
           onFocus={() => setFocused("descripcion")}
-          onBlur={() => setFocused(null)}
-          className={`${inputClass("descripcion")} resize-none`}
+          onBlur={() => handleBlur("descripcion")}
+          className={`${inputClass("descripcion", !!fieldErr("descripcion"))} resize-none`}
         />
+        {fieldErr("descripcion") && (
+          <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+            <AlertCircle size={12} className="shrink-0" />
+            {fieldErr("descripcion")}
+          </p>
+        )}
       </div>
 
       {/* Submit */}
@@ -243,18 +358,22 @@ function PresupuestoForm() {
             size={16}
             className="transition-transform group-hover:translate-x-0.5"
           />
-          Solicitar Presupuesto
+          Enviar consulta
         </span>
         <span className="absolute inset-0 animate-shimmer" />
       </button>
 
-      {error && (
-        <p className="text-xs text-red-500">{error}</p>
+      {/* Error de red al enviar */}
+      {errors.submit && (
+        <p className="flex items-center gap-1 text-xs text-red-500">
+          <AlertCircle size={12} className="shrink-0" />
+          {errors.submit}
+        </p>
       )}
 
       <p className="text-xs text-silver">
-        * Campos obligatorios. Nos pondremos en contacto contigo en menos de 24
-        horas.
+        * Nombre, método de contacto (teléfono o email), servicio y descripción
+        son obligatorios.
       </p>
     </form>
   );
@@ -305,11 +424,11 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
       {/* Info card */}
       <div className="rounded-2xl bg-white p-8 shadow-sm hover-glow transition-all duration-300">
         <h3 className="font-heading text-xl text-carbon">
-          ¿Prefieres contactarnos directamente?
+          ¿Prefieres el contacto directo?
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-silver">
-          Llámanos o escríbenos sin compromiso. Estaremos encantados de
-          atenderte.
+          Llámame o escríbeme directamente. Estoy disponible para atenderte de
+          forma personal.
         </p>
 
         <div className="mt-6 space-y-5">
@@ -343,12 +462,12 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
       <div className="relative overflow-hidden rounded-2xl bg-carbon p-8 text-white shadow-lg">
         <div className="absolute inset-0 bg-gradient-to-br from-copper/5 via-transparent to-steel-blue/5" />
         <div className="relative">
-          <h3 className="font-heading text-xl">Presupuesto sin compromiso</h3>
+          <h3 className="font-heading text-xl">Trato directo y personal</h3>
           <ul className="mt-5 space-y-3.5 text-sm text-white/50">
             {[
-              "Respuesta en menos de 24 horas",
+              "Comunicación directa conmigo",
               "Visita gratuita a domicilio",
-              "Presupuesto detallado por escrito",
+              "Valoración adaptada a tu proyecto",
               "Sin letra pequeña ni sorpresas",
             ].map((item) => (
               <li key={item} className="flex items-center gap-3">
@@ -400,12 +519,12 @@ export default function PresupuestoPage() {
             Sin compromiso
           </span>
           <h1 className="font-heading text-3xl leading-tight text-white md:text-4xl lg:text-5xl">
-            Pide tu presupuesto{" "}
-            <span className="text-gradient-copper">gratuito</span>
+            Cuéntame{" "}
+            <span className="text-gradient-copper">tu proyecto</span>
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/50 md:text-lg">
-            Cuéntanos tu proyecto y recibe un presupuesto detallado y
-            personalizado sin ningún compromiso.
+            Ponte en contacto conmigo por teléfono o email, cuéntame qué
+            necesitas y te daré una respuesta personalizada.
           </p>
         </div>
       </section>
@@ -417,12 +536,12 @@ export default function PresupuestoPage() {
             {/* Form */}
             <div className="rounded-2xl bg-white p-8 shadow-sm md:p-10">
               <h2 className="font-heading text-2xl text-carbon">
-                Datos del proyecto
+                Cuéntame tu proyecto
               </h2>
               <span className="mt-3 decorative-line" />
               <p className="mt-4 mb-8 text-sm text-silver">
-                Rellena el formulario y nos pondremos en contacto contigo lo
-                antes posible.
+                Rellena el formulario con los detalles de tu proyecto y me
+                pondré en contacto contigo personalmente.
               </p>
               <PresupuestoForm />
             </div>

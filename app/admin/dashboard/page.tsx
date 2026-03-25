@@ -20,6 +20,7 @@ import {
   ChevronDown,
   ChevronUp,
   Eye,
+  MapPin,
   Phone as PhoneIcon,
   Mail,
   CheckCircle,
@@ -37,7 +38,6 @@ import {
 interface Reforma {
   id: string;
   title: string;
-  location: string;
   description: string;
   tags: string[];
   images: string[];
@@ -60,9 +60,17 @@ interface HeroSlide {
   caption: string;
 }
 
+interface StoreAddress {
+  street?: string;
+  postalCode?: string;
+  city?: string;
+  region?: string;
+  mapsQuery?: string;
+}
+
 interface SiteConfig {
   business: Record<string, unknown>;
-  storeAddress?: Record<string, unknown>;
+  storeAddress?: StoreAddress;
   storePhotos?: { src: string; alt: string }[];
   footer: Record<string, unknown>;
   tags: string[];
@@ -70,7 +78,7 @@ interface SiteConfig {
   heroCarousel: HeroSlide[];
 }
 
-type Tab = "overview" | "presupuestos" | "reformas" | "carousel" | "config";
+type Tab = "presupuestos" | "reformas" | "carousel" | "localizacion" | "config";
 type EstadoFilter = "nuevo" | "contactado" | "cerrado";
 type SortField = "fecha" | "estado" | "nombre";
 type SortDir = "asc" | "desc";
@@ -93,7 +101,7 @@ async function api<T>(url: string, opts?: RequestInit): Promise<T> {
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>("overview");
+  const [tab, setTab] = useState<Tab>("presupuestos");
   const [loading, setLoading] = useState(true);
   const [config, setConfig] = useState<SiteConfig | null>(null);
   const [reformas, setReformas] = useState<Reforma[]>([]);
@@ -150,14 +158,16 @@ export default function AdminDashboard() {
   }
 
   const tabs: { key: Tab; label: string; icon: typeof LayoutDashboard }[] = [
-    { key: "overview", label: "Resumen", icon: LayoutDashboard },
-    { key: "presupuestos", label: "Presupuestos", icon: FileText },
+    { key: "presupuestos", label: "Consultas", icon: FileText },
     { key: "reformas", label: "Reformas", icon: Hammer },
-    { key: "carousel", label: "Carrusel", icon: ImagesIcon },
+    { key: "carousel", label: "Carrusel inicio", icon: ImagesIcon },
+    { key: "localizacion", label: "Localización", icon: MapPin },
     { key: "config", label: "Configuración", icon: Settings },
   ];
 
   const newCount = presupuestos.filter((p) => p.estado === "nuevo").length;
+  const contactadoCount = presupuestos.filter((p) => p.estado === "contactado").length;
+  const cerradoCount = presupuestos.filter((p) => p.estado === "cerrado").length;
 
   return (
     <div className="flex min-h-dvh bg-[#0A0A0A] text-white">
@@ -168,6 +178,22 @@ export default function AdminDashboard() {
             Admin Panel
           </p>
           <p className="mt-1 text-[10px] text-white/25">Oscar Carregal</p>
+
+          {/* Contadores de consultas */}
+          <div className="mt-4 flex gap-1.5">
+            <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-green-500/10 px-2 py-2">
+              <span className="text-base font-bold leading-none text-green-400">{newCount}</span>
+              <span className="text-[8px] font-semibold uppercase tracking-wide text-green-400/60">Nuevas</span>
+            </div>
+            <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-blue-500/10 px-2 py-2">
+              <span className="text-base font-bold leading-none text-blue-400">{contactadoCount}</span>
+              <span className="text-[8px] font-semibold uppercase tracking-wide text-blue-400/60">Seguim.</span>
+            </div>
+            <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-white/5 px-2 py-2">
+              <span className="text-base font-bold leading-none text-white/40">{cerradoCount}</span>
+              <span className="text-[8px] font-semibold uppercase tracking-wide text-white/20">Cerradas</span>
+            </div>
+          </div>
         </div>
 
         <nav className="flex-1 space-y-1 px-3 py-4">
@@ -205,13 +231,6 @@ export default function AdminDashboard() {
 
       {/* Main */}
       <main className="flex-1 overflow-y-auto p-8">
-        {tab === "overview" && (
-          <OverviewPanel
-            reformas={reformas}
-            presupuestos={presupuestos}
-            config={config}
-          />
-        )}
         {tab === "presupuestos" && (
           <PresupuestosPanel
             presupuestos={presupuestos}
@@ -231,6 +250,9 @@ export default function AdminDashboard() {
             reformas={reformas}
             onRefresh={loadData}
           />
+        )}
+        {tab === "localizacion" && (
+          <LocalizacionPanel config={config} onRefresh={loadData} />
         )}
         {tab === "config" && (
           <ConfigPanel config={config} onRefresh={loadData} />
@@ -259,7 +281,7 @@ function OverviewPanel({
 
   const stats = [
     { label: "Reformas", value: reformas.length, color: "text-copper", bg: "bg-copper/10" },
-    { label: "Presupuestos nuevos", value: newCount, color: "text-green-400", bg: "bg-green-400/10" },
+    { label: "Consultas nuevas", value: newCount, color: "text-green-400", bg: "bg-green-400/10" },
     { label: "En seguimiento", value: contactedCount, color: "text-blue-400", bg: "bg-blue-400/10" },
     { label: "Total imágenes", value: totalImages, color: "text-purple-400", bg: "bg-purple-400/10" },
     { label: "Slides carrusel", value: config?.heroCarousel.length ?? 0, color: "text-amber-400", bg: "bg-amber-400/10" },
@@ -270,7 +292,7 @@ function OverviewPanel({
     <div>
       <h1 className="font-heading text-2xl">Panel de Control</h1>
       <p className="mt-1 text-sm text-white/30">
-        Resumen general de tu web y solicitudes
+        Resumen general de tu web y consultas
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -290,7 +312,7 @@ function OverviewPanel({
       {presupuestos.length > 0 && (
         <div className="mt-10">
           <h2 className="font-heading text-lg text-white/70">
-            Últimas solicitudes
+            Últimas consultas
           </h2>
           <div className="mt-4 space-y-3">
             {presupuestos.slice(0, 5).map((p) => (
@@ -435,7 +457,7 @@ function PresupuestosPanel({
   };
 
   const deletePresupuesto = async (id: string) => {
-    if (!confirm("¿Eliminar esta solicitud?")) return;
+    if (!confirm("¿Eliminar esta consulta?")) return;
     try {
       await api("/api/admin/presupuestos", {
         method: "DELETE",
@@ -458,9 +480,9 @@ function PresupuestosPanel({
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-heading text-2xl">Presupuestos</h1>
+          <h1 className="font-heading text-2xl">Consultas</h1>
           <p className="mt-1 text-sm text-white/30">
-            {presupuestos.length} solicitudes recibidas
+            {presupuestos.length} consultas recibidas
           </p>
         </div>
       </div>
@@ -528,7 +550,7 @@ function PresupuestosPanel({
       <div className="mt-4 space-y-3">
         {filtered.length === 0 && (
           <p className="py-12 text-center text-sm text-white/20">
-            No hay solicitudes con estos filtros
+            No hay consultas con estos filtros
           </p>
         )}
         {filtered.map((p) => (
@@ -570,13 +592,17 @@ function PresupuestosPanel({
                     <p className="text-[10px] uppercase tracking-wider text-white/20">
                       Teléfono
                     </p>
-                    <a
-                      href={`tel:${p.telefono}`}
-                      className="mt-0.5 flex items-center gap-1.5 text-sm text-copper hover:underline"
-                    >
-                      <PhoneIcon size={12} />
-                      {p.telefono}
-                    </a>
+                    {p.telefono ? (
+                      <a
+                        href={`tel:${p.telefono}`}
+                        className="mt-0.5 flex items-center gap-1.5 text-sm text-copper hover:underline"
+                      >
+                        <PhoneIcon size={12} />
+                        {p.telefono}
+                      </a>
+                    ) : (
+                      <p className="mt-0.5 text-sm text-white/30">—</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-white/20">
@@ -651,6 +677,8 @@ function ReformasPanel({
 }) {
   const [editing, setEditing] = useState<Reforma | null>(null);
   const [creating, setCreating] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [savingFeatured, setSavingFeatured] = useState(false);
 
   const handleDelete = async (id: string) => {
     const r = reformas.find((ref) => ref.id === id);
@@ -664,20 +692,33 @@ function ReformasPanel({
     }
   };
 
-  const toggleFeatured = async (id: string) => {
+  /* Añade una reforma al final del array de destacados (máx. 3) */
+  const addFeatured = async (reformaId: string) => {
     if (!config) return;
-    const isFeatured = config.featuredReformas.includes(id);
-
-    if (!isFeatured && config.featuredReformas.length >= 3) {
-      alert("Solo puedes tener 3 reformas destacadas. Quita una antes de añadir otra.");
-      return;
-    }
-
-    const updated = isFeatured
-      ? config.featuredReformas.filter((r) => r !== id)
-      : [...config.featuredReformas, id];
-
+    const current = config.featuredReformas ?? [];
+    if (current.includes(reformaId) || current.length >= 3) return;
+    setSavingFeatured(true);
     try {
+      await api("/api/admin/config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...config, featuredReformas: [...current, reformaId] }),
+      });
+      setPickerOpen(false);
+      onRefresh();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSavingFeatured(false);
+    }
+  };
+
+  /* Elimina una reforma del array de destacados */
+  const removeFeatured = async (reformaId: string) => {
+    if (!config) return;
+    setSavingFeatured(true);
+    try {
+      const updated = (config.featuredReformas ?? []).filter((id) => id !== reformaId);
       await api("/api/admin/config", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -686,8 +727,18 @@ function ReformasPanel({
       onRefresh();
     } catch (err) {
       console.error(err);
+    } finally {
+      setSavingFeatured(false);
     }
   };
+
+  const featuredList = config?.featuredReformas ?? [];
+  /* Resolución de los 3 slots posicionales a objetos Reforma */
+  const featuredSlots = [0, 1, 2].map((i) =>
+    reformas.find((r) => r.id === featuredList[i]) ?? null
+  );
+  /* Reformas que aún no están destacadas (disponibles para el picker) */
+  const availableForFeatured = reformas.filter((r) => !featuredList.includes(r.id));
 
   return (
     <div>
@@ -695,7 +746,7 @@ function ReformasPanel({
         <div>
           <h1 className="font-heading text-2xl">Reformas</h1>
           <p className="mt-1 text-sm text-white/30">
-            {reformas.length} proyectos · {config?.featuredReformas.length ?? 0}/3 destacados
+            {reformas.length} proyectos
           </p>
         </div>
         <button
@@ -707,7 +758,114 @@ function ReformasPanel({
         </button>
       </div>
 
-      {/* Reforma cards */}
+      {/* ── Selector de reformas destacadas ── */}
+      <section className="mt-8 rounded-xl border border-white/6 bg-[#141414] p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
+              Reformas Destacadas
+            </h2>
+            <p className="mt-0.5 text-xs text-white/30">
+              Aparecen en la portada · máx. 3
+            </p>
+          </div>
+          {savingFeatured && (
+            <Loader2 size={14} className="animate-spin text-white/30" />
+          )}
+        </div>
+
+        {/* 3 slots visuales */}
+        <div className="mt-5 grid grid-cols-3 gap-4">
+          {[0, 1, 2].map((slot) => {
+            const reforma = featuredSlots[slot];
+            /* Slot vacío solo es clickable si es el siguiente disponible */
+            const isNextEmpty = slot === featuredList.length;
+
+            return reforma ? (
+              /* Slot relleno — muestra thumbnail + título + botón eliminar */
+              <div
+                key={slot}
+                className="group relative overflow-hidden rounded-xl border border-white/8 bg-[#1A1A1A]"
+              >
+                <div className="relative aspect-[4/3]">
+                  {reforma.images.length > 0 ? (
+                    <Image
+                      src={`/reformas/${reforma.id}/${reforma.images[0]}`}
+                      alt={reforma.title}
+                      fill
+                      sizes="200px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-[#222]">
+                      <ImagesIcon size={24} className="text-white/10" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                  <p className="absolute bottom-2 left-2 right-8 truncate text-xs font-semibold text-white drop-shadow-sm">
+                    {reforma.title || "(Sin título)"}
+                  </p>
+                  {/* Número de slot */}
+                  <span className="absolute left-2 top-2 rounded-md bg-copper/80 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+                    {slot + 1}
+                  </span>
+                </div>
+                {/* Botón eliminar — visible al hover */}
+                <button
+                  onClick={() => removeFeatured(reforma.id)}
+                  className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white/50 opacity-0 transition-all group-hover:opacity-100 hover:bg-red-500/80 hover:text-white"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            ) : (
+              /* Slot vacío — botón "+" */
+              <button
+                key={slot}
+                onClick={() => isNextEmpty && setPickerOpen(true)}
+                disabled={!isNextEmpty}
+                className={`group aspect-[4/3] rounded-xl border-2 border-dashed transition-all ${
+                  isNextEmpty
+                    ? "cursor-pointer border-white/15 bg-[#1A1A1A] hover:border-copper/50 hover:bg-copper/5"
+                    : "cursor-not-allowed border-white/6 bg-[#161616] opacity-40"
+                }`}
+              >
+                <div className="flex h-full flex-col items-center justify-center gap-2">
+                  <div
+                    className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${
+                      isNextEmpty
+                        ? "border-white/15 bg-white/5 group-hover:border-copper/40 group-hover:bg-copper/10"
+                        : "border-white/8 bg-white/3"
+                    }`}
+                  >
+                    <Plus
+                      size={18}
+                      className={`transition-colors ${
+                        isNextEmpty
+                          ? "text-white/25 group-hover:text-copper"
+                          : "text-white/10"
+                      }`}
+                    />
+                  </div>
+                  <span
+                    className={`text-[11px] transition-colors ${
+                      isNextEmpty
+                        ? "text-white/20 group-hover:text-copper/60"
+                        : "text-white/10"
+                    }`}
+                  >
+                    Añadir
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Vista previa eliminada por configuración */}
+      </section>
+
+      {/* ── Grid de todas las reformas ── */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {reformas.map((r) => (
           <div
@@ -729,8 +887,8 @@ function ReformasPanel({
                   <ImagesIcon size={32} />
                 </div>
               )}
-              <div className="absolute top-2 right-2 flex gap-1.5">
-                {config?.featuredReformas.includes(r.id) && (
+              <div className="absolute right-2 top-2 flex gap-1.5">
+                {featuredList.includes(r.id) && (
                   <span className="rounded-md bg-copper/80 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
                     DESTACADO
                   </span>
@@ -742,21 +900,23 @@ function ReformasPanel({
             </div>
 
             <div className="p-4">
-              <h3 className="text-sm font-semibold truncate">
+              <h3 className="truncate text-sm font-semibold">
                 {r.title || "(Sin título)"}
               </h3>
-              {r.location && (
-                <p className="text-xs text-white/30">{r.location}</p>
-              )}
               {r.tags.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
                   {r.tags.slice(0, 3).map((tag) => (
-                    <span key={tag} className="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-white/30">
+                    <span
+                      key={tag}
+                      className="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-white/30"
+                    >
                       {tag}
                     </span>
                   ))}
                   {r.tags.length > 3 && (
-                    <span className="text-[10px] text-white/20">+{r.tags.length - 3}</span>
+                    <span className="text-[10px] text-white/20">
+                      +{r.tags.length - 3}
+                    </span>
                   )}
                 </div>
               )}
@@ -767,19 +927,6 @@ function ReformasPanel({
                 >
                   <Edit3 size={12} />
                   Editar
-                </button>
-                <button
-                  onClick={() => toggleFeatured(r.id)}
-                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition-colors ${
-                    config?.featuredReformas.includes(r.id)
-                      ? "bg-copper/15 text-copper"
-                      : "bg-white/5 text-white/30 hover:bg-white/10"
-                  }`}
-                >
-                  <Star size={12} />
-                  {config?.featuredReformas.includes(r.id)
-                    ? "Destacado"
-                    : "Destacar"}
                 </button>
                 <button
                   onClick={() => handleDelete(r.id)}
@@ -793,7 +940,16 @@ function ReformasPanel({
         ))}
       </div>
 
-      {/* Edit modal */}
+      {/* Modal selector de destacados */}
+      {pickerOpen && (
+        <FeaturedPickerModal
+          reformas={availableForFeatured}
+          onSelect={addFeatured}
+          onClose={() => setPickerOpen(false)}
+        />
+      )}
+
+      {/* Modal edición */}
       {editing && (
         <ReformaEditor
           reforma={editing}
@@ -806,7 +962,7 @@ function ReformasPanel({
         />
       )}
 
-      {/* Create modal */}
+      {/* Modal creación */}
       {creating && (
         <ReformaEditor
           reforma={null}
@@ -837,7 +993,7 @@ function ReformaEditor({
 }) {
   const isNew = reforma === null;
   const [title, setTitle] = useState(reforma?.title ?? "");
-  const [location, setLocation] = useState(reforma?.location ?? "");
+  // `location` field removed — no longer tracked
   const [description, setDescription] = useState(reforma?.description ?? "");
   const [selectedTags, setSelectedTags] = useState<string[]>(reforma?.tags ?? []);
   const [images, setImages] = useState<string[]>(reforma?.images ?? []);
@@ -859,7 +1015,7 @@ function ReformaEditor({
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const canSave = title.trim() && location.trim() && description.trim();
+  const canSave = title.trim() && description.trim();
 
   const handleSave = async () => {
     if (!canSave) return;
@@ -871,7 +1027,6 @@ function ReformaEditor({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             title: title.trim(),
-            location: location.trim(),
             description: description.trim(),
             tags: selectedTags,
           }),
@@ -882,7 +1037,6 @@ function ReformaEditor({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             title: title.trim(),
-            location: location.trim(),
             description: description.trim(),
             tags: selectedTags,
             images,
@@ -998,17 +1152,7 @@ function ReformaEditor({
             />
           </div>
 
-          <div>
-            <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/30">
-              Ubicación <span className="text-red-400">*</span>
-            </label>
-            <input
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className={inputClass}
-              placeholder="San Sebastián"
-            />
-          </div>
+          {/* Ubicación eliminada del editor */}
 
           <div>
             <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/30">
@@ -1185,6 +1329,86 @@ function ReformaEditor({
               {isNew ? "Crear Reforma" : "Guardar"}
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════ FEATURED PICKER MODAL ═══════════════════════════════ */
+
+/**
+ * Modal para seleccionar una reforma como destacada.
+ * Muestra solo las reformas que aún no están en featuredReformas.
+ */
+function FeaturedPickerModal({
+  reformas,
+  onSelect,
+  onClose,
+}: {
+  reformas: Reforma[];
+  onSelect: (id: string) => void;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-8"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded-lg p-2 text-white/30 hover:bg-white/5 hover:text-white"
+        >
+          <X size={18} />
+        </button>
+
+        <h2 className="font-heading text-xl">Seleccionar reforma destacada</h2>
+        <p className="mt-1 text-sm text-white/30">
+          Elige la reforma que aparecerá en la portada
+        </p>
+
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+          {reformas.length === 0 ? (
+            <p className="col-span-3 py-8 text-center text-sm text-white/20">
+              Todas las reformas ya están destacadas
+            </p>
+          ) : (
+            reformas.map((r) => (
+              <button
+                key={r.id}
+                onClick={() => onSelect(r.id)}
+                className="group overflow-hidden rounded-xl border border-white/6 bg-[#141414] text-left transition-all hover:border-copper/40 hover:bg-copper/5"
+              >
+                <div className="relative h-28 bg-[#1A1A1A]">
+                  {r.images.length > 0 ? (
+                    <Image
+                      src={`/reformas/${r.id}/${r.images[0]}`}
+                      alt={r.title}
+                      fill
+                      sizes="200px"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <ImagesIcon size={24} className="text-white/10" />
+                    </div>
+                  )}
+                </div>
+                <div className="p-3">
+                  <p className="line-clamp-1 text-xs font-semibold text-white/70 transition-colors group-hover:text-white">
+                    {r.title || "(Sin título)"}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-white/25">
+                    {r.images.length} {r.images.length === 1 ? "foto" : "fotos"}
+                  </p>
+                </div>
+              </button>
+            ))
+          )}
         </div>
       </div>
     </div>
@@ -1691,34 +1915,7 @@ function ConfigPanel({
                   className={inputClass}
                 />
               </div>
-              <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
-                  Ciudad
-                </label>
-                <input
-                  value={loc.city ?? ""}
-                  onChange={(e) =>
-                    updateNestedBusiness("location", "city", e.target.value)
-                  }
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
-                  Zona de servicio
-                </label>
-                <input
-                  value={loc.serviceArea ?? ""}
-                  onChange={(e) =>
-                    updateNestedBusiness(
-                      "location",
-                      "serviceArea",
-                      e.target.value
-                    )
-                  }
-                  className={inputClass}
-                />
-              </div>
+              {/* Campos de localización eliminados de la configuración */}
             </div>
           </section>
 
@@ -1803,6 +2000,315 @@ function ConfigPanel({
           </button>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════ LOCALIZACIÓN ═══════════════════════════════ */
+
+/**
+ * Panel de gestión de la sección de localización:
+ * - Fotos del showroom (subir, eliminar, reordenar con drag & drop)
+ * - Vista previa del mosaico de fotos (layout idéntico al web)
+ * - Dirección y coordenadas Google Maps
+ */
+function LocalizacionPanel({
+  config,
+  onRefresh,
+}: {
+  config: SiteConfig | null;
+  onRefresh: () => void;
+}) {
+  const [photos, setPhotos] = useState<{ src: string; alt: string }[]>(
+    config?.storePhotos ?? []
+  );
+  const [address, setAddress] = useState({
+    street: config?.storeAddress?.street ?? "",
+    postalCode: config?.storeAddress?.postalCode ?? "",
+    city: config?.storeAddress?.city ?? "",
+    region: config?.storeAddress?.region ?? "",
+    mapsQuery: config?.storeAddress?.mapsQuery ?? "",
+  });
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  /* Sube imágenes al endpoint /api/admin/tienda/images */
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      for (const file of Array.from(files)) {
+        formData.append("images", file);
+      }
+      const res = await api<{ files: { src: string; alt: string }[] }>(
+        "/api/admin/tienda/images",
+        { method: "POST", body: formData }
+      );
+      setPhotos((prev) => [...prev, ...res.files]);
+      onRefresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Error subiendo imágenes");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  /* Elimina una foto del disco y la quita del array local */
+  const handleDeletePhoto = async (src: string) => {
+    if (!confirm("¿Eliminar esta foto del showroom?")) return;
+    try {
+      await api("/api/admin/tienda/images", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ src }),
+      });
+      setPhotos((prev) => prev.filter((p) => p.src !== src));
+      onRefresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Error eliminando foto");
+    }
+  };
+
+  /* Drag & drop para reordenar fotos */
+  const handleDragStart = (index: number) => setDragIndex(index);
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === index) return;
+    const updated = [...photos];
+    const [moved] = updated.splice(dragIndex, 1);
+    updated.splice(index, 0, moved);
+    setPhotos(updated);
+    setDragIndex(index);
+  };
+  const handleDragEnd = () => setDragIndex(null);
+
+  /* Guarda el orden de fotos + dirección en config.json */
+  const handleSave = async () => {
+    if (!config) return;
+    setSaving(true);
+    setSaveSuccess(false);
+    try {
+      await api("/api/admin/config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...config,
+          storePhotos: photos,
+          storeAddress: {
+            ...(config.storeAddress ?? {}),
+            ...address,
+          },
+        }),
+      });
+      setSaveSuccess(true);
+      onRefresh();
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Error guardando cambios");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  /* El mosaico web usa [2],[0],[1] como orden visual (izquierda grande + dos a la derecha) */
+  const mosaicPhotos = photos.length >= 3 ? [photos[2], photos[0], photos[1]] : photos;
+
+  const inputClass =
+    "w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-all focus:border-copper/40 placeholder:text-white/15";
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-heading text-2xl">Localización</h1>
+          <p className="mt-1 text-sm text-white/30">
+            Fotos del showroom y datos de ubicación
+          </p>
+        </div>
+      </div>
+
+      {/* ── Fotos del showroom ── */}
+      <section className="mt-8 rounded-xl border border-white/6 bg-[#141414] p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
+            Fotos del Showroom
+          </h2>
+          <label className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-white/5 px-3 py-1.5 text-xs text-white/50 transition-colors hover:bg-white/10 hover:text-white">
+            <Upload size={12} />
+            {uploading ? "Subiendo…" : "Subir fotos"}
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleUpload}
+              className="hidden"
+            />
+          </label>
+        </div>
+
+        {photos.length > 0 ? (
+          <>
+            <p className="mt-2 text-[10px] text-white/20">
+              Arrastra para reordenar · {photos.length} fotos
+            </p>
+
+            {/* Grid de fotos con drag & drop */}
+            <div className="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-5">
+              {photos.map((photo, i) => (
+                <div
+                  key={photo.src}
+                  draggable
+                  onDragStart={() => handleDragStart(i)}
+                  onDragOver={(e) => handleDragOver(e, i)}
+                  onDragEnd={handleDragEnd}
+                  className={`group relative cursor-grab active:cursor-grabbing ${
+                    dragIndex === i ? "opacity-50" : ""
+                  }`}
+                >
+                  <div className={`relative aspect-square overflow-hidden rounded-lg bg-[#1A1A1A] ${i < 3 ? 'ring-2 ring-copper' : ''}`}>
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt || ""}
+                      fill
+                      sizes="120px"
+                      className="pointer-events-none object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/30">
+                      <GripVertical
+                        size={16}
+                        className="text-white/0 transition-colors group-hover:text-white/70"
+                      />
+                    </div>
+                  </div>
+                  {/* Botón eliminar */}
+                  <button
+                    onClick={() => handleDeletePhoto(photo.src)}
+                    className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  >
+                    <X size={10} />
+                  </button>
+                  {/* Eliminada etiqueta 'Principal' — ahora las 3 primeras muestran contorno naranja */}
+                </div>
+              ))}
+            </div>
+
+            {/* Vista previa del mosaico web */}
+            <div className="mt-6">
+              {/* Previsualización del mosaico eliminada */}
+            </div>
+          </>
+        ) : (
+          <div className="mt-4 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-white/10 py-10">
+            <ImagesIcon size={32} className="text-white/10" />
+            <p className="mt-3 text-sm text-white/20">
+              Sin fotos. Sube imágenes del showroom.
+            </p>
+          </div>
+        )}
+      </section>
+
+      {/* ── Dirección y localización ── */}
+      <section className="mt-6 rounded-xl border border-white/6 bg-[#141414] p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
+          Dirección y Región
+        </h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+              Calle y número
+            </label>
+            <input
+              value={address.street}
+              onChange={(e) =>
+                setAddress((prev) => ({ ...prev, street: e.target.value }))
+              }
+              className={inputClass}
+              placeholder="Avenida de Tolosa 89"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+              Código postal
+            </label>
+            <input
+              value={address.postalCode}
+              onChange={(e) =>
+                setAddress((prev) => ({ ...prev, postalCode: e.target.value }))
+              }
+              className={inputClass}
+              placeholder="20018"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+              Ciudad
+            </label>
+            <input
+              value={address.city}
+              onChange={(e) =>
+                setAddress((prev) => ({ ...prev, city: e.target.value }))
+              }
+              className={inputClass}
+              placeholder="San Sebastián"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+              Región / Provincia
+            </label>
+            <input
+              value={address.region}
+              onChange={(e) =>
+                setAddress((prev) => ({ ...prev, region: e.target.value }))
+              }
+              className={inputClass}
+              placeholder="Gipuzkoa, País Vasco"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+              Coordenadas Google Maps
+            </label>
+            <input
+              value={address.mapsQuery}
+              onChange={(e) =>
+                setAddress((prev) => ({ ...prev, mapsQuery: e.target.value }))
+              }
+              className={inputClass}
+              placeholder="43.30739782667964,-2.0075817173451656"
+            />
+            <p className="mt-1 text-[10px] text-white/20">
+              Formato: latitud,longitud. Centra el mapa y genera el enlace de Google Maps.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {saveSuccess && (
+        <div className="mt-4 rounded-lg border border-green-500/20 bg-green-500/10 px-4 py-2.5 text-xs text-green-400">
+          Cambios guardados correctamente
+        </div>
+      )}
+
+      <button
+        onClick={handleSave}
+        disabled={saving}
+        className="mt-6 flex items-center gap-2 rounded-lg bg-copper px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-copper-light disabled:opacity-40"
+      >
+        {saving ? (
+          <Loader2 size={14} className="animate-spin" />
+        ) : (
+          <Save size={14} />
+        )}
+        Guardar cambios
+      </button>
     </div>
   );
 }

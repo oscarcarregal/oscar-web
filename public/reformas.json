@@ -2,7 +2,6 @@
   {
     "id": "r1",
     "title": "Reforma Integral de Baño",
-    "location": "San Sebastián",
     "description": "Transformación completa con plato de ducha extraplano, mampara fija, mueble suspendido y grifería termostática. Acabado en porcelánico imitación cemento.",
     "tags": ["Baño", "Fontanería", "Alicatado", "Cocina"],
     "images": [
@@ -15,7 +14,6 @@
   {
     "id": "r2",
     "title": "Reforma Sorpresa",
-    "location": "San Sebastián",
     "description": "Reforma sorpresa para la clienta Mónica: baño completamente renovado con materiales de alta gama como regalo para su familia.",
     "tags": ["Baño", "Reforma", "Fontanería"],
     "images": [
@@ -30,7 +28,6 @@
   {
     "id": "r3",
     "title": "Cambio Bañera por Ducha",
-    "location": "San Sebastián",
     "description": "Sustitución de bañera por plato de ducha extraplano con mampara fija. Solución moderna y accesible para el día a día.",
     "tags": ["Baño", "Ducha"],
     "images": [
@@ -41,7 +38,6 @@
   {
     "id": "r4",
     "title": "Montaje de Baños",
-    "location": "Los Arcos, Navarra",
     "description": "Instalación completa de baños para varios clientes: platos de ducha, sanitarios, grifería y alicatado con acabados impecables.",
     "tags": ["Baño", "Alicatado", "Fontanería"],
     "images": [
@@ -54,7 +50,6 @@
   {
     "id": "r5",
     "title": "Lavabo y Ducha Doble",
-    "location": "San Sebastián",
     "description": "Instalación de lavabo y ducha doble para mayor comodidad. El mejor equipamiento para familias con necesidades distintas.",
     "tags": ["Baño", "Fontanería", "Diseño"],
     "images": [
@@ -66,7 +61,6 @@
   {
     "id": "r6",
     "title": "Inodoro IN-WASH Suspendido",
-    "location": "San Sebastián",
     "description": "Instalación de inodoro IN-WASH suspendido de ROCA. Tecnología punta con función de bidé integrada, diseño elegante y limpieza máxima.",
     "tags": ["Baño", "Fontanería", "Diseño"],
     "images": [
@@ -77,7 +71,6 @@
   {
     "id": "r7",
     "title": "Reforma de Cocina",
-    "location": "San Sebastián",
     "description": "Reforma integral de cocina con nueva distribución, instalación de gas, encimera y mobiliario lacado. Resultado espectacular.",
     "tags": ["Cocina", "Gas", "Reforma"],
     "images": [

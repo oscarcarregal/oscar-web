@@ -10,7 +10,6 @@ const REFORMAS_PATH = path.join(process.cwd(), "public", "reformas.json");
 interface ReformaEntry {
   id: string;
   title: string;
-  location: string;
   description: string;
   tags: string[];
   images: string[];
@@ -31,8 +30,8 @@ function createSlugBase(...parts: string[]): string {
   return slug || "reforma";
 }
 
-async function generateUniqueReformaId(title: string, location: string): Promise<string> {
-  const base = createSlugBase(title, location);
+async function generateUniqueReformaId(title: string): Promise<string> {
+  const base = createSlugBase(title);
 
   for (let i = 0; i < 8; i += 1) {
     const timestamp = Date.now().toString(36);
@@ -89,9 +88,9 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { title, location, description, tags } = await req.json();
+    const { title, description, tags } = await req.json();
 
-    const safeId = await generateUniqueReformaId(title || "", location || "");
+    const safeId = await generateUniqueReformaId(title || "");
 
     // Crear directorio para las imágenes
     await fs.mkdir(path.join(REFORMAS_DIR, safeId), { recursive: true });
@@ -101,7 +100,6 @@ export async function POST(req: NextRequest) {
     reformas.push({
       id: safeId,
       title: title || "Nueva Reforma",
-      location: location || "",
       description: description || "",
       tags: tags || [],
       images: [],

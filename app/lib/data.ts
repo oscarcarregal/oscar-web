@@ -2,7 +2,6 @@
 
 export interface ReformaInfo {
   title: string;
-  location: string;
   description: string;
   tags: string[];
   images: string[];

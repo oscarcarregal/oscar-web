@@ -11,7 +11,6 @@ const CONFIG_PATH = path.join(process.cwd(), "public", "config.json");
 interface ReformaEntry {
   id: string;
   title: string;
-  location: string;
   description: string;
   tags: string[];
   images: string[];
@@ -71,7 +70,7 @@ export async function PUT(
   }
 
   try {
-    const { title, location, description, tags, images } = await req.json();
+    const { title, description, tags, images } = await req.json();
     const reformas = await readReformas();
     const index = reformas.findIndex((r) => r.id === safeId);
 
@@ -83,7 +82,6 @@ export async function PUT(
     reformas[index] = {
       id: safeId,
       title: title ?? existing.title,
-      location: location ?? existing.location,
       description: description ?? existing.description,
       tags: tags ?? existing.tags,
       images: images ?? existing.images,

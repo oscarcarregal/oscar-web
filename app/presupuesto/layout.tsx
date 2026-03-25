@@ -2,9 +2,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pedir Presupuesto Gratuito",
+  title: "Contacto · Cuéntame tu proyecto",
   description:
-    "Solicita un presupuesto sin compromiso para tu reforma, instalación de fontanería, gas o calefacción en San Sebastián. Respuesta en menos de 24 horas.",
+    "Contacta directamente conmigo para reformas, fontanería, gas o calefacción en San Sebastián. Trato personalizado y comunicación directa.",
 };
 
 export default function PresupuestoLayout({

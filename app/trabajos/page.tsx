@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import {
   Search,
-  MapPin,
   ChevronLeft,
   ChevronRight,
   X,
@@ -254,10 +253,7 @@ function WorkCard({
           <span className="font-medium">{project.imagePaths.length}</span>
         </span>
 
-        <span className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-black/30 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
-          <MapPin size={11} />
-          {project.location}
-        </span>
+        {/* Ubicación eliminada de las tarjetas */}
 
         <div
           className={`absolute bottom-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-copper px-3 py-1.5 text-xs font-semibold text-white shadow-lg transition-all duration-400 ${
@@ -353,10 +349,7 @@ function GalleryModal({
           <h2 className="font-heading text-2xl text-carbon sm:text-3xl">
             {project.title}
           </h2>
-          <p className="mt-2 flex items-center gap-1.5 text-sm text-silver">
-            <MapPin size={14} className="text-copper" />
-            {project.location}
-          </p>
+          {/* Ubicación eliminada de la galería */}
           <p className="mt-4 text-sm leading-relaxed text-gray-dark">
             {project.description}
           </p>
@@ -462,8 +455,8 @@ function TrabajosCTA({ phoneNumber }: { phoneNumber: string }) {
           <span className="text-gradient-copper">resultado así?</span>
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/50">
-          Cuéntanos tu idea y te daremos un presupuesto personalizado sin
-          compromiso.
+          Cuéntame tu idea y me pondré en contacto contigo para hablar de tu
+          proyecto de forma directa y personalizada.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
@@ -503,7 +496,6 @@ export default function TrabajosPage() {
     const matchesQuery =
       !q ||
       p.title.toLowerCase().includes(q) ||
-      p.location.toLowerCase().includes(q) ||
       p.description.toLowerCase().includes(q) ||
       p.tags.some((t) => t.toLowerCase().includes(q));
 
