@@ -102,7 +102,6 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
             { value: "+500", label: "Proyectos" },
             { value: "15+", label: "Años exp." },
             { value: "100%", label: "Garantía" },
-            { value: "1:1", label: "Atención" },
           ].map((item) => (
             <div key={item.label} className="text-center group">
               <p className="relative text-2xl font-bold text-white drop-shadow md:text-3xl">

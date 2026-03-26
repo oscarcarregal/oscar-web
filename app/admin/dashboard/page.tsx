@@ -31,6 +31,7 @@ import {
   ArrowUpDown,
   Filter,
   Star,
+  Menu,
 } from "lucide-react";
 
 /* ═══════════════════════════════ TYPES ═══════════════════════════════ */
@@ -65,6 +66,7 @@ interface StoreAddress {
   postalCode?: string;
   city?: string;
   region?: string;
+  serviceArea?: string;
   mapsQuery?: string;
 }
 
@@ -106,6 +108,8 @@ export default function AdminDashboard() {
   const [config, setConfig] = useState<SiteConfig | null>(null);
   const [reformas, setReformas] = useState<Reforma[]>([]);
   const [presupuestos, setPresupuestos] = useState<Presupuesto[]>([]);
+  // Controla la visibilidad del drawer de navegación en móvil
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -171,8 +175,106 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex min-h-dvh bg-[#0A0A0A] text-white">
-      {/* Sidebar */}
-      <aside className="sticky top-0 flex h-dvh w-60 shrink-0 flex-col border-r border-white/6 bg-[#0D0D0D]">
+
+      {/* ── Barra superior fija en móvil ── */}
+      <header className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center gap-3 border-b border-white/6 bg-[#0D0D0D] px-4 md:hidden">
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-white/40 hover:bg-white/5 hover:text-white"
+          aria-label="Abrir menú"
+        >
+          <Menu size={20} />
+        </button>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
+          Admin Panel
+        </p>
+        {newCount > 0 && (
+          <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-copper text-[10px] font-bold text-white">
+            {newCount}
+          </span>
+        )}
+      </header>
+
+      {/* ── Drawer de navegación (móvil) ── */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        >
+          {/* Fondo oscuro */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          {/* Panel lateral */}
+          <aside
+            className="absolute left-0 top-0 flex h-full w-64 flex-col border-r border-white/6 bg-[#0D0D0D]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-white/6 px-5 py-5">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
+                  Admin Panel
+                </p>
+                <p className="mt-1 text-[10px] text-white/25">Oscar Carregal</p>
+              </div>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="rounded-lg p-1.5 text-white/30 hover:bg-white/5 hover:text-white"
+                aria-label="Cerrar menú"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="px-5 pb-4 pt-3">
+              <div className="flex gap-1.5">
+                <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-green-500/10 px-2 py-2">
+                  <span className="text-base font-bold leading-none text-green-400">{newCount}</span>
+                  <span className="text-[8px] font-semibold uppercase tracking-wide text-green-400/60">Nuevas</span>
+                </div>
+                <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-blue-500/10 px-2 py-2">
+                  <span className="text-base font-bold leading-none text-blue-400">{contactadoCount}</span>
+                  <span className="text-[8px] font-semibold uppercase tracking-wide text-blue-400/60">Seguim.</span>
+                </div>
+                <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-white/5 px-2 py-2">
+                  <span className="text-base font-bold leading-none text-white/40">{cerradoCount}</span>
+                  <span className="text-[8px] font-semibold uppercase tracking-wide text-white/20">Cerradas</span>
+                </div>
+              </div>
+            </div>
+            <nav className="flex-1 space-y-1 px-3 py-2">
+              {tabs.map((t) => (
+                <button
+                  key={t.key}
+                  onClick={() => { setTab(t.key); setSidebarOpen(false); }}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 ${
+                    tab === t.key
+                      ? "bg-copper/10 text-copper"
+                      : "text-white/40 hover:bg-white/5 hover:text-white/70"
+                  }`}
+                >
+                  <t.icon size={16} />
+                  {t.label}
+                  {t.key === "presupuestos" && newCount > 0 && (
+                    <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-copper text-[10px] font-bold text-white">
+                      {newCount}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </nav>
+            <div className="border-t border-white/6 px-3 py-4">
+              <button
+                onClick={handleLogout}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/30 transition-colors hover:bg-red-500/10 hover:text-red-400"
+              >
+                <LogOut size={16} />
+                Cerrar sesión
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {/* ── Sidebar fijo (escritorio ≥ md) ── */}
+      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-white/6 bg-[#0D0D0D] md:flex">
         <div className="border-b border-white/6 px-5 py-5">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
             Admin Panel
@@ -229,8 +331,8 @@ export default function AdminDashboard() {
         </div>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1 overflow-y-auto p-8">
+      {/* Main — padding superior compensa la barra fija en móvil */}
+      <main className="flex-1 overflow-y-auto px-4 pb-8 pt-[4.5rem] sm:px-6 md:p-8 md:pt-8">
         {tab === "presupuestos" && (
           <PresupuestosPanel
             presupuestos={presupuestos}
@@ -629,7 +731,7 @@ function PresupuestosPanel({
                     {p.descripcion}
                   </p>
                 </div>
-                <div className="mt-5 flex items-center gap-3">
+                <div className="mt-5 flex flex-wrap items-center gap-2">
                   <p className="text-[10px] uppercase tracking-wider text-white/20">
                     Estado:
                   </p>
@@ -679,6 +781,7 @@ function ReformasPanel({
   const [creating, setCreating] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [savingFeatured, setSavingFeatured] = useState(false);
+  const [featuredOpen, setFeaturedOpen] = useState(false); // sección destacadas minimizada por defecto
 
   const handleDelete = async (id: string) => {
     const r = reformas.find((ref) => ref.id === id);
@@ -742,7 +845,7 @@ function ReformasPanel({
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-heading text-2xl">Reformas</h1>
           <p className="mt-1 text-sm text-white/30">
@@ -760,7 +863,18 @@ function ReformasPanel({
 
       {/* ── Selector de reformas destacadas ── */}
       <section className="mt-8 rounded-xl border border-white/6 bg-[#141414] p-6">
-        <div className="flex items-center justify-between">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => setFeaturedOpen((v) => !v)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setFeaturedOpen((v) => !v);
+            }
+          }}
+          className="flex items-center justify-between cursor-pointer"
+        >
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
               Reformas Destacadas
@@ -769,13 +883,26 @@ function ReformasPanel({
               Aparecen en la portada · máx. 3
             </p>
           </div>
-          {savingFeatured && (
-            <Loader2 size={14} className="animate-spin text-white/30" />
-          )}
+          <div className="flex items-center gap-2">
+            {savingFeatured && (
+              <Loader2 size={14} className="animate-spin text-white/30" />
+            )}
+            {/* Botón para colapsar/expandir la sección */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setFeaturedOpen((v) => !v);
+              }}
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-white/30 transition-colors hover:bg-white/5 hover:text-white/60"
+            >
+              {featuredOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              {featuredOpen ? "Minimizar" : "Expandir"}
+            </button>
+          </div>
         </div>
 
-        {/* 3 slots visuales */}
-        <div className="mt-5 grid grid-cols-3 gap-4">
+        {/* 3 slots visuales — visibles solo cuando la sección está expandida */}
+        {featuredOpen && <div className="mt-5 grid grid-cols-3 gap-4">
           {[0, 1, 2].map((slot) => {
             const reforma = featuredSlots[slot];
             /* Slot vacío solo es clickable si es el siguiente disponible */
@@ -860,7 +987,7 @@ function ReformasPanel({
               </button>
             );
           })}
-        </div>
+        </div>}
 
         {/* Vista previa eliminada por configuración */}
       </section>
@@ -1125,7 +1252,7 @@ function ReformaEditor({
       onClick={onClose}
     >
       <div
-        className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-8"
+        className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-5 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -1356,7 +1483,7 @@ function FeaturedPickerModal({
       onClick={onClose}
     >
       <div
-        className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-8"
+        className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-5 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -1494,7 +1621,7 @@ function CarouselPanel({
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-heading text-2xl">Carrusel Hero</h1>
           <p className="mt-1 text-sm text-white/30">
@@ -1587,7 +1714,7 @@ function CarouselPanel({
           onClick={() => setShowAddModal(false)}
         >
           <div
-            className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-8"
+            className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-5 sm:p-8"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -1748,11 +1875,10 @@ function ConfigPanel({
   const biz = business as Record<string, unknown>;
   const insta = (biz.instagram ?? {}) as Record<string, string>;
   const schedule = (biz.schedule ?? {}) as Record<string, string>;
-  const loc = (biz.location ?? {}) as Record<string, string>;
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-heading text-2xl">Configuración</h1>
           <p className="mt-1 text-sm text-white/30">
@@ -2027,6 +2153,7 @@ function LocalizacionPanel({
     postalCode: config?.storeAddress?.postalCode ?? "",
     city: config?.storeAddress?.city ?? "",
     region: config?.storeAddress?.region ?? "",
+    serviceArea: config?.storeAddress?.serviceArea ?? "",
     mapsQuery: config?.storeAddress?.mapsQuery ?? "",
   });
   const [saving, setSaving] = useState(false);
@@ -2160,8 +2287,54 @@ function LocalizacionPanel({
             </p>
 
             {/* Grid de fotos con drag & drop */}
-            <div className="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-5">
-              {photos.map((photo, i) => (
+            <div className="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-5 items-end">
+              {/* Contenedor agrupador de las 3 fotos principales con borde naranja único */}
+              {photos.length >= 3 && (
+                <div className="col-span-3 flex flex-col gap-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-copper">Destacadas en web</span>
+                <div className="grid grid-cols-3 gap-3 rounded-xl ring-[4px] ring-copper p-1">
+                  {photos.slice(0, 3).map((photo, i) => (
+                    <div
+                      key={photo.src}
+                      draggable
+                      onDragStart={() => handleDragStart(i)}
+                      onDragOver={(e) => handleDragOver(e, i)}
+                      onDragEnd={handleDragEnd}
+                      className={`group relative cursor-grab active:cursor-grabbing ${
+                        dragIndex === i ? "opacity-50" : ""
+                      }`}
+                    >
+                      <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1A1A1A]">
+                        <Image
+                          src={photo.src}
+                          alt={photo.alt || ""}
+                          fill
+                          sizes="120px"
+                          className="pointer-events-none object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/30">
+                          <GripVertical
+                            size={16}
+                            className="text-white/0 transition-colors group-hover:text-white/70"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleDeletePhoto(photo.src)}
+                        className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                      >
+                        <X size={10} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                </div>
+              )}
+
+              {/* Resto de fotos (a partir de la 4ª) sin borde especial */}
+              {photos.map((photo, i) => {
+                if (i < 3 && photos.length >= 3) return null; // ya renderizadas arriba
+                return (
                 <div
                   key={photo.src}
                   draggable
@@ -2172,7 +2345,7 @@ function LocalizacionPanel({
                     dragIndex === i ? "opacity-50" : ""
                   }`}
                 >
-                  <div className={`relative aspect-square overflow-hidden rounded-lg bg-[#1A1A1A] ${i < 3 ? 'ring-2 ring-copper' : ''}`}>
+                  <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1A1A1A]">
                     <Image
                       src={photo.src}
                       alt={photo.alt || ""}
@@ -2187,16 +2360,15 @@ function LocalizacionPanel({
                       />
                     </div>
                   </div>
-                  {/* Botón eliminar */}
                   <button
                     onClick={() => handleDeletePhoto(photo.src)}
                     className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
                   >
                     <X size={10} />
                   </button>
-                  {/* Eliminada etiqueta 'Principal' — ahora las 3 primeras muestran contorno naranja */}
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Vista previa del mosaico web */}
@@ -2271,6 +2443,22 @@ function LocalizacionPanel({
               className={inputClass}
               placeholder="Gipuzkoa, País Vasco"
             />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+              Zona de trabajo
+            </label>
+            <input
+              value={address.serviceArea}
+              onChange={(e) =>
+                setAddress((prev) => ({ ...prev, serviceArea: e.target.value }))
+              }
+              className={inputClass}
+              placeholder="San Sebastián, Irún, Tolosa y alrededores"
+            />
+            <p className="mt-1 text-[10px] text-white/20">
+              Descripción de la zona de cobertura. Se muestra en la sección de contacto.
+            </p>
           </div>
           <div className="sm:col-span-2">
             <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">

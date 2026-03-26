@@ -406,8 +406,10 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
     {
       icon: MapPin,
       title: "Zona de Trabajo",
-      text: business?.location.serviceArea,
-      sub: business?.location.region,
+      text: config?.storeAddress?.serviceArea,
+      sub: config?.storeAddress
+        ? `${config.storeAddress.street}, ${config.storeAddress.postalCode} ${config.storeAddress.city}`
+        : undefined,
       href: undefined,
     },
     {

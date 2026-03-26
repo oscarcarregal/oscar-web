@@ -28,6 +28,7 @@ export interface StoreAddress {
   postalCode: string;
   city: string;
   region: string;
+  serviceArea: string;
   mapsQuery: string;
 }
 
@@ -44,11 +45,6 @@ export interface BusinessConfig {
     days: string;
     hours: string;
     compact: string;
-  };
-  location: {
-    city: string;
-    serviceArea: string;
-    region: string;
   };
   responseTime: string;
   experience: string;

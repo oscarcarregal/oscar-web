@@ -4,7 +4,7 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import type { ReformaProject } from "../lib/data";
 
@@ -102,7 +102,6 @@ function ProjectCard({ project, index, visible }: { project: ReformaProject; ind
 
 export default function Portfolio({ projects }: { projects: ReformaProject[] }) {
   const { ref, visible } = useScrollReveal();
-  const [open, setOpen] = useState(false); // cerrado por defecto
 
   return (
     <section id="trabajos" className="scroll-mt-28 bg-white py-28 md:py-36">
@@ -112,27 +111,14 @@ export default function Portfolio({ projects }: { projects: ReformaProject[] }) 
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <div className="flex items-center justify-center gap-4">
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
-                Nuestros Trabajos
-              </span>
-              <h2 className="mt-4 text-3xl text-carbon md:text-4xl lg:text-[2.75rem]">
-                Reformas que hablan
-                <br className="hidden sm:block" />
-                por sí solas
-              </h2>
-            </div>
-            <button
-              onClick={() => setOpen((v) => !v)}
-              aria-expanded={open}
-              className="ml-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-carbon shadow-sm hover:bg-gray-50"
-            >
-              <ChevronDown className={`transition-transform ${open ? "rotate-180" : ""}`} size={16} />
-              {open ? "Ocultar" : "Mostrar reformas"}
-            </button>
-
-          </div>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
+            Nuestros Trabajos
+          </span>
+          <h2 className="mt-4 text-3xl text-carbon md:text-4xl lg:text-[2.75rem]">
+            Reformas que hablan
+            <br className="hidden sm:block" />
+            por sí solas
+          </h2>
 
           <span className="mx-auto mt-6 decorative-line" />
           <p className="mt-6 text-base leading-relaxed text-silver">
@@ -142,39 +128,33 @@ export default function Portfolio({ projects }: { projects: ReformaProject[] }) 
         </div>
 
         {projects.length > 0 ? (
-          open ? (
-            <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {projects.map((p, i) => (
-                <ProjectCard key={p.id} project={p} index={i} visible={visible} />
-              ))}
-            </div>
-          ) : (
-            <div className="mt-8 text-center text-sm text-silver">Sección plegada. Pulsa "Mostrar reformas" para desplegarla.</div>
-          )
+          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {projects.map((p, i) => (
+              <ProjectCard key={p.id} project={p} index={i} visible={visible} />
+            ))}
+          </div>
         ) : (
           <div className="mt-12 rounded-2xl border border-gray-200 bg-gray-bg p-8 text-center text-sm text-silver">
             No hay proyectos destacados disponibles en este momento.
           </div>
         )}
 
-        {open && (
-          <div
-            className={`mt-16 text-center transition-all duration-700 delay-500 ${
-              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
+        <div
+          className={`mt-16 text-center transition-all duration-700 delay-500 ${
+            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <Link
+            href="/trabajos"
+            className="group inline-flex items-center gap-3 rounded-full border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-carbon shadow-sm transition-all duration-300 hover:border-copper/30 hover:shadow-lg hover:shadow-copper/10"
           >
-            <Link
-              href="/trabajos"
-              className="group inline-flex items-center gap-3 rounded-full border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-carbon shadow-sm transition-all duration-300 hover:border-copper/30 hover:shadow-lg hover:shadow-copper/10"
-            >
-              Ver todos los trabajos
-              <ArrowRight
-                size={16}
-                className="text-copper transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Link>
-          </div>
-        )}
+            Ver todos los trabajos
+            <ArrowRight
+              size={16}
+              className="text-copper transition-transform duration-300 group-hover:translate-x-1"
+            />
+          </Link>
+        </div>
       </div>
     </section>
   );

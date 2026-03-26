@@ -23,6 +23,7 @@ export default function Footer() {
 
   const business = siteConfig?.business;
   const footer = siteConfig?.footer;
+  const storeAddress = siteConfig?.storeAddress;
   const phoneHref = business?.phoneNumber ? `tel:+34${business.phoneNumber}` : undefined;
 
   return (
@@ -121,7 +122,9 @@ export default function Footer() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
                   <MapPin size={14} className="text-copper" />
                 </div>
-                {business?.location.city}
+                {storeAddress
+                  ? `${storeAddress.street}, ${storeAddress.postalCode} ${storeAddress.city}`
+                  : null}
               </li>
               <li className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">

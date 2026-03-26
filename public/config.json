@@ -13,11 +13,6 @@
       "hours": "8:00 – 20:00",
       "compact": "Lun – Vie · 8:00 – 20:00"
     },
-    "location": {
-      "city": "Avenida de Tolosa 89, 20018 San Sebastian",
-      "serviceArea": "San Sebastián, Irún Tolosa y alrededores",
-      "region": "Avenida de Tolosa 89, 20018 San Sebastian"
-    },
     "responseTime": "Contacto directo y personalizado",
     "experience": "Más de 15 años de experiencia"
   },
@@ -26,9 +21,8 @@
     "postalCode": "20018",
     "city": "San Sebastian",
     "region": "Gipuzkoa, País Vasco",
-    "mapsQuery": "43.30739782667964,-2.0075817173451656",
-    "mapsUrl": "",
-    "mapsEmbedUrl": ""
+    "serviceArea": "San Sebastián, Irún, Tolosa y alrededores",
+    "mapsQuery": "43.30739782667964,-2.0075817173451656"
   },
   "storePhotos": [
     {

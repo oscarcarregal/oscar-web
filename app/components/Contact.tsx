@@ -33,8 +33,11 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
     {
       icon: MapPin,
       title: "Zona de Trabajo",
-      line1: business?.location.serviceArea,
-      line2: business?.location.region,
+      line1: config?.storeAddress?.serviceArea,
+      // Dirección completa derivada de los campos estructurados
+      line2: config?.storeAddress
+        ? `${config.storeAddress.street}, ${config.storeAddress.postalCode} ${config.storeAddress.city}`
+        : undefined,
       href: undefined,
     },
   ];
