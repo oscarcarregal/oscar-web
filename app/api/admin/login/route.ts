@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   const ip = getClientIpFromHeaders(req.headers);
 
-  const { allowed } = checkRateLimit(ip);
+  const { allowed } = await checkRateLimit(ip);
   if (!allowed) {
     return NextResponse.json(
       { error: "Demasiados intentos. Espera 15 minutos." },
@@ -42,14 +42,14 @@ export async function POST(req: NextRequest) {
     const valid = await verifyPassword(password);
 
     if (!valid) {
-      recordFailedAttempt(ip);
+      await recordFailedAttempt(ip);
       return NextResponse.json(
         { error: "Contraseña incorrecta" },
         { status: 401, headers: NO_STORE_HEADERS }
       );
     }
 
-    clearAttempts(ip);
+    await clearAttempts(ip);
     const token = createSessionToken();
     await setSessionCookie(token);
 

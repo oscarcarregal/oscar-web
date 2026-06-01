@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
 import { sanitizeConfigPayload } from "@/app/lib/config-security";
-import fs from "fs/promises";
-import path from "path";
+import { Redis } from "@upstash/redis";
 
-const CONFIG_PATH = path.join(process.cwd(), "public", "config.json");
+const redis = Redis.fromEnv();
 
 export async function GET() {
   if (!(await requireAuth())) {
@@ -15,11 +14,16 @@ export async function GET() {
   }
 
   try {
-    const data = await fs.readFile(CONFIG_PATH, "utf-8");
-    return NextResponse.json(JSON.parse(data), { headers: NO_STORE_HEADERS });
+    let data = await redis.get("site:config");
+    if (!data) {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const res = await fetch(`${baseUrl}/config.json`);
+      if (res.ok) data = await res.json();
+    }
+    return NextResponse.json(data, { headers: NO_STORE_HEADERS });
   } catch {
     return NextResponse.json(
-      { error: "Error leyendo config" },
+      { error: "Error leyendo configuración" },
       { status: 500, headers: NO_STORE_HEADERS }
     );
   }
@@ -51,7 +55,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await fs.writeFile(CONFIG_PATH, JSON.stringify(validation.data, null, 2), "utf-8");
+    await redis.set("site:config", validation.data);
     return NextResponse.json({ success: true }, { headers: NO_STORE_HEADERS });
   } catch {
     return NextResponse.json(

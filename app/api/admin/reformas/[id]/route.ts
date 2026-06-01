@@ -1,8 +1,35 @@
 /* Rutas API para obtener, actualizar y eliminar una reforma individual */
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, sanitizeId } from "@/app/lib/admin-auth";
-import fs from "fs/promises";
-import path from "path";
+import { sanitizeConfigPayload } from "@/app/lib/config-security";
+import { Redis } from "@upstash/redis";
+import { del } from "@vercel/blob";
+
+const redis = Redis.fromEnv();
+
+function sanitizeStr(val: unknown, max: number): string {
+  if (typeof val !== "string") return "";
+  return val.trim().slice(0, max);
+}
+
+function sanitizeTags(val: unknown, maxItems = 20, maxLen = 60): string[] {
+  if (!Array.isArray(val)) return [];
+  return val
+    .filter((t) => typeof t === "string")
+    .map((t) => (t as string).trim().slice(0, maxLen))
+    .filter(Boolean)
+    .slice(0, maxItems);
+}
+
+// Nombres de archivo simples o URLs completas de Vercel Blob
+function sanitizeImageNames(val: unknown): string[] {
+  if (!Array.isArray(val)) return [];
+  return val
+    .filter((v) => typeof v === "string")
+    .map((v) => (v as string).trim())
+    .filter((v) => v.startsWith("http") || /^[a-zA-Z0-9._-]+$/.test(v))
+    .slice(0, 500);
+}
 
 const REFORMAS_DIR = path.join(process.cwd(), "public", "reformas");
 const REFORMAS_PATH = path.join(process.cwd(), "public", "reformas.json");
@@ -18,15 +45,20 @@ interface ReformaEntry {
 
 async function readReformas(): Promise<ReformaEntry[]> {
   try {
-    const raw = await fs.readFile(REFORMAS_PATH, "utf-8");
-    return JSON.parse(raw);
+    let data = await redis.get<ReformaEntry[]>("reformas");
+    if (!data) {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const res = await fetch(`${baseUrl}/reformas.json`);
+      if (res.ok) data = await res.json();
+    }
+    return Array.isArray(data) ? data : [];
   } catch {
     return [];
   }
 }
 
 async function writeReformas(reformas: ReformaEntry[]): Promise<void> {
-  await fs.writeFile(REFORMAS_PATH, JSON.stringify(reformas, null, 2), "utf-8");
+  await redis.set("reformas", reformas);
 }
 
 export async function GET(
@@ -70,7 +102,7 @@ export async function PUT(
   }
 
   try {
-    const { title, description, tags, images } = await req.json();
+    const body = await req.json();
     const reformas = await readReformas();
     const index = reformas.findIndex((r) => r.id === safeId);
 
@@ -81,10 +113,10 @@ export async function PUT(
     const existing = reformas[index];
     reformas[index] = {
       id: safeId,
-      title: title ?? existing.title,
-      description: description ?? existing.description,
-      tags: tags ?? existing.tags,
-      images: images ?? existing.images,
+      title: body.title !== undefined ? sanitizeStr(body.title, 200) || existing.title : existing.title,
+      description: body.description !== undefined ? sanitizeStr(body.description, 5000) : existing.description,
+      tags: body.tags !== undefined ? sanitizeTags(body.tags) : existing.tags,
+      images: body.images !== undefined ? sanitizeImageNames(body.images) : existing.images,
     };
 
     await writeReformas(reformas);
@@ -111,21 +143,35 @@ export async function DELETE(
   try {
     // Eliminar del fichero centralizado de reformas
     const reformas = await readReformas();
+    const reformaToDelete = reformas.find((r) => r.id === safeId);
     const updated = reformas.filter((r) => r.id !== safeId);
     await writeReformas(updated);
 
-    // Limpiar referencias en config.json (featured y carousel)
-    const configRaw = await fs.readFile(CONFIG_PATH, "utf-8");
-    const config = JSON.parse(configRaw);
-    config.featuredReformas = config.featuredReformas.filter((r: string) => r !== safeId);
-    config.heroCarousel = config.heroCarousel.filter(
-      (s: { reforma: string }) => s.reforma !== safeId
-    );
-    await fs.writeFile(CONFIG_PATH, JSON.stringify(config, null, 2), "utf-8");
+    // Limpiar referencias en config (featured y carousel) usando Redis
+    let config: any = await redis.get("site:config");
+    if (!config) {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const res = await fetch(`${baseUrl}/config.json`);
+      if (res.ok) config = await res.json();
+    }
+    if (config) {
+      config.featuredReformas = (config.featuredReformas ?? []).filter((r: string) => r !== safeId);
+      config.heroCarousel = (config.heroCarousel ?? []).filter(
+        (s: { reforma: string }) => s.reforma !== safeId
+      );
+      const validation = sanitizeConfigPayload(config);
+      if (validation.ok && validation.data) {
+        await redis.set("site:config", validation.data);
+      }
+    }
 
-    // Eliminar directorio de imágenes
-    const reformaDir = path.join(REFORMAS_DIR, safeId);
-    await fs.rm(reformaDir, { recursive: true, force: true });
+    // Eliminar imágenes de Vercel Blob
+    if (reformaToDelete && reformaToDelete.images.length > 0) {
+      const blobUrls = reformaToDelete.images.filter(img => img.startsWith("http"));
+      if (blobUrls.length > 0) {
+        await del(blobUrls).catch(() => console.error("Error borrando blobs en cascada"));
+      }
+    }
 
     return NextResponse.json({ success: true });
   } catch {

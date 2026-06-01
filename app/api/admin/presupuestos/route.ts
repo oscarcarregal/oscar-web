@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
-import fs from "fs/promises";
-import path from "path";
+import { Redis } from "@upstash/redis";
 
-const PRESUPUESTOS_PATH = path.join(process.cwd(), "data", "presupuestos.json");
+const redis = Redis.fromEnv();
 
 export interface StoredPresupuesto {
   id: string;
@@ -17,16 +16,12 @@ export interface StoredPresupuesto {
 }
 
 async function readPresupuestos(): Promise<StoredPresupuesto[]> {
-  try {
-    const data = await fs.readFile(PRESUPUESTOS_PATH, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
+  const data = await redis.get<StoredPresupuesto[]>("presupuestos");
+  return Array.isArray(data) ? data : [];
 }
 
 async function writePresupuestos(data: StoredPresupuesto[]): Promise<void> {
-  await fs.writeFile(PRESUPUESTOS_PATH, JSON.stringify(data, null, 2), "utf-8");
+  await redis.set("presupuestos", data);
 }
 
 export async function GET() {

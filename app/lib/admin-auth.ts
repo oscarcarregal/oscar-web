@@ -1,94 +1,54 @@
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { Redis } from "@upstash/redis";
 
 const COOKIE_NAME = "admin_session";
-const SESSION_TTL = 10 * 60 * 1000; // 10 minutes
-const ATTEMPT_TTL = 30 * 60 * 1000; // 30 minutes
+const SESSION_TTL = 30 * 60 * 1000; // 30 minutos
+const ATTEMPT_TTL = 30 * 60 * 1000; // 30 minutos
 export const NO_STORE_HEADERS = Object.freeze({
   "Cache-Control": "no-store, max-age=0",
 });
 
-/* ─── Rate Limiter (in-memory) ─── */
+/* ─── Rate Limiter (Redis) ─── */
 
-const attempts = new Map<
-  string,
-  { count: number; blockedUntil: number; lastSeen: number }
->();
 const MAX_ATTEMPTS = 5;
-const BLOCK_DURATION = 15 * 60 * 1000; // 15 minutes
+const BLOCK_DURATION = 15 * 60; // 15 minutes in seconds
+const ATTEMPT_TTL_SEC = 30 * 60; // 30 minutes in seconds
 
-function normalizeIp(ip: string): string {
-  const candidate = ip.trim();
-  if (!candidate) return "unknown";
-
-  if (candidate === "::1") return "127.0.0.1";
-  if (candidate.startsWith("::ffff:")) return candidate.slice(7);
-
-  return candidate;
-}
-
-export function getClientIpFromHeaders(headers: Headers): string {
-  const forwarded = headers.get("x-forwarded-for");
-  if (forwarded) {
-    const firstIp = forwarded.split(",")[0] ?? "";
-    return normalizeIp(firstIp);
-  }
-
-  const realIp = headers.get("x-real-ip");
-  if (realIp) {
-    return normalizeIp(realIp);
-  }
-
-  return "unknown";
-}
-
-function purgeAttempts(now: number): void {
-  for (const [ip, record] of attempts.entries()) {
-    const expired =
-      (record.blockedUntil > 0 && record.blockedUntil <= now) ||
-      now - record.lastSeen > ATTEMPT_TTL;
-    if (expired) {
-      attempts.delete(ip);
-    }
-  }
-}
-
-export function checkRateLimit(ip: string): {
+export async function checkRateLimit(ip: string): Promise<{
   allowed: boolean;
   remaining: number;
-} {
-  const now = Date.now();
-  purgeAttempts(now);
+}> {
+  const redis = Redis.fromEnv();
+  const key = `rl:login:${ip}`;
+  const count = await redis.get<number>(key) || 0;
 
-  const record = attempts.get(ip);
-
-  if (record && record.blockedUntil > now) {
+  if (count >= MAX_ATTEMPTS) {
     return { allowed: false, remaining: 0 };
-  }
-
-  if (record && record.blockedUntil <= now && record.count >= MAX_ATTEMPTS) {
-    attempts.delete(ip);
   }
 
   return {
     allowed: true,
-    remaining: MAX_ATTEMPTS - (record?.count ?? 0),
+    remaining: MAX_ATTEMPTS - count,
   };
 }
 
-export function recordFailedAttempt(ip: string): void {
-  const record = attempts.get(ip) ?? { count: 0, blockedUntil: 0, lastSeen: Date.now() };
-  record.count += 1;
-  record.lastSeen = Date.now();
-  if (record.count >= MAX_ATTEMPTS) {
-    record.blockedUntil = Date.now() + BLOCK_DURATION;
+export async function recordFailedAttempt(ip: string): Promise<void> {
+  const redis = Redis.fromEnv();
+  const key = `rl:login:${ip}`;
+  const count = await redis.incr(key);
+  
+  if (count === 1) {
+    await redis.expire(key, ATTEMPT_TTL_SEC);
+  } else if (count >= MAX_ATTEMPTS) {
+    await redis.expire(key, BLOCK_DURATION);
   }
-  attempts.set(ip, record);
 }
 
-export function clearAttempts(ip: string): void {
-  attempts.delete(ip);
+export async function clearAttempts(ip: string): Promise<void> {
+  const redis = Redis.fromEnv();
+  await redis.del(`rl:login:${ip}`);
 }
 
 /* ─── Password Verification ─── */
@@ -99,14 +59,12 @@ export async function verifyPassword(password: string): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }
 
-/* ─── Revoked Tokens (in-memory) ─── */
+/* ─── Revoked Tokens (Redis) ─── */
 
-const revokedTokens = new Set<string>();
-
-export function revokeToken(token: string): void {
-  revokedTokens.add(token);
-  // Auto-cleanup after TTL to prevent memory leaks
-  setTimeout(() => revokedTokens.delete(token), SESSION_TTL);
+export async function revokeToken(token: string): Promise<void> {
+  const redis = Redis.fromEnv();
+  // El TTL de la cookie es SESSION_TTL (milisegundos)
+  await redis.set(`revoked:${token}`, 1, { ex: Math.floor(SESSION_TTL / 1000) });
 }
 
 /* ─── Session Token ─── */
@@ -130,7 +88,7 @@ export function createSessionToken(): string {
   return `${payload}.${signature}`;
 }
 
-export function verifySessionToken(token: string): boolean {
+export async function verifySessionToken(token: string): Promise<boolean> {
   let decodedToken = token;
   try {
     decodedToken = decodeURIComponent(token);
@@ -138,8 +96,10 @@ export function verifySessionToken(token: string): boolean {
     return false;
   }
 
-  // Check if token has been revoked
-  if (revokedTokens.has(decodedToken)) return false;
+  // Check if token has been revoked in Redis
+  const redis = Redis.fromEnv();
+  const isRevoked = await redis.exists(`revoked:${decodedToken}`);
+  if (isRevoked) return false;
 
   const parts = decodedToken.split(".");
   if (parts.length !== 2) return false;
@@ -192,13 +152,26 @@ export async function getSession(): Promise<boolean> {
   const store = await cookies();
   const token = store.get(COOKIE_NAME)?.value;
   if (!token) return false;
-  return verifySessionToken(token);
+  return await verifySessionToken(token);
 }
 
 /* ─── Request Auth Guard ─── */
 
 export async function requireAuth(): Promise<boolean> {
   return getSession();
+}
+
+/**
+ * Renueva la cookie de sesión si el token actual es válido.
+ * Llamar desde rutas API autenticadas para implementar sliding session.
+ */
+export async function renewSession(): Promise<void> {
+  const store = await cookies();
+  const token = store.get(COOKIE_NAME)?.value;
+  if (token && await verifySessionToken(token)) {
+    const newToken = createSessionToken();
+    await setSessionCookie(newToken);
+  }
 }
 
 /* ─── Path Safety ─── */

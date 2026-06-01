@@ -4,22 +4,41 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
 import { sanitizeConfigPayload } from "@/app/lib/config-security";
-import fs from "fs/promises";
-import path from "path";
+import { Redis } from "@upstash/redis";
+import { put, del } from "@vercel/blob";
 
-const TIENDA_DIR = path.join(process.cwd(), "public", "tienda");
-const CONFIG_PATH = path.join(process.cwd(), "public", "config.json");
+const redis = Redis.fromEnv();
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
+function isValidImageBuffer(buf: Buffer): boolean {
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return true;
+  if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) return true;
+  if (buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 &&
+      buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50) return true;
+  return false;
+}
+
+function safeExtFromBuffer(buf: Buffer): string {
+  if (buf[0] === 0xff && buf[1] === 0xd8) return "jpg";
+  if (buf[0] === 0x89 && buf[1] === 0x50) return "png";
+  if (buf[0] === 0x52 && buf[1] === 0x49) return "webp";
+  return "jpg";
+}
+
 async function readConfig() {
-  const raw = await fs.readFile(CONFIG_PATH, "utf-8");
-  return JSON.parse(raw);
+  let data = await redis.get("site:config");
+  if (!data) {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const res = await fetch(`${baseUrl}/config.json`);
+    if (res.ok) data = await res.json();
+  }
+  return data || {};
 }
 
 async function writeConfig(data: unknown) {
-  await fs.writeFile(CONFIG_PATH, JSON.stringify(data, null, 2), "utf-8");
+  await redis.set("site:config", data);
 }
 
 /* POST — sube una o varias imágenes al showroom */
@@ -42,22 +61,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await fs.mkdir(TIENDA_DIR, { recursive: true });
-
     const savedPhotos: { src: string; alt: string }[] = [];
 
     for (const file of files) {
       if (!ALLOWED_TYPES.includes(file.type)) continue;
       if (file.size > MAX_FILE_SIZE) continue;
 
-      const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-      // Nombre seguro sin caracteres especiales
-      const safeName = `tienda_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
-      const filePath = path.join(TIENDA_DIR, safeName);
-
       const buffer = Buffer.from(await file.arrayBuffer());
-      await fs.writeFile(filePath, buffer);
-      savedPhotos.push({ src: `/tienda/${safeName}`, alt: "" });
+
+      // Validar magic number real del archivo
+      if (!isValidImageBuffer(buffer)) continue;
+
+      const ext = safeExtFromBuffer(buffer);
+      const safeName = `tienda/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+      const blob = await put(safeName, buffer, {
+        access: 'public',
+        contentType: file.type
+      });
+
+      savedPhotos.push({ src: blob.url, alt: "" });
     }
 
     // Añadir las nuevas fotos al array storePhotos de config.json
@@ -100,18 +123,10 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    // Extraer solo el nombre de fichero para evitar path traversal
-    const safeName = path.basename(src);
-    if (!safeName || safeName.startsWith(".")) {
-      return NextResponse.json(
-        { error: "Ruta inválida" },
-        { status: 400, headers: NO_STORE_HEADERS }
-      );
+    // Borrar la URL del Blob si existe
+    if (src.startsWith("http")) {
+      await del(src).catch(() => console.error("Error borrando blob de tienda"));
     }
-
-    // Eliminar el fichero del disco (sin fallar si ya no existe)
-    const filePath = path.join(TIENDA_DIR, safeName);
-    await fs.unlink(filePath).catch(() => {});
 
     // Actualizar config.json eliminando la foto del array storePhotos
     const config = await readConfig();

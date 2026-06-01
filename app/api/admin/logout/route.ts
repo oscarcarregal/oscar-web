@@ -8,9 +8,9 @@ export async function POST() {
   const token = store.get("admin_session")?.value;
   if (token) {
     try {
-      revokeToken(decodeURIComponent(token));
+      await revokeToken(decodeURIComponent(token));
     } catch {
-      revokeToken(token);
+      await revokeToken(token);
     }
   }
   await clearSessionCookie();

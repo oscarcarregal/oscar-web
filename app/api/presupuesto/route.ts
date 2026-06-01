@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
 import crypto from "crypto";
+import { getClientIpFromHeaders } from "@/app/lib/admin-auth";
+import { Redis } from "@upstash/redis";
 
-const PRESUPUESTOS_PATH = path.join(process.cwd(), "data", "presupuestos.json");
+const redis = Redis.fromEnv();
+
+// Rate limit independiente del de login: máx 5 presupuestos por IP cada 10 min
+const PRESUP_MAX = 5;
+const PRESUP_WINDOW_SEC = 10 * 60; // 10 minutos en segundos
+
+async function checkPresupuestoLimit(ip: string): Promise<boolean> {
+  const key = `rl:presupuesto:${ip}`;
+  const count = await redis.incr(key);
+
+  if (count === 1) {
+    await redis.expire(key, PRESUP_WINDOW_SEC);
+  }
+
+  return count <= PRESUP_MAX;
+}
 
 interface StoredPresupuesto {
   id: string;
@@ -31,6 +46,16 @@ function isValidPhone(phone: string) {
 }
 
 export async function POST(req: NextRequest) {
+  // Comprobación de rate limit por IP
+  const ip = getClientIpFromHeaders(req.headers);
+  const allowed = await checkPresupuestoLimit(ip);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Demasiadas solicitudes. Inténtalo de nuevo en unos minutos." },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await req.json();
 
@@ -76,20 +101,13 @@ export async function POST(req: NextRequest) {
     };
 
     // Read existing
-    let data: StoredPresupuesto[] = [];
-    try {
-      const raw = await fs.readFile(PRESUPUESTOS_PATH, "utf-8");
-      data = JSON.parse(raw);
-    } catch {
-      // File doesn't exist yet
-    }
+    let data = await redis.get<StoredPresupuesto[]>("presupuestos") || [];
+    if (!Array.isArray(data)) data = [];
 
     // Prepend (newest first)
     data.unshift(presupuesto);
 
-    // Ensure data directory exists
-    await fs.mkdir(path.dirname(PRESUPUESTOS_PATH), { recursive: true });
-    await fs.writeFile(PRESUPUESTOS_PATH, JSON.stringify(data, null, 2), "utf-8");
+    await redis.set("presupuestos", data);
 
     return NextResponse.json({ success: true, id: presupuesto.id });
   } catch {

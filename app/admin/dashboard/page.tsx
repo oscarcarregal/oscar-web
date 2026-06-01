@@ -105,6 +105,7 @@ export default function AdminDashboard() {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("presupuestos");
   const [loading, setLoading] = useState(true);
+  const [sessionExpired, setSessionExpired] = useState(false);
   const [config, setConfig] = useState<SiteConfig | null>(null);
   const [reformas, setReformas] = useState<Reforma[]>([]);
   const [presupuestos, setPresupuestos] = useState<Presupuesto[]>([]);
@@ -123,7 +124,7 @@ export default function AdminDashboard() {
       setPresupuestos(presData);
     } catch (err) {
       if (err instanceof Error && err.message === "UNAUTHORIZED") {
-        router.replace("/admin");
+        setSessionExpired(true);
         return;
       }
       console.error("Error loading admin data:", err);
@@ -150,6 +151,26 @@ export default function AdminDashboard() {
     router.replace("/admin");
   };
 
+  if (sessionExpired) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-[#0A0A0A]">
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 px-8 py-10 text-center">
+          <AlertCircle size={32} className="text-amber-400" />
+          <h2 className="font-heading text-lg text-white">Sesión expirada</h2>
+          <p className="text-sm text-white/40">
+            Tu sesión ha expirado por inactividad.<br />Vuelve a iniciar sesión para continuar.
+          </p>
+          <button
+            onClick={() => router.replace("/admin")}
+            className="mt-2 rounded-lg bg-copper px-5 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-80"
+          >
+            Ir al login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-[#0A0A0A]">
@@ -160,6 +181,7 @@ export default function AdminDashboard() {
       </div>
     );
   }
+
 
   const tabs: { key: Tab; label: string; icon: typeof LayoutDashboard }[] = [
     { key: "presupuestos", label: "Consultas", icon: FileText },
@@ -360,81 +382,6 @@ export default function AdminDashboard() {
           <ConfigPanel config={config} onRefresh={loadData} />
         )}
       </main>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════ OVERVIEW ═══════════════════════════════ */
-
-function OverviewPanel({
-  reformas,
-  presupuestos,
-  config,
-}: {
-  reformas: Reforma[];
-  presupuestos: Presupuesto[];
-  config: SiteConfig | null;
-}) {
-  const newCount = presupuestos.filter((p) => p.estado === "nuevo").length;
-  const contactedCount = presupuestos.filter(
-    (p) => p.estado === "contactado"
-  ).length;
-  const totalImages = reformas.reduce((acc, r) => acc + r.images.length, 0);
-
-  const stats = [
-    { label: "Reformas", value: reformas.length, color: "text-copper", bg: "bg-copper/10" },
-    { label: "Consultas nuevas", value: newCount, color: "text-green-400", bg: "bg-green-400/10" },
-    { label: "En seguimiento", value: contactedCount, color: "text-blue-400", bg: "bg-blue-400/10" },
-    { label: "Total imágenes", value: totalImages, color: "text-purple-400", bg: "bg-purple-400/10" },
-    { label: "Slides carrusel", value: config?.heroCarousel.length ?? 0, color: "text-amber-400", bg: "bg-amber-400/10" },
-    { label: "Tags", value: config?.tags.length ?? 0, color: "text-teal-400", bg: "bg-teal-400/10" },
-  ];
-
-  return (
-    <div>
-      <h1 className="font-heading text-2xl">Panel de Control</h1>
-      <p className="mt-1 text-sm text-white/30">
-        Resumen general de tu web y consultas
-      </p>
-
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {stats.map((s) => (
-          <div
-            key={s.label}
-            className="rounded-xl border border-white/6 bg-[#141414] p-6"
-          >
-            <p className="text-xs font-medium uppercase tracking-wider text-white/30">
-              {s.label}
-            </p>
-            <p className={`mt-2 text-3xl font-bold ${s.color}`}>{s.value}</p>
-          </div>
-        ))}
-      </div>
-
-      {presupuestos.length > 0 && (
-        <div className="mt-10">
-          <h2 className="font-heading text-lg text-white/70">
-            Últimas consultas
-          </h2>
-          <div className="mt-4 space-y-3">
-            {presupuestos.slice(0, 5).map((p) => (
-              <div
-                key={p.id}
-                className="flex items-center gap-4 rounded-lg border border-white/6 bg-[#141414] p-4"
-              >
-                <StatusBadge estado={p.estado} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{p.nombre}</p>
-                  <p className="text-xs text-white/30">{p.servicio}</p>
-                </div>
-                <p className="text-xs text-white/20">
-                  {new Date(p.fecha).toLocaleDateString("es-ES")}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

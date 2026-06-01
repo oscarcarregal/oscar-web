@@ -1,14 +1,36 @@
 /* Rutas API para subir y eliminar imágenes de una reforma */
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, sanitizeId } from "@/app/lib/admin-auth";
-import fs from "fs/promises";
-import path from "path";
+import { Redis } from "@upstash/redis";
+import { put, del } from "@vercel/blob";
 
-const REFORMAS_DIR = path.join(process.cwd(), "public", "reformas");
-const REFORMAS_PATH = path.join(process.cwd(), "public", "reformas.json");
+const redis = Redis.fromEnv();
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
+/**
+ * Valida los primeros bytes del buffer contra magic numbers conocidos.
+ * Evita que un atacante suba un archivo renombrado como imagen.
+ */
+function isValidImageBuffer(buf: Buffer): boolean {
+  // JPEG: FF D8 FF
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return true;
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) return true;
+  // WebP: 52 49 46 46 ... 57 45 42 50
+  if (buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 &&
+      buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50) return true;
+  return false;
+}
+
+/** Extensión segura derivada del magic number, no del nombre de archivo */
+function safeExtFromBuffer(buf: Buffer): string {
+  if (buf[0] === 0xff && buf[1] === 0xd8) return "jpg";
+  if (buf[0] === 0x89 && buf[1] === 0x50) return "png";
+  if (buf[0] === 0x52 && buf[1] === 0x49) return "webp";
+  return "jpg";
+}
 
 interface ReformaEntry {
   id: string;
@@ -21,15 +43,20 @@ interface ReformaEntry {
 
 async function readReformas(): Promise<ReformaEntry[]> {
   try {
-    const raw = await fs.readFile(REFORMAS_PATH, "utf-8");
-    return JSON.parse(raw);
+    let data = await redis.get<ReformaEntry[]>("reformas");
+    if (!data) {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const res = await fetch(`${baseUrl}/reformas.json`);
+      if (res.ok) data = await res.json();
+    }
+    return Array.isArray(data) ? data : [];
   } catch {
     return [];
   }
 }
 
 async function writeReformas(reformas: ReformaEntry[]): Promise<void> {
-  await fs.writeFile(REFORMAS_PATH, JSON.stringify(reformas, null, 2), "utf-8");
+  await redis.set("reformas", reformas);
 }
 
 export async function POST(
@@ -54,8 +81,7 @@ export async function POST(
       return NextResponse.json({ error: "No se enviaron imágenes" }, { status: 400 });
     }
 
-    const reformaDir = path.join(REFORMAS_DIR, safeId);
-    await fs.mkdir(reformaDir, { recursive: true });
+    // No necesitamos crear carpetas locales con Blob
 
     const savedFiles: string[] = [];
 
@@ -63,13 +89,20 @@ export async function POST(
       if (!ALLOWED_TYPES.includes(file.type)) continue;
       if (file.size > MAX_FILE_SIZE) continue;
 
-      const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-      const safeName = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
-      const filePath = path.join(reformaDir, safeName);
-
       const buffer = Buffer.from(await file.arrayBuffer());
-      await fs.writeFile(filePath, buffer);
-      savedFiles.push(safeName);
+
+      // Validar magic number real del archivo
+      if (!isValidImageBuffer(buffer)) continue;
+
+      const ext = safeExtFromBuffer(buffer);
+      const safeName = `reformas/${safeId}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+      const blob = await put(safeName, buffer, { 
+        access: 'public',
+        contentType: file.type
+      });
+      
+      savedFiles.push(blob.url);
     }
 
     // Actualizar el array de imágenes en reformas.json
@@ -106,16 +139,16 @@ export async function DELETE(
       return NextResponse.json({ error: "Nombre de archivo requerido" }, { status: 400 });
     }
 
-    // Eliminar fichero del disco
-    const safeName = path.basename(filename);
-    const filePath = path.join(REFORMAS_DIR, safeId, safeName);
-    await fs.unlink(filePath);
+    // Si es una URL de Blob, la borramos (filename será la URL completa)
+    if (filename.startsWith("http")) {
+      await del(filename).catch(() => console.error("Error borrando blob"));
+    }
 
     // Actualizar reformas.json
     const reformas = await readReformas();
     const index = reformas.findIndex((r) => r.id === safeId);
     if (index !== -1) {
-      reformas[index].images = reformas[index].images.filter((img) => img !== safeName);
+      reformas[index].images = reformas[index].images.filter((img) => img !== filename);
       await writeReformas(reformas);
     }
 

@@ -1,8 +1,23 @@
 /* Rutas API para listar y crear reformas (lectura/escritura en reformas.json) */
 import { NextRequest, NextResponse } from "next/server";
-import { requireAuth, sanitizeId } from "@/app/lib/admin-auth";
-import fs from "fs/promises";
-import path from "path";
+import { requireAuth, sanitizeId, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
+import { Redis } from "@upstash/redis";
+
+const redis = Redis.fromEnv();
+
+function sanitizeStr(val: unknown, max: number): string {
+  if (typeof val !== "string") return "";
+  return val.trim().slice(0, max);
+}
+
+function sanitizeTags(val: unknown, maxItems = 20, maxLen = 60): string[] {
+  if (!Array.isArray(val)) return [];
+  return val
+    .filter((t) => typeof t === "string")
+    .map((t) => (t as string).trim().slice(0, maxLen))
+    .filter(Boolean)
+    .slice(0, maxItems);
+}
 
 const REFORMAS_DIR = path.join(process.cwd(), "public", "reformas");
 const REFORMAS_PATH = path.join(process.cwd(), "public", "reformas.json");
@@ -32,17 +47,15 @@ function createSlugBase(...parts: string[]): string {
 
 async function generateUniqueReformaId(title: string): Promise<string> {
   const base = createSlugBase(title);
+  const reformas = await readReformas();
+  const existingIds = new Set(reformas.map(r => r.id));
 
   for (let i = 0; i < 8; i += 1) {
     const timestamp = Date.now().toString(36);
     const random = Math.random().toString(36).slice(2, 6);
     const candidate = sanitizeId(`${base}-${timestamp}-${random}`);
 
-    if (!candidate) continue;
-
-    try {
-      await fs.access(path.join(REFORMAS_DIR, candidate));
-    } catch {
+    if (candidate && !existingIds.has(candidate)) {
       return candidate;
     }
   }
@@ -54,11 +67,16 @@ async function generateUniqueReformaId(title: string): Promise<string> {
   return fallback;
 }
 
-/* Lee el array de reformas del fichero centralizado */
+/* Lee el array de reformas del fichero centralizado (Redis) */
 async function readReformas(): Promise<ReformaEntry[]> {
   try {
-    const raw = await fs.readFile(REFORMAS_PATH, "utf-8");
-    return JSON.parse(raw);
+    let data = await redis.get<ReformaEntry[]>("reformas");
+    if (!data) {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const res = await fetch(`${baseUrl}/reformas.json`);
+      if (res.ok) data = await res.json();
+    }
+    return Array.isArray(data) ? data : [];
   } catch {
     return [];
   }
@@ -66,7 +84,7 @@ async function readReformas(): Promise<ReformaEntry[]> {
 
 /* Escribe el array completo de reformas */
 async function writeReformas(reformas: ReformaEntry[]): Promise<void> {
-  await fs.writeFile(REFORMAS_PATH, JSON.stringify(reformas, null, 2), "utf-8");
+  await redis.set("reformas", reformas);
 }
 
 export async function GET() {
@@ -88,20 +106,21 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { title, description, tags } = await req.json();
+    const body = await req.json();
 
-    const safeId = await generateUniqueReformaId(title || "");
+    const title = sanitizeStr(body.title, 200) || "Nueva Reforma";
+    const description = sanitizeStr(body.description, 5000);
+    const tags = sanitizeTags(body.tags);
 
-    // Crear directorio para las imágenes
-    await fs.mkdir(path.join(REFORMAS_DIR, safeId), { recursive: true });
+    const safeId = await generateUniqueReformaId(title);
 
     // Añadir entrada al fichero centralizado
     const reformas = await readReformas();
     reformas.push({
       id: safeId,
-      title: title || "Nueva Reforma",
-      description: description || "",
-      tags: tags || [],
+      title,
+      description,
+      tags,
       images: [],
     });
     await writeReformas(reformas);

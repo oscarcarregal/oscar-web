@@ -82,20 +82,22 @@ async function parseJsonOrThrow<T>(res: Response, url: string): Promise<T> {
 }
 
 export async function fetchConfig(): Promise<SiteConfig> {
-  const url = "/config.json";
-  const res = await fetch(url);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const url = `${baseUrl}/api/config`;
+  const res = await fetch(url, { cache: 'no-store' }); // Ensure fresh data from Redis
   return parseJsonOrThrow<SiteConfig>(res, url);
 }
 
 /* Carga todas las reformas del fichero centralizado */
 export async function fetchAllReformas(): Promise<ReformaProject[]> {
-  const url = "/reformas.json";
-  const res = await fetch(url);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const url = `${baseUrl}/api/reformas`;
+  const res = await fetch(url, { cache: 'no-store' });
   const raw = await parseJsonOrThrow<(ReformaInfo & { id: string })[]>(res, url);
 
   return raw.map((r) => ({
     ...r,
-    imagePaths: r.images.map((img) => `/reformas/${r.id}/${img}`),
+    imagePaths: r.images.map((img) => img.startsWith("http") ? img : `/reformas/${r.id}/${img}`),
   }));
 }
 
