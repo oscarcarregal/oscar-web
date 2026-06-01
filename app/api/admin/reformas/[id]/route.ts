@@ -31,9 +31,6 @@ function sanitizeImageNames(val: unknown): string[] {
     .slice(0, 500);
 }
 
-const REFORMAS_DIR = path.join(process.cwd(), "public", "reformas");
-const REFORMAS_PATH = path.join(process.cwd(), "public", "reformas.json");
-const CONFIG_PATH = path.join(process.cwd(), "public", "config.json");
 
 interface ReformaEntry {
   id: string;

@@ -3,7 +3,7 @@ import { Redis } from "@upstash/redis";
 import configData from "../../../../public/config.json";
 import reformasData from "../../../../public/reformas.json";
 // Importamos de manera segura los presupuestos
-let presupuestosData = [];
+let presupuestosData: any[] = [];
 try {
   presupuestosData = require("../../../../data/presupuestos.json");
 } catch (e) {

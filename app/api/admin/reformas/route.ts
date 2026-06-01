@@ -19,8 +19,6 @@ function sanitizeTags(val: unknown, maxItems = 20, maxLen = 60): string[] {
     .slice(0, maxItems);
 }
 
-const REFORMAS_DIR = path.join(process.cwd(), "public", "reformas");
-const REFORMAS_PATH = path.join(process.cwd(), "public", "reformas.json");
 
 interface ReformaEntry {
   id: string;

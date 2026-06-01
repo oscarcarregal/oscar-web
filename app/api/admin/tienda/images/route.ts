@@ -27,8 +27,8 @@ function safeExtFromBuffer(buf: Buffer): string {
   return "jpg";
 }
 
-async function readConfig() {
-  let data = await redis.get("site:config");
+async function readConfig(): Promise<any> {
+  let data: any = await redis.get("site:config");
   if (!data) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const res = await fetch(`${baseUrl}/config.json`);
