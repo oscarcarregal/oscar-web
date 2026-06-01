@@ -172,12 +172,11 @@ function PresupuestoForm() {
     submitted || blurred.has(key) ? errors[key] : undefined;
 
   const inputClass = (field: string, hasError?: boolean) =>
-    `w-full rounded-xl border bg-white px-4 py-3.5 text-sm text-carbon outline-none transition-all duration-300 placeholder:text-silver/60 ${
-      hasError
-        ? "border-red-400 ring-2 ring-red-100 shadow-sm"
-        : focused === field
-          ? "border-copper/50 ring-2 ring-copper/10 shadow-sm"
-          : "border-gray-200 hover:border-gray-300"
+    `w-full rounded-xl border bg-white px-4 py-3.5 text-sm text-carbon outline-none transition-all duration-300 placeholder:text-silver/60 ${hasError
+      ? "border-red-400 ring-2 ring-red-100 shadow-sm"
+      : focused === field
+        ? "border-copper/50 ring-2 ring-copper/10 shadow-sm"
+        : "border-gray-200 hover:border-gray-300"
     }`;
 
   if (sent) {
@@ -480,7 +479,6 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
           <ul className="mt-5 space-y-3.5 text-sm text-white/50">
             {[
               "Comunicación directa conmigo",
-              "Visita gratuita a domicilio",
               "Valoración adaptada a tu proyecto",
               "Sin letra pequeña ni sorpresas",
             ].map((item) => (

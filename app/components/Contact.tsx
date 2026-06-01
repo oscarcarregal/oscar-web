@@ -32,13 +32,16 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
     },
     {
       icon: MapPin,
-      title: "Zona de Trabajo",
-      line1: config?.storeAddress?.serviceArea,
-      // Dirección completa derivada de los campos estructurados
-      line2: config?.storeAddress
-        ? `${config.storeAddress.street}, ${config.storeAddress.postalCode} ${config.storeAddress.city}`
+      title: "Visita nuestro local",
+      // primera linea: Calle y número
+      line1: config?.storeAddress
+        ? config.storeAddress.street
         : undefined,
-      href: undefined,
+      // Segunda linea: CP + Ciudad
+      line2: config?.storeAddress
+        ? `${config.storeAddress.postalCode} ${config.storeAddress.city}`
+        : undefined,
+      href: "https://maps.google.com/maps?q=" + config?.storeAddress?.mapsQuery,
     },
   ];
 
@@ -46,9 +49,8 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
     <section id="contacto" className="scroll-mt-28 bg-white py-28 md:py-36">
       <div ref={ref} className="mx-auto max-w-7xl px-6">
         <div
-          className={`mx-auto max-w-2xl text-center transition-all duration-700 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`mx-auto max-w-2xl text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
             Contacto
@@ -63,11 +65,10 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
           {contactItems.map((c, i) => (
             <div
               key={c.title}
-              className={`group flex flex-col items-center rounded-2xl bg-cream p-10 text-center transition-all duration-500 hover-glow hover:-translate-y-1 ${
-                visible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-12"
-              }`}
+              className={`group flex flex-col items-center rounded-2xl bg-cream p-10 text-center transition-all duration-500 hover-glow hover:-translate-y-1 ${visible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-12"
+                }`}
               style={{
                 transitionDelay: visible ? `${200 + i * 120}ms` : "0ms",
               }}
