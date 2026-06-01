@@ -145,11 +145,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 transition-all duration-500 ${
-        scrolled
+      className={`sticky top-0 z-50 transition-all duration-500 ${scrolled
           ? "bg-white/95 backdrop-blur-xl border-b border-gray-200/60 shadow-[0_1px_20px_rgba(0,0,0,0.06)]"
           : "bg-transparent border-b border-transparent"
-      }`}
+        }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo */}
@@ -171,11 +170,10 @@ export default function Navbar() {
               key={l.href}
               href={l.href}
               onClick={(e) => handleNavClick(e, l.href)}
-              className={`relative px-4 py-2 text-sm font-medium tracking-wide transition-colors duration-300 ${
-                active === l.label
+              className={`relative px-4 py-2 text-sm font-medium tracking-wide transition-colors duration-300 ${active === l.label
                   ? "text-copper"
                   : "text-gray-dark hover:text-carbon"
-              }`}
+                }`}
             >
               {l.label}
               {active === l.label && (
@@ -188,7 +186,7 @@ export default function Navbar() {
             href="/presupuesto"
             className="group ml-4 inline-flex items-center gap-2 rounded-full bg-carbon px-6 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-copper hover:shadow-lg hover:shadow-copper/20"
           >
-            Tu Proyecto
+            Tu  Proyecto
             <ArrowUpRight
               size={14}
               className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -208,9 +206,8 @@ export default function Navbar() {
 
       {/* Menú móvil desplegable */}
       <div
-        className={`overflow-hidden transition-all duration-400 lg:hidden ${
-          open ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`overflow-hidden transition-all duration-400 lg:hidden ${open ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
+          }`}
       >
         <div className="border-t border-gray-100 bg-white px-6 pb-6 pt-4">
           {links.map((l, i) => (
@@ -232,7 +229,7 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
             className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-carbon py-3.5 text-sm font-semibold text-white transition-all hover:bg-copper"
           >
-            Tu Proyecto
+            Tu  Proyecto
             <ArrowUpRight size={14} />
           </Link>
         </div>
