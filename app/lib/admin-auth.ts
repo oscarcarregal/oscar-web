@@ -62,7 +62,10 @@ export async function clearAttempts(ip: string): Promise<void> {
 /* ─── Password Verification ─── */
 
 export async function verifyPassword(password: string): Promise<boolean> {
-  const hash = process.env.ADMIN_PASSWORD_HASH;
+  let hash = await redis.get<string>("admin:password_hash");
+  if (!hash) {
+    hash = process.env.ADMIN_PASSWORD_HASH;
+  }
   if (!hash) return false;
   return bcrypt.compare(password, hash);
 }

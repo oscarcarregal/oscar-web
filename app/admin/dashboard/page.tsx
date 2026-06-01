@@ -1725,9 +1725,6 @@ function ConfigPanel({
   config: SiteConfig | null;
   onRefresh: () => void;
 }) {
-  const [formData, setFormData] = useState(
-    config ? JSON.stringify(config, null, 2) : "{}"
-  );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -1735,7 +1732,6 @@ function ConfigPanel({
   const [business, setBusiness] = useState(config?.business ?? {});
   const [tags, setTags] = useState<string[]>(config?.tags ?? []);
   const [newTag, setNewTag] = useState("");
-  const [mode, setMode] = useState<"visual" | "json">("visual");
 
   const updateBusiness = (key: string, value: string) => {
     setBusiness((prev) => ({ ...prev, [key]: value }));
@@ -1789,28 +1785,6 @@ function ConfigPanel({
     }
   };
 
-  const handleSaveJson = async () => {
-    setSaving(true);
-    setError("");
-    setSuccess(false);
-    try {
-      const parsed = JSON.parse(formData);
-      await api("/api/admin/config", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed),
-      });
-      setSuccess(true);
-      onRefresh();
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
-      setError(
-        err instanceof SyntaxError
-          ? "JSON inválido"
-          : err instanceof Error
-            ? err.message
-            : "Error"
-      );
     } finally {
       setSaving(false);
     }
@@ -1829,39 +1803,8 @@ function ConfigPanel({
         <div>
           <h1 className="font-heading text-2xl">Configuración</h1>
           <p className="mt-1 text-sm text-white/30">
-            Datos del negocio y tags
+            Datos del negocio y etiquetas
           </p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setMode("visual")}
-            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-              mode === "visual"
-                ? "bg-copper text-white"
-                : "bg-white/5 text-white/40 hover:bg-white/10"
-            }`}
-          >
-            Visual
-          </button>
-          <button
-            onClick={() => {
-              setMode("json");
-              setFormData(
-                JSON.stringify(
-                  { ...config, business, tags },
-                  null,
-                  2
-                )
-              );
-            }}
-            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-              mode === "json"
-                ? "bg-copper text-white"
-                : "bg-white/5 text-white/40 hover:bg-white/10"
-            }`}
-          >
-            JSON
-          </button>
         </div>
       </div>
 
@@ -1876,8 +1819,7 @@ function ConfigPanel({
         </div>
       )}
 
-      {mode === "visual" ? (
-        <div className="mt-6 space-y-8">
+      <div className="mt-6 space-y-8">
           {/* Business Info */}
           <section className="rounded-xl border border-white/6 bg-[#141414] p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
@@ -2049,31 +1991,127 @@ function ConfigPanel({
             )}
             Guardar Configuración
           </button>
+
+          {/* Seguridad / Cambio de Contraseña */}
+          <ChangePasswordForm />
+
         </div>
-      ) : (
-        <div className="mt-6 space-y-4">
-          <textarea
-            value={formData}
-            onChange={(e) => setFormData(e.target.value)}
-            rows={30}
-            className="w-full rounded-xl border border-white/10 bg-[#141414] p-4 font-mono text-xs text-white/70 outline-none focus:border-copper/30"
-            spellCheck={false}
-          />
-          <button
-            onClick={handleSaveJson}
-            disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-copper px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-copper-light disabled:opacity-40"
-          >
-            {saving ? (
-              <Loader2 size={14} className="animate-spin" />
-            ) : (
-              <Save size={14} />
-            )}
-            Guardar JSON
-          </button>
+    </div>
+  );
+}
+
+function ChangePasswordForm() {
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      setError("Las nuevas contraseñas no coinciden");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    setSuccess(false);
+
+    try {
+      await api("/api/admin/password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      setSuccess(true);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setTimeout(() => setSuccess(false), 4000);
+    } catch (err: any) {
+      setError(err instanceof Error ? err.message : "Error al cambiar la contraseña");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const inputClass = "w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-all focus:border-copper/40 placeholder:text-white/15";
+
+  return (
+    <section className="rounded-xl border border-red-500/20 bg-[#1A1111] p-6 mt-8">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-red-400 flex items-center gap-2">
+        <AlertCircle size={16} />
+        Seguridad
+      </h2>
+      <p className="mt-2 text-xs text-white/40">
+        Cambia la contraseña de acceso al panel de administración. Por seguridad, te recomendamos usar una contraseña fuerte.
+      </p>
+      
+      {error && (
+        <div className="mt-4 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs text-red-400">
+          {error}
         </div>
       )}
-    </div>
+      {success && (
+        <div className="mt-4 rounded-lg border border-green-500/20 bg-green-500/10 px-4 py-2 text-xs text-green-400">
+          ¡Contraseña cambiada con éxito!
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="mt-6 space-y-4 max-w-sm">
+        <div>
+          <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+            Contraseña actual
+          </label>
+          <input
+            type="password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            className={inputClass}
+            required
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+            Nueva contraseña
+          </label>
+          <input
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className={inputClass}
+            required
+            minLength={8}
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+            Confirmar nueva contraseña
+          </label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className={inputClass}
+            required
+            minLength={8}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={saving || !currentPassword || !newPassword || !confirmPassword}
+          className="w-full flex items-center justify-center gap-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 px-6 py-2.5 text-sm font-semibold transition-all hover:bg-red-500/30 hover:text-red-300 disabled:opacity-40"
+        >
+          {saving ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <Save size={14} />
+          )}
+          Actualizar Contraseña
+        </button>
+      </form>
+    </section>
   );
 }
 
