@@ -1,9 +1,9 @@
 /* Rutas API para listar y crear reformas (lectura/escritura en reformas.json) */
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, sanitizeId, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis";
 
-const redis = Redis.fromEnv();
+
 
 function sanitizeStr(val: unknown, max: number): string {
   if (typeof val !== "string") return "";

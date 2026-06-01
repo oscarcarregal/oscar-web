@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
 import { sanitizeConfigPayload } from "@/app/lib/config-security";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis";
 
-const redis = Redis.fromEnv();
+
 
 export async function GET() {
   if (!(await requireAuth())) {

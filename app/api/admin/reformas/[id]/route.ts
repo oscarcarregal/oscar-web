@@ -2,10 +2,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, sanitizeId } from "@/app/lib/admin-auth";
 import { sanitizeConfigPayload } from "@/app/lib/config-security";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis";
 import { del } from "@vercel/blob";
 
-const redis = Redis.fromEnv();
+
 
 function sanitizeStr(val: unknown, max: number): string {
   if (typeof val !== "string") return "";

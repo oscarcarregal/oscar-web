@@ -4,10 +4,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
 import { sanitizeConfigPayload } from "@/app/lib/config-security";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis";
 import { put, del } from "@vercel/blob";
 
-const redis = Redis.fromEnv();
+
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB

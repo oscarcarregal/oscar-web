@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis";
 import configData from "../../../../public/config.json";
 import reformasData from "../../../../public/reformas.json";
 // Importamos de manera segura los presupuestos
@@ -12,7 +12,7 @@ try {
 
 export async function GET() {
   try {
-    const redis = Redis.fromEnv();
+    
     
     await redis.set("site:config", configData);
     await redis.set("reformas", reformasData);

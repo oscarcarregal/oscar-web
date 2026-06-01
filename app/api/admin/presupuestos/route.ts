@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis";
 
-const redis = Redis.fromEnv();
+
 
 export interface StoredPresupuesto {
   id: string;

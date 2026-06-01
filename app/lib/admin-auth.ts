@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis";
 
 const COOKIE_NAME = "admin_session";
 const SESSION_TTL = 30 * 60 * 1000; // 30 minutos
@@ -28,7 +28,7 @@ export async function checkRateLimit(ip: string): Promise<{
   allowed: boolean;
   remaining: number;
 }> {
-  const redis = Redis.fromEnv();
+  
   const key = `rl:login:${ip}`;
   const count = await redis.get<number>(key) || 0;
 
@@ -43,7 +43,7 @@ export async function checkRateLimit(ip: string): Promise<{
 }
 
 export async function recordFailedAttempt(ip: string): Promise<void> {
-  const redis = Redis.fromEnv();
+  
   const key = `rl:login:${ip}`;
   const count = await redis.incr(key);
   
@@ -55,7 +55,7 @@ export async function recordFailedAttempt(ip: string): Promise<void> {
 }
 
 export async function clearAttempts(ip: string): Promise<void> {
-  const redis = Redis.fromEnv();
+  
   await redis.del(`rl:login:${ip}`);
 }
 
@@ -70,7 +70,7 @@ export async function verifyPassword(password: string): Promise<boolean> {
 /* ─── Revoked Tokens (Redis) ─── */
 
 export async function revokeToken(token: string): Promise<void> {
-  const redis = Redis.fromEnv();
+  
   // El TTL de la cookie es SESSION_TTL (milisegundos)
   await redis.set(`revoked:${token}`, 1, { ex: Math.floor(SESSION_TTL / 1000) });
 }
@@ -105,7 +105,7 @@ export async function verifySessionToken(token: string): Promise<boolean> {
   }
 
   // Check if token has been revoked in Redis
-  const redis = Redis.fromEnv();
+  
   const isRevoked = await redis.exists(`revoked:${decodedToken}`);
   if (isRevoked) return false;
 

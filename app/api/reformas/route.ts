@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis";
 
 export async function GET() {
   try {
-    const redis = Redis.fromEnv();
+    
     let data = await redis.get("reformas");
     
     if (!data) {

@@ -1,10 +1,10 @@
 /* Rutas API para subir y eliminar imágenes de una reforma */
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, sanitizeId } from "@/app/lib/admin-auth";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis";
 import { put, del } from "@vercel/blob";
 
-const redis = Redis.fromEnv();
+
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
