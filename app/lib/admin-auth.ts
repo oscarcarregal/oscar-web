@@ -16,6 +16,14 @@ const MAX_ATTEMPTS = 5;
 const BLOCK_DURATION = 15 * 60; // 15 minutes in seconds
 const ATTEMPT_TTL_SEC = 30 * 60; // 30 minutes in seconds
 
+export function getClientIpFromHeaders(req: Request): string {
+  const forwardedFor = req.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    return forwardedFor.split(",")[0].trim();
+  }
+  return "127.0.0.1";
+}
+
 export async function checkRateLimit(ip: string): Promise<{
   allowed: boolean;
   remaining: number;
