@@ -23,6 +23,7 @@ import Footer from "../components/Footer";
 import FloatingActions from "../components/FloatingActions";
 import { fetchConfig, type SiteConfig } from "../lib/data";
 import { formatPhoneNumber } from "../lib/phone";
+import { SidebarSkeleton } from "../components/Skeletons";
 
 /* ─────────────────────── TYPES ─────────────────────── */
 
@@ -100,6 +101,7 @@ function PresupuestoForm() {
   // Campos que el usuario ya ha tocado (blur), para mostrar su error antes del submit
   const [blurred, setBlurred] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const update = (field: keyof FormData, value: string) => {
     const updated = { ...form, [field]: value };
@@ -129,6 +131,7 @@ function PresupuestoForm() {
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
+    setIsSubmitting(true);
     const servicioLabel =
       servicios.find((s) => s.value === form.servicio)?.label ?? form.servicio;
 
@@ -159,6 +162,8 @@ function PresupuestoForm() {
         ...prev,
         submit: "Hubo un error al enviar la consulta. Por favor, inténtalo de nuevo.",
       }));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -351,16 +356,23 @@ function PresupuestoForm() {
       {/* Submit */}
       <button
         type="submit"
-        className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-copper px-8 py-4 text-base font-semibold text-white shadow-lg shadow-copper/20 transition-all duration-300 hover:bg-copper-light hover:shadow-xl sm:w-auto"
+        disabled={isSubmitting}
+        className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-copper px-8 py-4 text-base font-semibold text-white shadow-lg shadow-copper/20 transition-all duration-300 hover:bg-copper-light hover:shadow-xl sm:w-auto disabled:opacity-70 disabled:cursor-not-allowed"
       >
         <span className="relative z-10 flex items-center gap-2">
-          <Send
-            size={16}
-            className="transition-transform group-hover:translate-x-0.5"
-          />
-          Enviar consulta
+          {isSubmitting ? (
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+          ) : (
+            <>
+              <Send
+                size={16}
+                className="transition-transform group-hover:translate-x-0.5"
+              />
+              Enviar consulta
+            </>
+          )}
         </span>
-        <span className="absolute inset-0 animate-shimmer" />
+        {!isSubmitting && <span className="absolute inset-0 animate-shimmer" />}
       </button>
 
       {/* Error de red al enviar */}
@@ -491,6 +503,7 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
 
 export default function PresupuestoPage() {
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -499,6 +512,8 @@ export default function PresupuestoPage() {
         setSiteConfig(config);
       } catch (error) {
         console.error("Error loading presupuesto config:", error);
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
@@ -550,7 +565,7 @@ export default function PresupuestoPage() {
 
             {/* Sidebar */}
             <aside>
-              <ContactSidebar config={siteConfig} />
+              {loading ? <SidebarSkeleton /> : <ContactSidebar config={siteConfig} />}
             </aside>
           </div>
         </div>

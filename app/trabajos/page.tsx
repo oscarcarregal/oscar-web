@@ -24,6 +24,7 @@ import {
   type SiteConfig,
   type ReformaProject,
 } from "../lib/data";
+import { TrabajosSkeleton } from "../components/Skeletons";
 
 /* ─────────────────────── DATA HOOK ─────────────────────── */
 
@@ -512,14 +513,7 @@ export default function TrabajosPage() {
       <TrabajosHero />
 
       {loading ? (
-        <section className="flex min-h-[40vh] items-center justify-center bg-cream">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-gray-200 border-t-copper" />
-            <p className="text-xs tracking-widest uppercase text-silver">
-              Cargando
-            </p>
-          </div>
-        </section>
+        <TrabajosSkeleton />
       ) : (
         <>
           <SearchFilters

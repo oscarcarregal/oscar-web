@@ -19,6 +19,7 @@ import {
   type ReformaProject,
   type HeroSlide,
 } from "./lib/data";
+import { HomeSkeleton } from "./components/Skeletons";
 
 /* ─────────────────────── HOOK DE DATOS ─────────────────────── */
 
@@ -65,14 +66,7 @@ export default function Home() {
     <>
       <Navbar />
       {loading ? (
-        <section className="flex min-h-[100dvh] items-center justify-center bg-carbon">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-copper" />
-            <p className="text-xs tracking-widest uppercase text-white/30">
-              Cargando
-            </p>
-          </div>
-        </section>
+        <HomeSkeleton />
       ) : (
         <HeroCarousel slides={heroSlides} experience={business?.experience} />
       )}
