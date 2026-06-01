@@ -66,15 +66,11 @@ function TrabajosHero() {
       <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-copper/20 to-transparent" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 text-center animate-fade-up">
-        <span className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium tracking-widest uppercase text-white/60 backdrop-blur-sm">
-          <span className="h-1.5 w-1.5 rounded-full bg-copper" />
-          Portfolio completo
-        </span>
         <h1 className="font-heading text-4xl leading-tight text-white md:text-5xl lg:text-6xl">
           Nuestros <span className="text-gradient-copper">Trabajos</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/50 md:text-xl">
-          Explora todos nuestros proyectos de reformas, fontanería e
+          Explora algunos de nuestros proyectos de reformas, fontanería e
           instalaciones.
         </p>
       </div>
@@ -143,11 +139,10 @@ function SearchFilters({
             <button
               onClick={() => setActiveTags([])}
               aria-pressed={activeTags.length === 0}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${
-                activeTags.length === 0
-                  ? "bg-carbon text-white shadow-sm"
-                  : "bg-cream text-gray-dark hover:bg-gray-200"
-              }`}
+              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${activeTags.length === 0
+                ? "bg-carbon text-white shadow-sm"
+                : "bg-cream text-gray-dark hover:bg-gray-200"
+                }`}
             >
               Todos
             </button>
@@ -156,11 +151,10 @@ function SearchFilters({
                 key={tag}
                 onClick={() => toggleTag(tag)}
                 aria-pressed={activeTags.includes(tag)}
-                className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${
-                  activeTags.includes(tag)
-                    ? "bg-copper text-white shadow-sm"
-                    : "bg-cream text-gray-dark hover:bg-gray-200"
-                }`}
+                className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${activeTags.includes(tag)
+                  ? "bg-copper text-white shadow-sm"
+                  : "bg-cream text-gray-dark hover:bg-gray-200"
+                  }`}
               >
                 {tag}
               </button>
@@ -238,15 +232,13 @@ function WorkCard({
             alt={project.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className={`object-cover transition-all duration-700 ${
-              i === imgIdx ? "opacity-100" : "opacity-0"
-            } ${hovered ? "scale-105" : "scale-100"}`}
+            className={`object-cover transition-all duration-700 ${i === imgIdx ? "opacity-100" : "opacity-0"
+              } ${hovered ? "scale-105" : "scale-100"}`}
           />
         ))}
         <div
-          className={`absolute inset-0 bg-gradient-to-t from-carbon/60 via-transparent to-transparent transition-opacity duration-500 ${
-            hovered ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute inset-0 bg-gradient-to-t from-carbon/60 via-transparent to-transparent transition-opacity duration-500 ${hovered ? "opacity-100" : "opacity-0"
+            }`}
         />
 
         <span className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-black/40 px-2.5 py-1 text-xs text-white backdrop-blur-sm">
@@ -257,11 +249,10 @@ function WorkCard({
         {/* Ubicación eliminada de las tarjetas */}
 
         <div
-          className={`absolute bottom-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-copper px-3 py-1.5 text-xs font-semibold text-white shadow-lg transition-all duration-400 ${
-            hovered
-              ? "translate-y-0 opacity-100"
-              : "translate-y-2 opacity-0"
-          }`}
+          className={`absolute bottom-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-copper px-3 py-1.5 text-xs font-semibold text-white shadow-lg transition-all duration-400 ${hovered
+            ? "translate-y-0 opacity-100"
+            : "translate-y-2 opacity-0"
+            }`}
         >
           Ver galería
           <ArrowRight size={12} />
@@ -377,9 +368,8 @@ function GalleryModal({
                 alt={`${project.title} – Foto ${i + 1}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 62vw"
-                className={`object-contain transition-all duration-500 ${
-                  i === current ? "opacity-100 scale-100" : "opacity-0 scale-[1.02]"
-                }`}
+                className={`object-contain transition-all duration-500 ${i === current ? "opacity-100 scale-100" : "opacity-0 scale-[1.02]"
+                  }`}
                 priority={i === 0}
               />
             ))}
@@ -415,11 +405,10 @@ function GalleryModal({
                 <button
                   key={src}
                   onClick={() => setCurrent(i)}
-                  className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg transition-all duration-300 ${
-                    i === current
-                      ? "ring-2 ring-copper ring-offset-2 ring-offset-carbon-light"
-                      : "opacity-50 hover:scale-[1.03] hover:opacity-100"
-                  }`}
+                  className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg transition-all duration-300 ${i === current
+                    ? "ring-2 ring-copper ring-offset-2 ring-offset-carbon-light"
+                    : "opacity-50 hover:scale-[1.03] hover:opacity-100"
+                    }`}
                 >
                   <Image
                     src={src}

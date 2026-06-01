@@ -37,9 +37,8 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
         <div
           key={slide.src}
           aria-hidden="true"
-          className={`absolute inset-0 transition-all duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            i === current ? "opacity-100 scale-100" : "opacity-0 scale-105"
-          }`}
+          className={`absolute inset-0 transition-all duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${i === current ? "opacity-100 scale-100" : "opacity-0 scale-105"
+            }`}
         >
           <Image
             src={slide.src}
@@ -99,7 +98,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
         {/* Estadísticas */}
         <div className="animate-fade-up delay-5 mt-20 flex items-center gap-8 sm:gap-14">
           {[
-            { value: "+500", label: "Proyectos" },
+            { value: "+50", label: "Proyectos" },
             { value: "15+", label: "Años exp." },
             { value: "100%", label: "Garantía" },
           ].map((item) => (
@@ -142,11 +141,10 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
               key={i}
               onClick={() => setCurrent(i)}
               aria-label={`Ir a diapositiva ${i + 1}`}
-              className={`rounded-full transition-all duration-500 ${
-                i === current
-                  ? "h-2 w-8 bg-copper"
-                  : "h-2 w-2 bg-white/25 hover:bg-white/50"
-              }`}
+              className={`rounded-full transition-all duration-500 ${i === current
+                ? "h-2 w-8 bg-copper"
+                : "h-2 w-2 bg-white/25 hover:bg-white/50"
+                }`}
             />
           ))}
         </div>
