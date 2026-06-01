@@ -1785,10 +1785,6 @@ function ConfigPanel({
     }
   };
 
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const inputClass =
     "w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-all focus:border-copper/40 placeholder:text-white/15";
