@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/app/lib/base-url";
 /* Rutas API para listar y crear reformas (lectura/escritura en reformas.json) */
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, sanitizeId, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
@@ -70,7 +71,7 @@ async function readReformas(): Promise<ReformaEntry[]> {
   try {
     let data = await redis.get<ReformaEntry[]>("reformas");
     if (!data) {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const baseUrl = getBaseUrl();
       const res = await fetch(`${baseUrl}/reformas.json`);
       if (res.ok) data = await res.json();
     }

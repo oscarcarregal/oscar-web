@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/app/lib/base-url";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
 import { sanitizeConfigPayload } from "@/app/lib/config-security";
@@ -16,7 +17,7 @@ export async function GET() {
   try {
     let data = await redis.get("site:config");
     if (!data) {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const baseUrl = getBaseUrl();
       const res = await fetch(`${baseUrl}/config.json`);
       if (res.ok) data = await res.json();
     }

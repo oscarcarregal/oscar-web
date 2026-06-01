@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/app/lib/base-url";
 /* ─── Tipos para los datos JSON del sitio ─── */
 
 export interface ReformaInfo {
@@ -82,7 +83,7 @@ async function parseJsonOrThrow<T>(res: Response, url: string): Promise<T> {
 }
 
 export async function fetchConfig(): Promise<SiteConfig> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const baseUrl = getBaseUrl();
   const url = `${baseUrl}/api/config`;
   const res = await fetch(url, { cache: 'no-store' }); // Ensure fresh data from Redis
   return parseJsonOrThrow<SiteConfig>(res, url);
@@ -90,7 +91,7 @@ export async function fetchConfig(): Promise<SiteConfig> {
 
 /* Carga todas las reformas del fichero centralizado */
 export async function fetchAllReformas(): Promise<ReformaProject[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const baseUrl = getBaseUrl();
   const url = `${baseUrl}/api/reformas`;
   const res = await fetch(url, { cache: 'no-store' });
   const raw = await parseJsonOrThrow<(ReformaInfo & { id: string })[]>(res, url);

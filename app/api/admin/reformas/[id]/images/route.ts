@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/app/lib/base-url";
 /* Rutas API para subir y eliminar imágenes de una reforma */
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, sanitizeId } from "@/app/lib/admin-auth";
@@ -45,7 +46,7 @@ async function readReformas(): Promise<ReformaEntry[]> {
   try {
     let data = await redis.get<ReformaEntry[]>("reformas");
     if (!data) {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const baseUrl = getBaseUrl();
       const res = await fetch(`${baseUrl}/reformas.json`);
       if (res.ok) data = await res.json();
     }

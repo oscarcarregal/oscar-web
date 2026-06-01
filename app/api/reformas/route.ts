@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/app/lib/base-url";
 import { NextResponse } from "next/server";
 import { redis } from "@/app/lib/redis";
 
@@ -7,7 +8,7 @@ export async function GET() {
     let data = await redis.get("reformas");
     
     if (!data) {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const baseUrl = getBaseUrl();
       const res = await fetch(`${baseUrl}/reformas.json`);
       if (res.ok) data = await res.json();
     }

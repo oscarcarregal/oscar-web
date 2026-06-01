@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/app/lib/base-url";
 /* API para subir y eliminar fotos del showroom/tienda.
    Las imágenes se guardan en public/tienda/ y el array
    storePhotos de config.json se actualiza automáticamente. */
@@ -30,7 +31,7 @@ function safeExtFromBuffer(buf: Buffer): string {
 async function readConfig(): Promise<any> {
   let data: any = await redis.get("site:config");
   if (!data) {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/config.json`);
     if (res.ok) data = await res.json();
   }

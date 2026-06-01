@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/app/lib/base-url";
 /* Rutas API para obtener, actualizar y eliminar una reforma individual */
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, sanitizeId } from "@/app/lib/admin-auth";
@@ -44,7 +45,7 @@ async function readReformas(): Promise<ReformaEntry[]> {
   try {
     let data = await redis.get<ReformaEntry[]>("reformas");
     if (!data) {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const baseUrl = getBaseUrl();
       const res = await fetch(`${baseUrl}/reformas.json`);
       if (res.ok) data = await res.json();
     }
@@ -147,7 +148,7 @@ export async function DELETE(
     // Limpiar referencias en config (featured y carousel) usando Redis
     let config: any = await redis.get("site:config");
     if (!config) {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const baseUrl = getBaseUrl();
       const res = await fetch(`${baseUrl}/config.json`);
       if (res.ok) config = await res.json();
     }

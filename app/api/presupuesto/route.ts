@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { getClientIpFromHeaders } from "@/app/lib/admin-auth";
 import { redis } from "@/app/lib/redis";
+import { sendNotificationEmail } from "@/app/lib/email";
 
 
 
@@ -108,6 +109,15 @@ export async function POST(req: NextRequest) {
     data.unshift(presupuesto);
 
     await redis.set("presupuestos", data);
+
+    // Enviar notificación por email de forma asíncrona (no bloquea la respuesta al cliente)
+    sendNotificationEmail({
+      nombre,
+      email,
+      telefono,
+      servicio,
+      descripcion
+    }).catch(() => {});
 
     return NextResponse.json({ success: true, id: presupuesto.id });
   } catch {
