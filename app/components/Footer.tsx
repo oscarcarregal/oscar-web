@@ -123,7 +123,7 @@ export default function Footer() {
                   <MapPin size={14} className="text-silver" />
                 </div>
                 {storeAddress
-                  ? `${storeAddress.street}, ${storeAddress.postalCode} ${storeAddress.city}`
+                  ? `${storeAddress.street.toLowerCase().includes("local") ? storeAddress.street : storeAddress.street + ", local 1"}, ${storeAddress.postalCode} ${storeAddress.city}`
                   : null}
               </li>
               <li className="flex items-center gap-3">

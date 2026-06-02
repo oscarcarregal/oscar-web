@@ -39,8 +39,8 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
       title: "Visita nuestro local",
       // primera linea: Calle y número
       line1: config?.storeAddress
-        ? config.storeAddress.street
-        : undefined,
+        ? (config.storeAddress.street.toLowerCase().includes("local") ? config.storeAddress.street : `${config.storeAddress.street}, local 1`)
+        : "Avenida de Tolosa 89, local 1",
       // Segunda linea: CP + Ciudad
       line2: config?.storeAddress
         ? `${config.storeAddress.postalCode} ${config.storeAddress.city}`

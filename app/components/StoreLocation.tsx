@@ -62,7 +62,8 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
 
   const cityName = storeAddress?.city?.trim() || "San Sebastian";
   const locationTitle = cityName.split(",")[0];
-  const streetLine = storeAddress?.street?.trim() || "Avenida de Tolosa 89, local 1";
+  const rawStreet = storeAddress?.street?.trim() || "Avenida de Tolosa 89";
+  const streetLine = rawStreet.toLowerCase().includes("local") ? rawStreet : `${rawStreet}, local 1`;
   const postalCityLine = [storeAddress?.postalCode?.trim(), cityName]
     .filter(Boolean)
     .join(" ");

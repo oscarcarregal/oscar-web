@@ -423,7 +423,7 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
       title: "Zona de Trabajo",
       text: config?.storeAddress?.serviceArea,
       sub: config?.storeAddress
-        ? `${config.storeAddress.street}, ${config.storeAddress.postalCode} ${config.storeAddress.city}`
+        ? `${config.storeAddress.street.toLowerCase().includes("local") ? config.storeAddress.street : config.storeAddress.street + ", local 1"}, ${config.storeAddress.postalCode} ${config.storeAddress.city}`
         : undefined,
       href: undefined,
       iconColor: "text-red-500",
