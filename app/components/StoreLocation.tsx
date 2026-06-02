@@ -62,7 +62,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
 
   const cityName = storeAddress?.city?.trim() || "San Sebastian";
   const locationTitle = cityName.split(",")[0];
-  const streetLine = storeAddress?.street?.trim() || "Avenida de Tolosa 89";
+  const streetLine = storeAddress?.street?.trim() || "Avenida de Tolosa 89, local 1";
   const postalCityLine = [storeAddress?.postalCode?.trim(), cityName]
     .filter(Boolean)
     .join(" ");
@@ -72,9 +72,8 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
       <div ref={ref} className="mx-auto max-w-7xl px-6">
         {/* Cabecera de sección */}
         <div
-          className={`mx-auto max-w-2xl text-center transition-all duration-700 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`mx-auto max-w-2xl text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
             Nuestra Ubicación
@@ -98,11 +97,10 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
           {/* Mosaico de fotos (columna izquierda) */}
           {visibleMosaicPhotos.length > 0 && (
             <div
-              className={`lg:col-span-2 transition-all duration-700 delay-200 ${
-                visible
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 -translate-x-8"
-              }`}
+              className={`lg:col-span-2 transition-all duration-700 delay-200 ${visible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-8"
+                }`}
             >
               <div className="grid h-full grid-cols-2 gap-3">
                 {/* Foto principal */}
@@ -148,11 +146,10 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
 
           {/* Mapa + tarjeta de dirección (columna derecha) */}
           <div
-            className={`${visibleMosaicPhotos.length > 0 ? "lg:col-span-3" : "lg:col-span-5"} flex flex-col gap-5 transition-all duration-700 delay-300 ${
-              visible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-8"
-            }`}
+            className={`${visibleMosaicPhotos.length > 0 ? "lg:col-span-3" : "lg:col-span-5"} flex flex-col gap-5 transition-all duration-700 delay-300 ${visible
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 translate-x-8"
+              }`}
           >
             {/* Google Maps embed */}
             <div className="relative flex-1 min-h-[300px] overflow-hidden rounded-2xl border border-gray-200/60 shadow-sm">
@@ -175,7 +172,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                 <div className="flex-1">
                   <h3 className="text-xl text-carbon">Dirección y horario</h3>
                   <p className="mt-2 text-sm font-medium text-gray-dark">
-                    {streetLine}
+                    {streetLine + ", Local 1"}
                   </p>
                   <p className="mt-1 text-sm font-medium text-gray-dark">
                     {postalCityLine}
@@ -230,9 +227,8 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                   alt={photo.alt}
                   fill
                   sizes="(max-width: 1024px) 100vw, 90vw"
-                  className={`object-contain transition-all duration-500 ${
-                    index === currentPhoto ? "opacity-100 scale-100" : "opacity-0 scale-[1.02]"
-                  }`}
+                  className={`object-contain transition-all duration-500 ${index === currentPhoto ? "opacity-100 scale-100" : "opacity-0 scale-[1.02]"
+                    }`}
                   priority={index === currentPhoto}
                 />
               ))}

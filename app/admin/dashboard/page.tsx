@@ -2414,7 +2414,7 @@ function LocalizacionPanel({
                 setAddress((prev) => ({ ...prev, street: e.target.value }))
               }
               className={inputClass}
-              placeholder="Avenida de Tolosa 89"
+              placeholder="Avenida de Tolosa 89, local 1"
             />
           </div>
           <div>

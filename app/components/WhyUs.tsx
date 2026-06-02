@@ -10,7 +10,7 @@ const reasons = [
     icon: ShieldCheck,
     title: "Calidad Premium",
     description:
-      "Trabajamos solo con marcas líderes y materiales certificados. Cada proyecto incluye garantía por escrito.",
+      "Trabajamos solo con marcas líderes y materiales certificados con todas las garantías.",
     iconColor: "text-indigo-500",
     iconBg: "bg-indigo-500/10",
   },
@@ -40,9 +40,8 @@ export default function WhyUs({ experience }: { experience: string }) {
       <div ref={ref} className="mx-auto max-w-7xl px-6">
         <div className="grid items-center gap-16 lg:grid-cols-2">
           <div
-            className={`transition-all duration-700 ${
-              visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
-            }`}
+            className={`transition-all duration-700 ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+              }`}
           >
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
               ¿Por qué elegirnos?
@@ -62,11 +61,10 @@ export default function WhyUs({ experience }: { experience: string }) {
               {reasons.map((r, i) => (
                 <div
                   key={r.title}
-                  className={`flex gap-5 transition-all duration-500 ${
-                    visible
+                  className={`flex gap-5 transition-all duration-500 ${visible
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-6"
-                  }`}
+                    }`}
                   style={{
                     transitionDelay: visible ? `${300 + i * 150}ms` : "0ms",
                   }}
@@ -86,9 +84,8 @@ export default function WhyUs({ experience }: { experience: string }) {
           </div>
 
           <div
-            className={`relative transition-all duration-700 delay-200 ${
-              visible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
-            }`}
+            className={`relative transition-all duration-700 delay-200 ${visible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+              }`}
           >
             <div className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rounded-full bg-silver/10 blur-3xl animate-pulse" />
             <div className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-silver/10 blur-3xl animate-pulse" />
