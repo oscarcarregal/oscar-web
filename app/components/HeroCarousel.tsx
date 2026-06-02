@@ -142,7 +142,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
               onClick={() => setCurrent(i)}
               aria-label={`Ir a diapositiva ${i + 1}`}
               className={`rounded-full transition-all duration-500 ${i === current
-                ? "h-2 w-8 bg-copper"
+                ? "h-2 w-8 bg-silver"
                 : "h-2 w-2 bg-white/25 hover:bg-white/50"
                 }`}
             />

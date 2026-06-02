@@ -169,8 +169,8 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
             {/* Tarjeta de dirección */}
             <div className="rounded-2xl bg-white p-7 shadow-sm transition-all duration-300 hover-glow">
               <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-copper/8">
-                  <MapPin className="text-copper" size={24} />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gray-100">
+                  <MapPin className="text-gray-500" size={24} />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl text-carbon">Dirección y horario</h3>
@@ -185,14 +185,14 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                   </p>
                   <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
                     <span className="inline-flex items-center gap-2 text-xs text-silver">
-                      <Clock size={14} className="text-copper" />
+                      <Clock size={14} className="text-silver" />
                       {business?.schedule.compact}
                     </span>
                     <a
                       href={`https://maps.google.com/maps?q=${mapsQuery}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-copper transition-colors hover:text-copper-dark"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-dark transition-colors hover:text-carbon"
                     >
                       Abrir en Google Maps
                       <ArrowUpRight size={12} />
@@ -265,7 +265,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                     onClick={() => setCurrentPhoto(index)}
                     className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg transition-all duration-300 ${
                       index === currentPhoto
-                        ? "ring-2 ring-copper ring-offset-2 ring-offset-carbon-light"
+                        ? "ring-2 ring-silver ring-offset-2 ring-offset-carbon-light"
                         : "opacity-50 hover:scale-[1.03] hover:opacity-100"
                     }`}
                     aria-label={`Ver foto ${index + 1}`}

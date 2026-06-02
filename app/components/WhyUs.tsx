@@ -84,11 +84,11 @@ export default function WhyUs({ experience }: { experience: string }) {
               visible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
             }`}
           >
-            <div className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rounded-full bg-copper/10 blur-3xl animate-pulse" />
-            <div className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-steel-blue/10 blur-3xl animate-pulse" />
+            <div className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rounded-full bg-silver/10 blur-3xl animate-pulse" />
+            <div className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-silver/10 blur-3xl animate-pulse" />
 
             <div className="relative overflow-hidden rounded-3xl bg-carbon p-10 text-white shadow-2xl md:p-14">
-              <div className="absolute inset-0 bg-gradient-to-br from-copper/5 via-transparent to-steel-blue/5" />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3" />
               <div className="relative">
                 <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
                   <Image

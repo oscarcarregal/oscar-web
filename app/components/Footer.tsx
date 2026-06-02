@@ -29,7 +29,7 @@ export default function Footer() {
   return (
     <footer className="relative bg-carbon text-white/60">
       {/* Top decorative border */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-copper/40 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
       <div className="mx-auto max-w-7xl px-6 pt-20 pb-12">
         <div className="grid gap-12 md:grid-cols-12">
@@ -56,9 +56,9 @@ export default function Footer() {
               href={business?.instagram.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm transition-all duration-300 hover:border-copper/30 hover:text-white"
+              className="group mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm transition-all duration-300 hover:border-white/25 hover:text-white"
             >
-              <Instagram size={16} className="text-copper" />
+              <Instagram size={16} className="text-silver" />
               {business?.instagram.handle}
               <ArrowUpRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
@@ -66,7 +66,7 @@ export default function Footer() {
 
           {/* Col 2 – Quick links */}
           <div className="md:col-span-3">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
               Enlaces
             </h4>
             <ul className="mt-5 space-y-3">
@@ -81,7 +81,7 @@ export default function Footer() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-sm transition-colors duration-300 hover:text-copper"
+                    className="text-sm transition-colors duration-300 hover:text-white"
                   >
                     {l.label}
                   </Link>
@@ -92,13 +92,13 @@ export default function Footer() {
 
           {/* Col 3 – Contact info */}
           <div className="md:col-span-4">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
               Contacto
             </h4>
             <ul className="mt-5 space-y-4 text-sm">
               <li className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <Phone size={14} className="text-copper" />
+                  <Phone size={14} className="text-silver" />
                 </div>
                 <a
                   href={phoneHref}
@@ -109,7 +109,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <Mail size={14} className="text-copper" />
+                  <Mail size={14} className="text-silver" />
                 </div>
                 <a
                   href={`mailto:${business?.email ?? ""}`}
@@ -120,7 +120,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <MapPin size={14} className="text-copper" />
+                  <MapPin size={14} className="text-silver" />
                 </div>
                 {storeAddress
                   ? `${storeAddress.street}, ${storeAddress.postalCode} ${storeAddress.city}`
@@ -128,7 +128,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <Clock size={14} className="text-copper" />
+                  <Clock size={14} className="text-silver" />
                 </div>
                 {business?.schedule.compact}
               </li>

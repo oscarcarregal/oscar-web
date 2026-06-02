@@ -175,7 +175,7 @@ function PresupuestoForm() {
     `w-full rounded-xl border bg-white px-4 py-3.5 text-sm text-carbon outline-none transition-all duration-300 placeholder:text-silver/60 ${hasError
       ? "border-red-400 ring-2 ring-red-100 shadow-sm"
       : focused === field
-        ? "border-copper/50 ring-2 ring-copper/10 shadow-sm"
+        ? "border-gray-400 ring-2 ring-gray-100 shadow-sm"
         : "border-gray-200 hover:border-gray-300"
     }`;
 
@@ -210,7 +210,7 @@ function PresupuestoForm() {
           htmlFor="nombre"
           className="mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-gray-dark"
         >
-          Nombre completo <span className="text-copper">*</span>
+          Nombre completo <span className="text-silver">*</span>
         </label>
         <input
           id="nombre"
@@ -233,7 +233,7 @@ function PresupuestoForm() {
       {/* Teléfono + Email — al menos uno obligatorio */}
       <div>
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-gray-dark">
-          Método de contacto <span className="text-copper">*</span>
+          Método de contacto <span className="text-silver">*</span>
           <span className="ml-2 font-normal normal-case tracking-normal text-silver">
             (teléfono, email o ambos)
           </span>
@@ -296,7 +296,7 @@ function PresupuestoForm() {
           htmlFor="servicio"
           className="mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-gray-dark"
         >
-          Tipo de servicio <span className="text-copper">*</span>
+          Tipo de servicio <span className="text-silver">*</span>
         </label>
         <div className="relative">
           <select
@@ -332,7 +332,7 @@ function PresupuestoForm() {
           htmlFor="descripcion"
           className="mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-gray-dark"
         >
-          Describe tu proyecto <span className="text-copper">*</span>
+          Describe tu proyecto <span className="text-silver">*</span>
         </label>
         <textarea
           id="descripcion"
@@ -356,7 +356,7 @@ function PresupuestoForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-copper px-8 py-4 text-base font-semibold text-white shadow-lg shadow-copper/20 transition-all duration-300 hover:bg-copper-light hover:shadow-xl sm:w-auto disabled:opacity-70 disabled:cursor-not-allowed"
+        className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-carbon px-8 py-4 text-base font-semibold text-white shadow-lg shadow-black/10 transition-all duration-300 hover:bg-[#333333] hover:shadow-xl sm:w-auto disabled:opacity-70 disabled:cursor-not-allowed"
       >
         <span className="relative z-10 flex items-center gap-2">
           {isSubmitting ? (
@@ -447,8 +447,8 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
         <div className="mt-6 space-y-5">
           {contactItems.map((c) => (
             <div key={c.title} className="flex items-start gap-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-copper/8">
-                <c.icon className="text-copper" size={18} />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100">
+                <c.icon className="text-gray-500" size={18} />
               </div>
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-silver">
@@ -457,7 +457,7 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
                 {c.href ? (
                   <a
                     href={c.href}
-                    className="text-sm font-medium text-carbon transition-colors hover:text-copper"
+                    className="text-sm font-medium text-carbon transition-colors hover:text-gray-500"
                   >
                     {c.text}
                   </a>
@@ -472,8 +472,8 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
       </div>
 
       {/* Trust badge */}
-      <div className="relative overflow-hidden rounded-2xl bg-carbon p-8 text-white shadow-lg">
-        <div className="absolute inset-0 bg-gradient-to-br from-copper/5 via-transparent to-steel-blue/5" />
+        <div className="relative overflow-hidden rounded-2xl bg-carbon p-8 text-white shadow-lg">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3" />
         <div className="relative">
           <h3 className="font-heading text-xl">Trato directo y personal</h3>
           <ul className="mt-5 space-y-3.5 text-sm text-white/50">
@@ -485,7 +485,7 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
               <li key={item} className="flex items-center gap-3">
                 <CheckCircle
                   size={14}
-                  className="shrink-0 text-copper"
+                  className="shrink-0 text-silver"
                 />
                 {item}
               </li>
@@ -524,9 +524,9 @@ export default function PresupuestoPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-carbon py-24 md:py-32">
-        <div className="pointer-events-none absolute -top-32 left-1/3 h-64 w-64 rounded-full bg-copper/8 blur-[100px]" />
-        <div className="pointer-events-none absolute -bottom-32 right-1/3 h-48 w-48 rounded-full bg-steel-blue/8 blur-[100px]" />
-        <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-copper/20 to-transparent" />
+        <div className="pointer-events-none absolute -top-32 left-1/3 h-64 w-64 rounded-full bg-white/3 blur-[100px]" />
+        <div className="pointer-events-none absolute -bottom-32 right-1/3 h-48 w-48 rounded-full bg-white/3 blur-[100px]" />
+        <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
         <div className="relative mx-auto max-w-7xl px-6 text-center animate-fade-up">
           <span className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium tracking-widest uppercase text-white/60 backdrop-blur-sm">

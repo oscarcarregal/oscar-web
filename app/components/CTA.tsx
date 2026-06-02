@@ -11,9 +11,9 @@ export default function CTA({ phoneNumber }: { phoneNumber: string }) {
 
   return (
     <section className="relative overflow-hidden bg-carbon py-24 md:py-32">
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-copper/30 to-transparent" />
-      <div className="pointer-events-none absolute -top-32 left-1/4 h-64 w-64 rounded-full bg-copper/8 blur-[100px]" />
-      <div className="pointer-events-none absolute -bottom-32 right-1/4 h-64 w-64 rounded-full bg-steel-blue/8 blur-[100px]" />
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="pointer-events-none absolute -top-32 left-1/4 h-64 w-64 rounded-full bg-white/3 blur-[100px]" />
+      <div className="pointer-events-none absolute -bottom-32 right-1/4 h-64 w-64 rounded-full bg-white/3 blur-[100px]" />
 
       <div
         ref={ref}

@@ -55,7 +55,7 @@ export function HomeSkeleton() {
           <div className="mx-auto h-6 w-32 rounded-full bg-white/10 mb-8" />
           <div className="mx-auto h-16 w-3/4 rounded-md bg-white/10 mb-6" />
           <div className="mx-auto h-6 w-1/2 rounded-md bg-white/5 mb-10" />
-          <div className="mx-auto h-12 w-48 rounded-full bg-copper/40" />
+          <div className="mx-auto h-12 w-48 rounded-full bg-white/10" />
         </div>
       </section>
       <section className="bg-cream py-24">

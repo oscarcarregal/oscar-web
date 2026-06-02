@@ -171,20 +171,20 @@ export default function Navbar() {
               href={l.href}
               onClick={(e) => handleNavClick(e, l.href)}
               className={`relative px-4 py-2 text-sm font-medium tracking-wide transition-colors duration-300 ${active === l.label
-                  ? "text-copper"
+                  ? "text-gray-dark"
                   : "text-gray-dark hover:text-carbon"
                 }`}
             >
               {l.label}
               {active === l.label && (
-                <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-copper animate-line-grow rounded-full" />
+                <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-carbon animate-line-grow rounded-full" />
               )}
             </Link>
           ))}
           <div className="ml-4 h-5 w-px bg-gray-200" />
           <Link
             href="/presupuesto"
-            className="group ml-4 inline-flex items-center gap-2 rounded-full bg-carbon px-6 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-copper hover:shadow-lg hover:shadow-copper/20"
+            className="group ml-4 inline-flex items-center gap-2 rounded-full bg-carbon px-6 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#333333] hover:shadow-lg hover:shadow-black/20"
           >
             Tu  Proyecto
             <ArrowUpRight
@@ -217,7 +217,7 @@ export default function Navbar() {
               onClick={(e) => {
                 handleNavClick(e, l.href);
               }}
-              className="flex items-center justify-between py-3.5 text-base font-medium text-gray-dark transition-colors hover:text-copper border-b border-gray-50 last:border-0"
+              className="flex items-center justify-between py-3.5 text-base font-medium text-gray-dark transition-colors hover:text-carbon border-b border-gray-50 last:border-0"
               style={{ animationDelay: `${i * 60}ms` }}
             >
               {l.label}
@@ -227,7 +227,7 @@ export default function Navbar() {
           <Link
             href="/presupuesto"
             onClick={() => setOpen(false)}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-carbon py-3.5 text-sm font-semibold text-white transition-all hover:bg-copper"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-carbon py-3.5 text-sm font-semibold text-white transition-all hover:bg-[#333333]"
           >
             Tu  Proyecto
             <ArrowUpRight size={14} />

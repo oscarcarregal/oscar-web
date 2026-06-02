@@ -6,11 +6,11 @@ export default function NotFound() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-carbon px-6 text-center text-white">
       {/* Orbes decorativos */}
-      <div className="pointer-events-none absolute -top-32 left-1/4 h-64 w-64 rounded-full bg-copper/8 blur-[100px]" />
-      <div className="pointer-events-none absolute -bottom-32 right-1/4 h-64 w-64 rounded-full bg-steel-blue/8 blur-[100px]" />
+      <div className="pointer-events-none absolute -top-32 left-1/4 h-64 w-64 rounded-full bg-white/3 blur-[100px]" />
+      <div className="pointer-events-none absolute -bottom-32 right-1/4 h-64 w-64 rounded-full bg-white/3 blur-[100px]" />
 
       <span className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium tracking-widest uppercase text-white/60 backdrop-blur-sm">
-        <span className="h-1.5 w-1.5 rounded-full bg-copper" />
+        <span className="h-1.5 w-1.5 rounded-full bg-silver" />
         Error 404
       </span>
 
@@ -25,7 +25,7 @@ export default function NotFound() {
 
       <Link
         href="/"
-        className="group mt-10 inline-flex items-center gap-2 rounded-full bg-copper px-8 py-4 text-base font-semibold text-white shadow-lg shadow-copper/25 transition-all duration-300 hover:bg-copper-light hover:shadow-xl"
+        className="group mt-10 inline-flex items-center gap-2 rounded-full bg-carbon px-8 py-4 text-base font-semibold text-white shadow-lg shadow-black/10 transition-all duration-300 hover:bg-[#333333] hover:shadow-xl"
       >
         Volver al inicio
         <ArrowRight

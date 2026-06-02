@@ -61,9 +61,9 @@ function TrabajosHero() {
   return (
     <section className="relative overflow-hidden bg-carbon py-24 md:py-32">
       {/* Decorative orbs */}
-      <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-copper/8 blur-[100px]" />
-      <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-steel-blue/8 blur-[100px]" />
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-copper/20 to-transparent" />
+      <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/3 blur-[100px]" />
+      <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-white/3 blur-[100px]" />
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 text-center animate-fade-up">
         <h1 className="font-heading text-4xl leading-tight text-white md:text-5xl lg:text-6xl">
@@ -117,7 +117,7 @@ function SearchFilters({
             placeholder="Buscar por nombre, ubicación o descripción…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full rounded-full border border-gray-200 bg-cream py-3 pl-11 pr-4 text-sm text-carbon outline-none transition-all placeholder:text-silver focus:border-copper/40 focus:ring-2 focus:ring-copper/10"
+            className="w-full rounded-full border border-gray-200 bg-cream py-3 pl-11 pr-4 text-sm text-carbon outline-none transition-all placeholder:text-silver focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
           />
           {query && (
             <button
@@ -152,7 +152,7 @@ function SearchFilters({
                 onClick={() => toggleTag(tag)}
                 aria-pressed={activeTags.includes(tag)}
                 className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${activeTags.includes(tag)
-                  ? "bg-copper text-white shadow-sm"
+                  ? "bg-carbon text-white shadow-sm"
                   : "bg-cream text-gray-dark hover:bg-gray-200"
                   }`}
               >
@@ -249,7 +249,7 @@ function WorkCard({
         {/* Ubicación eliminada de las tarjetas */}
 
         <div
-          className={`absolute bottom-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-copper px-3 py-1.5 text-xs font-semibold text-white shadow-lg transition-all duration-400 ${hovered
+          className={`absolute bottom-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-carbon px-3 py-1.5 text-xs font-semibold text-white shadow-lg transition-all duration-400 ${hovered
             ? "translate-y-0 opacity-100"
             : "translate-y-2 opacity-0"
             }`}
@@ -260,7 +260,7 @@ function WorkCard({
       </div>
 
       <div className="flex flex-1 flex-col p-7">
-        <h3 className="text-xl text-carbon transition-colors group-hover:text-copper">
+        <h3 className="text-xl text-carbon transition-colors group-hover:text-[#555555]">
           {project.title}
         </h3>
         <p className="mt-2 flex-1 text-sm leading-relaxed text-silver line-clamp-3">
@@ -406,7 +406,7 @@ function GalleryModal({
                   key={src}
                   onClick={() => setCurrent(i)}
                   className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg transition-all duration-300 ${i === current
-                    ? "ring-2 ring-copper ring-offset-2 ring-offset-carbon-light"
+                    ? "ring-2 ring-silver ring-offset-2 ring-offset-carbon-light"
                     : "opacity-50 hover:scale-[1.03] hover:opacity-100"
                     }`}
                 >
@@ -434,9 +434,9 @@ function TrabajosCTA({ phoneNumber }: { phoneNumber: string }) {
 
   return (
     <section className="relative overflow-hidden bg-carbon py-24 md:py-32">
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-copper/30 to-transparent" />
-      <div className="pointer-events-none absolute -top-32 left-1/4 h-64 w-64 rounded-full bg-copper/8 blur-[100px]" />
-      <div className="pointer-events-none absolute -bottom-32 right-1/4 h-64 w-64 rounded-full bg-steel-blue/8 blur-[100px]" />
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="pointer-events-none absolute -top-32 left-1/4 h-64 w-64 rounded-full bg-white/3 blur-[100px]" />
+      <div className="pointer-events-none absolute -bottom-32 right-1/4 h-64 w-64 rounded-full bg-white/3 blur-[100px]" />
 
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <h2 className="font-heading text-3xl text-white md:text-4xl lg:text-5xl">
@@ -451,7 +451,7 @@ function TrabajosCTA({ phoneNumber }: { phoneNumber: string }) {
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
             href={phoneHref}
-            className="group inline-flex items-center gap-2 rounded-full bg-copper px-8 py-4 text-base font-semibold text-white shadow-lg shadow-copper/25 transition-all duration-300 hover:bg-copper-light hover:shadow-xl"
+            className="group inline-flex items-center gap-2 rounded-full bg-carbon px-8 py-4 text-base font-semibold text-white shadow-lg shadow-black/10 transition-all duration-300 hover:bg-[#333333] hover:shadow-xl"
           >
             <Phone size={18} />
             Llamar Ahora
@@ -542,7 +542,7 @@ export default function TrabajosPage() {
                       setQuery("");
                       setActiveTags([]);
                     }}
-                    className="mt-6 rounded-full bg-copper px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-copper-dark"
+                    className="mt-6 rounded-full bg-carbon px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#333333]"
                   >
                     Limpiar filtros
                   </button>

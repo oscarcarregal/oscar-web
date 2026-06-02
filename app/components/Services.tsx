@@ -78,23 +78,13 @@ export default function Services() {
               }}
             >
               <div
-                className={`absolute top-0 left-0 right-0 h-[2px] ${
-                  s.accent === "copper"
-                    ? "bg-gradient-to-r from-copper to-copper-light"
-                    : "bg-gradient-to-r from-steel-blue to-steel-blue-light"
-                }`}
+                className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-copper to-copper-light"
               />
               <div
-                className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl transition-colors duration-300 ${
-                  s.accent === "copper"
-                    ? "bg-copper/8 group-hover:bg-copper/15"
-                    : "bg-steel-blue/8 group-hover:bg-steel-blue/15"
-                }`}
+                className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-copper/8 group-hover:bg-copper/15 transition-colors duration-300"
               >
                 <s.icon
-                  className={
-                    s.accent === "copper" ? "text-copper" : "text-steel-blue"
-                  }
+                  className="text-copper"
                   size={26}
                 />
               </div>

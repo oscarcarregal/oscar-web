@@ -70,7 +70,7 @@ function ProjectCard({ project, index, visible }: { project: ReformaProject; ind
               <span
                 key={i}
                 className={`block h-1 rounded-full transition-all duration-300 ${
-                  i === imgIdx ? "w-5 bg-copper" : "w-1 bg-white/50"
+                  i === imgIdx ? "w-5 bg-silver" : "w-1 bg-white/50"
                 }`}
               />
             ))}
@@ -79,7 +79,7 @@ function ProjectCard({ project, index, visible }: { project: ReformaProject; ind
       </div>
 
       <div className="flex flex-1 flex-col p-7">
-        <h3 className="text-xl text-carbon group-hover:text-copper transition-colors duration-300">
+        <h3 className="text-xl text-carbon group-hover:text-[#555555] transition-colors duration-300">
           {project.title}
         </h3>
         <p className="mt-3 flex-1 text-sm leading-relaxed text-silver">
@@ -146,12 +146,12 @@ export default function Portfolio({ projects }: { projects: ReformaProject[] }) 
         >
           <Link
             href="/trabajos"
-            className="group inline-flex items-center gap-3 rounded-full border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-carbon shadow-sm transition-all duration-300 hover:border-copper/30 hover:shadow-lg hover:shadow-copper/10"
+            className="group inline-flex items-center gap-3 rounded-full border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-carbon shadow-sm transition-all duration-300 hover:border-gray-400 hover:shadow-lg hover:shadow-black/10"
           >
             Ver todos los trabajos
             <ArrowRight
               size={16}
-              className="text-copper transition-transform duration-300 group-hover:translate-x-1"
+              className="text-silver transition-transform duration-300 group-hover:translate-x-1"
             />
           </Link>
         </div>

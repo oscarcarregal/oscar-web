@@ -319,12 +319,12 @@ const generateHTML = (title, themeOverrides, colorClasses) => `
 </html>
 `;
 
-// Mockup 5: Original Base layout with Blue accents instead of Copper
-const mockup5 = generateHTML(
-  "Mockup 5 Completo - Base Original con Acentos Azules",
+// Mockup 4: Original Base layout (Light body, Dark hero) with Gray accents instead of Copper
+const mockup4 = generateHTML(
+  "Mockup 4 Completo - Base Original con Acentos Grises",
   `
-      --color-accent: #2A6FA8; /* Azul acero para reemplazar el cobre */
-      --color-accent-light: #3b82f6;
+      --color-accent: #737373; /* Gris medio/oscuro para reemplazar el cobre */
+      --color-accent-light: #A3A3A3;
   `,
   {
     bgMain: "bg-white",
@@ -335,13 +335,13 @@ const mockup5 = generateHTML(
     textMain: "text-[#3A3A3A]", // Original Gray Dark
     textHeading: "text-[#111111]", // Carbon
     textMuted: "text-[#8A8A8A]", // Silver
-    textAccent: "text-[#2A6FA8]", // Blue Accent
-    bgAccent: "bg-[#1B4D7A]", // Darker Blue for buttons
+    textAccent: "text-[#737373]", // Gray Accent
+    bgAccent: "bg-[#555555]", // Distinct Gray for buttons
     textAccentContrast: "text-white",
     borderClass: "border-gray-200/60"
   }
 );
 
-fs.writeFileSync('c:/Users/Ander/Desktop/juegos/yop/oscar-carregal/temp_mockups/mockup5_original_azul.html', mockup5);
+fs.writeFileSync('c:/Users/Ander/Desktop/juegos/yop/oscar-carregal/temp_mockups/mockup4_original_grises.html', mockup4);
 
-console.log("Mockup 5 generated successfully.");
+console.log("Mockup 4 generated successfully.");
