@@ -97,8 +97,8 @@ export default function Footer() {
             </h4>
             <ul className="mt-5 space-y-4 text-sm">
               <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500/10">
-                  <Phone size={14} className="text-green-500" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
+                  <Phone size={14} className="text-silver" />
                 </div>
                 <a
                   href={phoneHref}
@@ -108,8 +108,8 @@ export default function Footer() {
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10">
-                  <Mail size={14} className="text-indigo-500" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
+                  <Mail size={14} className="text-silver" />
                 </div>
                 <a
                   href={`mailto:${business?.email ?? ""}`}
@@ -119,16 +119,16 @@ export default function Footer() {
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/10">
-                  <MapPin size={14} className="text-red-500" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
+                  <MapPin size={14} className="text-silver" />
                 </div>
                 {storeAddress
                   ? `${storeAddress.street}, ${storeAddress.postalCode} ${storeAddress.city}`
                   : null}
               </li>
               <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
-                  <Clock size={14} className="text-amber-500" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
+                  <Clock size={14} className="text-silver" />
                 </div>
                 {business?.schedule.compact}
               </li>
