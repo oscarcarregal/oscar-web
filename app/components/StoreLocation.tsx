@@ -173,7 +173,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                 <div className="flex-1">
                   <h3 className="text-xl text-carbon">Dirección y horario</h3>
                   <p className="mt-2 text-sm font-medium text-gray-dark">
-                    {streetLine + ", Local 1"}
+                    {streetLine}
                   </p>
                   <p className="mt-1 text-sm font-medium text-gray-dark">
                     {postalCityLine}
@@ -260,11 +260,10 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                   <button
                     key={`${photo.src}-${index}`}
                     onClick={() => setCurrentPhoto(index)}
-                    className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg transition-all duration-300 ${
-                      index === currentPhoto
+                    className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg transition-all duration-300 ${index === currentPhoto
                         ? "ring-2 ring-silver ring-offset-2 ring-offset-carbon-light"
                         : "opacity-50 hover:scale-[1.03] hover:opacity-100"
-                    }`}
+                      }`}
                     aria-label={`Ver foto ${index + 1}`}
                   >
                     <Image
