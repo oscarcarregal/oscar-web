@@ -17,12 +17,11 @@ export default function CTA({ phoneNumber }: { phoneNumber: string }) {
 
       <div
         ref={ref}
-        className={`mx-auto max-w-4xl px-6 text-center transition-all duration-700 ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+        className={`mx-auto max-w-4xl px-6 text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
       >
         <h2 className="text-3xl text-white md:text-4xl lg:text-5xl">
-          ¿Listo para transformar
+          ¿Listo para transformar{" "}
           <br className="hidden sm:block" />
           <span className="text-gradient-copper">tu hogar?</span>
         </h2>

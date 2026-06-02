@@ -80,7 +80,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
             Nuestra Ubicación
           </span>
           <h2 className="mt-4 text-3xl text-carbon md:text-4xl lg:text-[2.75rem]">
-            Encuéntranos en
+            Encuéntranos en{" "}
             <br className="hidden sm:block" />
             <span className="text-gradient-copper">
               {locationTitle}

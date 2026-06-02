@@ -111,7 +111,7 @@ export default function Portfolio({ projects, instagramUrl }: { projects: Reform
             Nuestros Trabajos
           </span>
           <h2 className="mt-4 text-3xl text-carbon md:text-4xl lg:text-[2.75rem]">
-            Reformas que hablan
+            Reformas que hablan{" "}
             <br className="hidden sm:block" />
             por sí solas
           </h2>
@@ -160,7 +160,7 @@ export default function Portfolio({ projects, instagramUrl }: { projects: Reform
                 size={16}
                 className="text-silver transition-transform duration-300 group-hover:scale-110"
               />
-              Síguenos
+              Visita nuestro Instagram
             </a>
           )}
         </div>

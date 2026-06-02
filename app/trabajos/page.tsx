@@ -440,7 +440,7 @@ function TrabajosCTA({ phoneNumber }: { phoneNumber: string }) {
 
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <h2 className="font-heading text-3xl text-white md:text-4xl lg:text-5xl">
-          ¿Te gustaría un
+          ¿Te gustaría un{" "}
           <br className="hidden sm:block" />
           <span className="text-gradient-copper">resultado así?</span>
         </h2>
