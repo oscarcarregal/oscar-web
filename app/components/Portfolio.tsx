@@ -4,7 +4,7 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Instagram } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import type { ReformaProject } from "../lib/data";
 
@@ -97,7 +97,7 @@ function ProjectCard({ project, index, visible }: { project: ReformaProject; ind
   );
 }
 
-export default function Portfolio({ projects }: { projects: ReformaProject[] }) {
+export default function Portfolio({ projects, instagramUrl }: { projects: ReformaProject[], instagramUrl?: string }) {
   const { ref, visible } = useScrollReveal();
 
   return (
@@ -135,12 +135,12 @@ export default function Portfolio({ projects }: { projects: ReformaProject[] }) 
         )}
 
         <div
-          className={`mt-16 text-center transition-all duration-700 delay-500 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          className={`mt-16 flex flex-col items-center justify-center gap-4 sm:flex-row transition-all duration-700 delay-500 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
         >
           <Link
             href="/trabajos"
-            className="group inline-flex items-center gap-3 rounded-full border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-carbon shadow-sm transition-all duration-300 hover:border-gray-400 hover:shadow-lg hover:shadow-black/10"
+            className="group inline-flex w-full items-center justify-center gap-3 rounded-full border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-carbon shadow-sm transition-all duration-300 hover:border-gray-400 hover:shadow-lg hover:shadow-black/10 sm:w-auto"
           >
             Ver todos los trabajos
             <ArrowRight
@@ -148,6 +148,21 @@ export default function Portfolio({ projects }: { projects: ReformaProject[] }) 
               className="text-silver transition-transform duration-300 group-hover:translate-x-1"
             />
           </Link>
+
+          {instagramUrl && (
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex w-full items-center justify-center gap-3 rounded-full border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-carbon shadow-sm transition-all duration-300 hover:border-gray-400 hover:shadow-lg hover:shadow-black/10 sm:w-auto"
+            >
+              <Instagram
+                size={16}
+                className="text-silver transition-transform duration-300 group-hover:scale-110"
+              />
+              Síguenos
+            </a>
+          )}
         </div>
       </div>
     </section>

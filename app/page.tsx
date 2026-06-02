@@ -71,7 +71,7 @@ export default function Home() {
         <HeroCarousel slides={heroSlides} experience={business?.experience} />
       )}
       <Services />
-      {!loading && <Portfolio projects={featured} />}
+      {!loading && <Portfolio projects={featured} instagramUrl={business?.instagram?.url} />}
       <WhyUs experience={business?.experience ?? ""} />
       <CTA phoneNumber={business?.phoneNumber ?? ""} />
       <StoreLocation config={siteConfig} />
