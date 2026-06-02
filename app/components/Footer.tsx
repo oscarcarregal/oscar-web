@@ -27,7 +27,7 @@ export default function Footer() {
   const phoneHref = business?.phoneNumber ? `tel:+34${business.phoneNumber}` : undefined;
 
   return (
-    <footer className="relative bg-carbon text-white/60">
+    <footer className="relative bg-carbon text-white/80">
       {/* Top decorative border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
@@ -66,7 +66,7 @@ export default function Footer() {
 
           {/* Col 2 – Quick links */}
           <div className="md:col-span-3">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
               Enlaces
             </h4>
             <ul className="mt-5 space-y-3">
@@ -92,13 +92,13 @@ export default function Footer() {
 
           {/* Col 3 – Contact info */}
           <div className="md:col-span-4">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
               Contacto
             </h4>
             <ul className="mt-5 space-y-4 text-sm">
               <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <Phone size={14} className="text-silver" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500/10">
+                  <Phone size={14} className="text-green-500" />
                 </div>
                 <a
                   href={phoneHref}
@@ -108,8 +108,8 @@ export default function Footer() {
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <Mail size={14} className="text-silver" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10">
+                  <Mail size={14} className="text-indigo-500" />
                 </div>
                 <a
                   href={`mailto:${business?.email ?? ""}`}
@@ -119,16 +119,16 @@ export default function Footer() {
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <MapPin size={14} className="text-silver" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/10">
+                  <MapPin size={14} className="text-red-500" />
                 </div>
                 {storeAddress
                   ? `${storeAddress.street}, ${storeAddress.postalCode} ${storeAddress.city}`
                   : null}
               </li>
               <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <Clock size={14} className="text-silver" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
+                  <Clock size={14} className="text-amber-500" />
                 </div>
                 {business?.schedule.compact}
               </li>
@@ -138,10 +138,10 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-16 flex flex-col items-center gap-4 border-t border-white/8 pt-8 sm:flex-row sm:justify-between">
-          <p className="text-xs text-white/30">
+          <p className="text-xs text-white/70">
             {footer?.copyrightLine}
           </p>
-          <p className="text-xs text-white/20">
+          <p className="text-xs text-white/70">
             {footer?.copyrightNote}
           </p>
         </div>

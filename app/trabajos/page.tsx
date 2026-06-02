@@ -69,7 +69,7 @@ function TrabajosHero() {
         <h1 className="font-heading text-4xl leading-tight text-white md:text-5xl lg:text-6xl">
           Nuestros <span className="text-gradient-copper">Trabajos</span>
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/50 md:text-xl">
+        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/70 md:text-xl">
           Explora algunos de nuestros proyectos de reformas, fontanería e
           instalaciones.
         </p>
@@ -444,7 +444,7 @@ function TrabajosCTA({ phoneNumber }: { phoneNumber: string }) {
           <br className="hidden sm:block" />
           <span className="text-gradient-copper">resultado así?</span>
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/50">
+        <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/70">
           Cuéntame tu idea y me pondré en contacto contigo para hablar de tu
           proyecto de forma directa y personalizada.
         </p>

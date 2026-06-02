@@ -26,7 +26,7 @@ export default function CTA({ phoneNumber }: { phoneNumber: string }) {
           <br className="hidden sm:block" />
           <span className="text-gradient-copper">tu hogar?</span>
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/50">
+        <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/70">
           Cuéntame tu proyecto y me pondré en contacto contigo para darte una
           respuesta personalizada y adaptada a lo que necesitas.
         </p>

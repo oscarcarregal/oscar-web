@@ -11,18 +11,24 @@ const reasons = [
     title: "Calidad Premium",
     description:
       "Trabajamos solo con marcas líderes y materiales certificados. Cada proyecto incluye garantía por escrito.",
+    iconColor: "text-indigo-500",
+    iconBg: "bg-indigo-500/10",
   },
   {
     icon: Sparkles,
     title: "Limpieza Absoluta",
     description:
       "Dejamos tu hogar impecable tras cada trabajo. Protegemos muebles y superficies durante toda la obra.",
+    iconColor: "text-teal-500",
+    iconBg: "bg-teal-500/10",
   },
   {
     icon: CalendarCheck,
     title: "Plazos Cumplidos",
     description:
       "Planificamos cada fase al detalle. Nos comprometemos con la fecha de entrega y la cumplimos.",
+    iconColor: "text-emerald-500",
+    iconBg: "bg-emerald-500/10",
   },
 ];
 
@@ -65,8 +71,8 @@ export default function WhyUs({ experience }: { experience: string }) {
                     transitionDelay: visible ? `${300 + i * 150}ms` : "0ms",
                   }}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-copper/8">
-                    <r.icon className="text-copper" size={22} />
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${r.iconBg}`}>
+                    <r.icon className={r.iconColor} size={22} />
                   </div>
                   <div>
                     <h3 className="text-lg text-carbon">{r.title}</h3>
@@ -102,7 +108,7 @@ export default function WhyUs({ experience }: { experience: string }) {
                 <h3 className="mt-8 text-center text-2xl md:text-3xl">
                   {experience} cuidando hogares
                 </h3>
-                <p className="mt-4 text-center text-sm leading-relaxed text-white/50">
+                <p className="mt-4 text-center text-sm leading-relaxed text-white/70">
                   Desde instalaciones sencillas hasta reformas integrales,
                   ponemos la misma dedicación en cada proyecto.
                 </p>
@@ -111,11 +117,11 @@ export default function WhyUs({ experience }: { experience: string }) {
                     <Star
                       key={i}
                       size={18}
-                      className="fill-copper text-copper"
+                      className="fill-yellow-400 text-yellow-400"
                     />
                   ))}
                 </div>
-                <p className="mt-2 text-center text-xs tracking-wide text-white/40">
+                <p className="mt-2 text-center text-xs tracking-wide text-white/70">
                   Valoración media de nuestros clientes
                 </p>
               </div>

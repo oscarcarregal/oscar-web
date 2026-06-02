@@ -22,6 +22,8 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
           ? `${business.schedule.days} · ${business.schedule.hours}`
           : "",
       href: phoneHref,
+      iconColor: "text-green-500",
+      iconBg: "bg-green-500/10 group-hover:bg-green-500/20",
     },
     {
       icon: Mail,
@@ -29,6 +31,8 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
       line1: business?.email,
       line2: business?.responseTime,
       href: business?.email ? `mailto:${business.email}` : undefined,
+      iconColor: "text-indigo-500",
+      iconBg: "bg-indigo-500/10 group-hover:bg-indigo-500/20",
     },
     {
       icon: MapPin,
@@ -42,6 +46,8 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
         ? `${config.storeAddress.postalCode} ${config.storeAddress.city}`
         : undefined,
       href: "https://maps.google.com/maps?q=" + config?.storeAddress?.mapsQuery,
+      iconColor: "text-red-500",
+      iconBg: "bg-red-500/10 group-hover:bg-red-500/20",
     },
   ];
 
@@ -73,8 +79,8 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
                 transitionDelay: visible ? `${200 + i * 120}ms` : "0ms",
               }}
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-copper/8 transition-colors duration-300 group-hover:bg-copper/15">
-                <c.icon className="text-copper" size={24} />
+              <div className={`flex h-14 w-14 items-center justify-center rounded-xl transition-colors duration-300 ${c.iconBg}`}>
+                <c.icon className={c.iconColor} size={24} />
               </div>
               <h3 className="mt-5 text-xl text-carbon">{c.title}</h3>
               {c.href ? (

@@ -169,8 +169,8 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
             {/* Tarjeta de dirección */}
             <div className="rounded-2xl bg-white p-7 shadow-sm transition-all duration-300 hover-glow">
               <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gray-100">
-                  <MapPin className="text-gray-500" size={24} />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-red-500/10">
+                  <MapPin className="text-red-500" size={24} />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl text-carbon">Dirección y horario</h3>

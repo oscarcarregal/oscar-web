@@ -9,7 +9,7 @@ export default function NotFound() {
       <div className="pointer-events-none absolute -top-32 left-1/4 h-64 w-64 rounded-full bg-white/3 blur-[100px]" />
       <div className="pointer-events-none absolute -bottom-32 right-1/4 h-64 w-64 rounded-full bg-white/3 blur-[100px]" />
 
-      <span className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium tracking-widest uppercase text-white/60 backdrop-blur-sm">
+      <span className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium tracking-widest uppercase text-white/80 backdrop-blur-sm">
         <span className="h-1.5 w-1.5 rounded-full bg-silver" />
         Error 404
       </span>
@@ -18,7 +18,7 @@ export default function NotFound() {
         Página no <span className="text-gradient-copper">encontrada</span>
       </h1>
 
-      <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-white/50">
+      <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-white/70">
         La página que buscas no existe o ha sido movida. Vuelve al inicio para
         seguir navegando.
       </p>

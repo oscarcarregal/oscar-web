@@ -172,7 +172,7 @@ function PresupuestoForm() {
     submitted || blurred.has(key) ? errors[key] : undefined;
 
   const inputClass = (field: string, hasError?: boolean) =>
-    `w-full rounded-xl border bg-white px-4 py-3.5 text-sm text-carbon outline-none transition-all duration-300 placeholder:text-silver/60 ${hasError
+    `w-full rounded-xl border bg-white px-4 py-3.5 text-sm text-carbon outline-none transition-all duration-300 placeholder:text-gray-500 ${hasError
       ? "border-red-400 ring-2 ring-red-100 shadow-sm"
       : focused === field
         ? "border-gray-400 ring-2 ring-gray-100 shadow-sm"
@@ -406,6 +406,8 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
           ? `${business.schedule.days} · ${business.schedule.hours}`
           : "",
       href: phoneHref,
+      iconColor: "text-green-500",
+      iconBg: "bg-green-500/10",
     },
     {
       icon: Mail,
@@ -413,6 +415,8 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
       text: business?.email,
       sub: business?.responseTime,
       href: business?.email ? `mailto:${business.email}` : undefined,
+      iconColor: "text-indigo-500",
+      iconBg: "bg-indigo-500/10",
     },
     {
       icon: MapPin,
@@ -422,6 +426,8 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
         ? `${config.storeAddress.street}, ${config.storeAddress.postalCode} ${config.storeAddress.city}`
         : undefined,
       href: undefined,
+      iconColor: "text-red-500",
+      iconBg: "bg-red-500/10",
     },
     {
       icon: Clock,
@@ -429,6 +435,8 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
       text: business?.schedule.days,
       sub: business?.schedule.hours,
       href: undefined,
+      iconColor: "text-amber-500",
+      iconBg: "bg-amber-500/10",
     },
   ];
 
@@ -447,8 +455,8 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
         <div className="mt-6 space-y-5">
           {contactItems.map((c) => (
             <div key={c.title} className="flex items-start gap-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100">
-                <c.icon className="text-gray-500" size={18} />
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${c.iconBg}`}>
+                <c.icon className={c.iconColor} size={18} />
               </div>
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-silver">
@@ -476,7 +484,7 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
           <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3" />
         <div className="relative">
           <h3 className="font-heading text-xl">Trato directo y personal</h3>
-          <ul className="mt-5 space-y-3.5 text-sm text-white/50">
+          <ul className="mt-5 space-y-3.5 text-sm text-white/70">
             {[
               "Comunicación directa conmigo",
               "Valoración adaptada a tu proyecto",
@@ -529,7 +537,7 @@ export default function PresupuestoPage() {
         <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
         <div className="relative mx-auto max-w-7xl px-6 text-center animate-fade-up">
-          <span className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium tracking-widest uppercase text-white/60 backdrop-blur-sm">
+          <span className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium tracking-widest uppercase text-white/80 backdrop-blur-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-copper" />
             Sin compromiso
           </span>
@@ -537,7 +545,7 @@ export default function PresupuestoPage() {
             Cuéntame{" "}
             <span className="text-gradient-copper">tu proyecto</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/50 md:text-lg">
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">
             Ponte en contacto conmigo por teléfono o email, cuéntame qué
             necesitas y te daré una respuesta personalizada.
           </p>

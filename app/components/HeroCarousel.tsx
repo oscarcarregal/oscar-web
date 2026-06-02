@@ -57,7 +57,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
 
       {/* Contenido central */}
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-6 pt-6 pb-26 text-center">
-        <span className="animate-fade-up mb-8 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium tracking-widest uppercase text-white/70 backdrop-blur-sm">
+        <span className="animate-fade-up mb-8 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium tracking-widest uppercase text-white/90 backdrop-blur-sm">
           <span className="h-1.5 w-1.5 rounded-full bg-copper animate-pulse" />
           {experience || "Más de 15 años de experiencia"}
         </span>
@@ -68,7 +68,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
           <span className="text-gradient-copper">hecha realidad</span>
         </h1>
 
-        <p className="animate-fade-up delay-2 mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-white/60 md:text-xl">
+        <p className="animate-fade-up delay-2 mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-white/80 md:text-xl">
           Fontanería, gas, calefacción y reformas integrales con los mejores
           materiales y un acabado impecable.
         </p>
@@ -106,7 +106,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
               <p className="relative text-2xl font-bold text-white drop-shadow md:text-3xl">
                 {item.value}
               </p>
-              <p className="mt-1 text-[11px] font-medium tracking-widest uppercase text-white/40">
+              <p className="mt-1 text-[11px] font-medium tracking-widest uppercase text-white/70">
                 {item.label}
               </p>
             </div>
@@ -132,7 +132,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
 
       {/* Indicadores inferiores */}
       <div className="absolute bottom-8 left-0 right-0 z-10 flex flex-col items-center gap-4">
-        <span className="rounded-full border border-white/10 bg-black/30 px-4 py-1.5 text-xs font-medium text-white/60 backdrop-blur-sm">
+        <span className="rounded-full border border-white/10 bg-black/30 px-4 py-1.5 text-xs font-medium text-white/80 backdrop-blur-sm">
           {slides[current]?.caption}
         </span>
         <div className="flex items-center gap-2.5">
