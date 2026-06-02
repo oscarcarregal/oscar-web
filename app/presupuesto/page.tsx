@@ -480,8 +480,8 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
       </div>
 
       {/* Trust badge */}
-        <div className="relative overflow-hidden rounded-2xl bg-carbon p-8 text-white shadow-lg">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3" />
+      <div className="relative overflow-hidden rounded-2xl bg-carbon p-8 text-white shadow-lg">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/3" />
         <div className="relative">
           <h3 className="font-heading text-xl">Trato directo y personal</h3>
           <ul className="mt-5 space-y-3.5 text-sm text-white/70">
@@ -543,7 +543,7 @@ export default function PresupuestoPage() {
           </span>
           <h1 className="font-heading text-3xl leading-tight text-white md:text-4xl lg:text-5xl">
             Cuéntame{" "}
-            <span className="text-gradient-copper">tu proyecto</span>
+            tu proyecto
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">
             Ponte en contacto conmigo por teléfono o email, cuéntame qué

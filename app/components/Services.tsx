@@ -9,7 +9,7 @@ const services = [
     icon: Droplets,
     title: "Fontanería",
     description:
-      "instalaciones sanitarias en viviendas y locales, montantes de agua, bajantes comunitarias.",
+      "Instalaciones sanitarias en viviendas y locales, montantes de agua, bajantes comunitarias.",
     iconColor: "text-blue-500",
     iconBg: "bg-blue-500/10 group-hover:bg-blue-500/20",
     gradientClass: "from-blue-500 to-blue-400",
@@ -53,9 +53,8 @@ export default function Services() {
     >
       <div ref={ref} className="mx-auto max-w-7xl px-6">
         <div
-          className={`mx-auto max-w-2xl text-center transition-all duration-700 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`mx-auto max-w-2xl text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
             Nuestros Servicios
@@ -63,7 +62,7 @@ export default function Services() {
           <h2 className="mt-4 text-3xl text-carbon md:text-4xl lg:text-[2.75rem]">
             Soluciones profesionales
             <br className="hidden sm:block" />
-             para tu hogar
+            para tu hogar
           </h2>
           <span className="mx-auto mt-6 decorative-line" />
           <p className="mt-6 text-base leading-relaxed text-silver">
@@ -76,11 +75,10 @@ export default function Services() {
           {services.map((s, index) => (
             <div
               key={s.title}
-              className={`group relative overflow-hidden rounded-2xl bg-white p-8 shadow-sm transition-all duration-[2600ms] ease-in-out hover-glow hover:-translate-y-1 ${
-                visible
+              className={`group relative overflow-hidden rounded-2xl bg-white p-8 shadow-sm transition-all duration-[2600ms] ease-in-out hover-glow hover:-translate-y-1 ${visible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-12"
-              }`}
+                }`}
               style={{
                 transitionDelay: visible ? `${200 + index * 100}ms` : "0ms",
               }}

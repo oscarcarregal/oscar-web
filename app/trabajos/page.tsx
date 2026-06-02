@@ -67,7 +67,7 @@ function TrabajosHero() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 text-center animate-fade-up">
         <h1 className="font-heading text-4xl leading-tight text-white md:text-5xl lg:text-6xl">
-          Nuestros <span className="text-gradient-copper">Trabajos</span>
+          Nuestros Trabajos
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/70 md:text-xl">
           Explora algunos de nuestros proyectos de reformas, fontanería e
