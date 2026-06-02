@@ -28,9 +28,8 @@ function ProjectCard({ project, index, visible }: { project: ReformaProject; ind
 
   return (
     <div
-      className={`group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover-glow hover:-translate-y-1 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-      }`}
+      className={`group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover-glow hover:-translate-y-1 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+        }`}
       style={{ transitionDelay: visible ? `${200 + index * 120}ms` : "0ms" }}
     >
       <div
@@ -47,9 +46,8 @@ function ProjectCard({ project, index, visible }: { project: ReformaProject; ind
             alt={project.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className={`object-cover transition-all duration-700 group-hover:scale-105 ${
-              i === imgIdx ? "opacity-100" : "opacity-0"
-            }`}
+            className={`object-cover transition-all duration-700 group-hover:scale-105 ${i === imgIdx ? "opacity-100" : "opacity-0"
+              }`}
           />
         ))}
 
@@ -69,9 +67,8 @@ function ProjectCard({ project, index, visible }: { project: ReformaProject; ind
             {project.imagePaths.map((_, i) => (
               <span
                 key={i}
-                className={`block h-1 rounded-full transition-all duration-300 ${
-                  i === imgIdx ? "w-5 bg-silver" : "w-1 bg-white/50"
-                }`}
+                className={`block h-1 rounded-full transition-all duration-300 ${i === imgIdx ? "w-5 bg-silver" : "w-1 bg-white/50"
+                  }`}
               />
             ))}
           </div>
@@ -107,9 +104,8 @@ export default function Portfolio({ projects }: { projects: ReformaProject[] }) 
     <section id="trabajos" className="scroll-mt-28 bg-white py-28 md:py-36">
       <div ref={ref} className="mx-auto max-w-7xl px-6">
         <div
-          className={`mx-auto max-w-2xl text-center transition-all duration-700 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`mx-auto max-w-2xl text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
             Nuestros Trabajos
@@ -122,8 +118,7 @@ export default function Portfolio({ projects }: { projects: ReformaProject[] }) 
 
           <span className="mx-auto mt-6 decorative-line" />
           <p className="mt-6 text-base leading-relaxed text-silver">
-            Proyectos reales de nuestros clientes. Pasa el ratón sobre cada
-            foto para ver más imágenes.
+            Proyectos reales de nuestros clientes.
           </p>
         </div>
 
@@ -140,9 +135,8 @@ export default function Portfolio({ projects }: { projects: ReformaProject[] }) 
         )}
 
         <div
-          className={`mt-16 text-center transition-all duration-700 delay-500 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`mt-16 text-center transition-all duration-700 delay-500 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <Link
             href="/trabajos"
