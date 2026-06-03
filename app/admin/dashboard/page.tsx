@@ -112,7 +112,13 @@ export default function AdminDashboard() {
   const [presupuestos, setPresupuestos] = useState<Presupuesto[]>([]);
   // Controla la visibilidad del drawer de navegación en móvil
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // IDs de consultas ya conocidas — para detectar nuevas en el polling
+  const knownIdsRef = useRef<Set<string>>(new Set());
+  // Toast de nueva consulta
+  const [newToastCount, setNewToastCount] = useState(0);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  /** Carga inicial completa (config + reformas + presupuestos) */
   const loadData = useCallback(async () => {
     try {
       const [cfgData, refData, presData] = await Promise.all([
@@ -123,6 +129,8 @@ export default function AdminDashboard() {
       setConfig(cfgData);
       setReformas(refData);
       setPresupuestos(presData);
+      // Registrar IDs conocidos tras la carga inicial
+      knownIdsRef.current = new Set(presData.map((p) => p.id));
     } catch (err) {
       if (err instanceof Error && err.message === "UNAUTHORIZED") {
         setSessionExpired(true);
@@ -134,9 +142,41 @@ export default function AdminDashboard() {
     }
   }, [router]);
 
+  /** Polling silencioso — sólo refresca presupuestos cada 30 s */
+  const pollPresupuestos = useCallback(async () => {
+    try {
+      const presData = await api<Presupuesto[]>("/api/admin/presupuestos");
+      const incoming = presData.filter((p) => !knownIdsRef.current.has(p.id));
+      if (incoming.length > 0) {
+        // Registrar los nuevos IDs
+        incoming.forEach((p) => knownIdsRef.current.add(p.id));
+        // Mostrar toast
+        setNewToastCount(incoming.length);
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        toastTimerRef.current = setTimeout(() => setNewToastCount(0), 5000);
+      }
+      setPresupuestos(presData);
+    } catch {
+      // Silenciar errores de red en el polling
+    }
+  }, []);
+
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  // Polling cada 30 segundos
+  useEffect(() => {
+    const interval = setInterval(pollPresupuestos, 30_000);
+    return () => clearInterval(interval);
+  }, [pollPresupuestos]);
+
+  // Limpiar toast timer al desmontar
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
 
   // Clear session on page refresh/close so password is required again
   useEffect(() => {
@@ -198,6 +238,21 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex min-h-dvh bg-[#0f1117] text-[#e2e8f0]">
+
+      {/* Toast — nueva consulta recibida */}
+      {newToastCount > 0 && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-emerald-500/30 bg-[#0f1f17] px-4 py-3 shadow-2xl">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20">
+            <CheckCircle size={16} className="text-emerald-400" />
+          </span>
+          <div>
+            <p className="text-sm font-semibold text-emerald-300">
+              {newToastCount === 1 ? "Nueva consulta recibida" : `${newToastCount} nuevas consultas`}
+            </p>
+            <p className="text-xs text-emerald-500/70">Aparece en la lista automáticamente</p>
+          </div>
+        </div>
+      )}
 
       {/* ── Barra superior fija en móvil ── */}
       <header className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center gap-3 border-b border-white/8 bg-[#111420] px-4 md:hidden">
@@ -360,6 +415,7 @@ export default function AdminDashboard() {
           <PresupuestosPanel
             presupuestos={presupuestos}
             onRefresh={loadData}
+            newToastCount={newToastCount}
           />
         )}
         {tab === "reformas" && (
@@ -413,9 +469,11 @@ function StatusBadge({ estado }: { estado: string }) {
 function PresupuestosPanel({
   presupuestos,
   onRefresh,
+  newToastCount,
 }: {
   presupuestos: Presupuesto[];
   onRefresh: () => void;
+  newToastCount: number;
 }) {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -534,6 +592,15 @@ function PresupuestosPanel({
           <p className="mt-1 text-sm text-[#64748b]">
             {presupuestos.length} consultas recibidas
           </p>
+        </div>
+        {/* Indicador de actualización automática */}
+        <div className="flex items-center gap-1.5 rounded-lg border border-white/8 bg-[#1e2435] px-3 py-1.5">
+          <span className={`h-2 w-2 rounded-full ${
+            newToastCount > 0 ? "bg-emerald-400 animate-pulse" : "bg-[#475569]"
+          }`} />
+          <span className="text-[10px] text-[#64748b]">
+            {newToastCount > 0 ? "Nueva consulta" : "Actualiz. automática"}
+          </span>
         </div>
       </div>
 
