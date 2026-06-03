@@ -76,7 +76,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
         <div className="animate-fade-up delay-3 mt-12 flex flex-col gap-4 sm:flex-row">
           <Link
             href="/presupuesto"
-            className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-copper px-8 py-4 text-base font-semibold text-white shadow-lg shadow-copper/25 transition-all duration-300 hover:bg-copper-light hover:shadow-xl hover:shadow-copper/30"
+            className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-carbon px-8 py-4 text-base font-semibold text-white shadow-lg shadow-black/10 transition-all duration-300 hover:bg-[#333333] hover:shadow-xl"
           >
             <span className="relative z-10 flex items-center gap-2">
               Cuéntame tu proyecto
@@ -99,7 +99,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
         <div className="animate-fade-up delay-5 mt-20 flex items-center gap-8 sm:gap-14">
           {[
             { value: "+50", label: "Proyectos" },
-            { value: "15+", label: "Años exp." },
+            { value: "+15", label: "Años exp." },
             { value: "100%", label: "Garantía" },
           ].map((item) => (
             <div key={item.label} className="text-center group">

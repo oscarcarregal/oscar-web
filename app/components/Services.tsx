@@ -18,7 +18,7 @@ const services = [
     icon: Flame,
     title: "Gas",
     description:
-      "Empresa autorizada, Instalacion de calderas y calentadores de gas, certificados y alta en industria.",
+      "Empresa autorizada. Instalación de calderas y calentadores de gas, certificados y alta en industria.",
     iconColor: "text-amber-500",
     iconBg: "bg-amber-500/10 group-hover:bg-amber-500/20",
     gradientClass: "from-amber-500 to-amber-400",
@@ -27,7 +27,7 @@ const services = [
     icon: Thermometer,
     title: "Calefacción y climatización",
     description:
-      "Instalacion de radiadores, suelo radiante y aire acondicionado.",
+      "Instalación de radiadores, suelo radiante y aire acondicionado.",
     iconColor: "text-red-500",
     iconBg: "bg-red-500/10 group-hover:bg-red-500/20",
     gradientClass: "from-red-500 to-red-400",
@@ -36,7 +36,7 @@ const services = [
     icon: Hammer,
     title: "Reformas generales",
     description:
-      "Reformas de cuartos de baños, cocinas pisos y locales, coordinación de gremios.",
+      "Reformas de cuartos de baño, cocinas, pisos y locales, coordinación de gremios.",
     iconColor: "text-stone-600",
     iconBg: "bg-stone-600/10 group-hover:bg-stone-600/20",
     gradientClass: "from-stone-600 to-stone-500",

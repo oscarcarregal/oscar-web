@@ -123,7 +123,7 @@ const generateHTML = (title, themeOverrides, colorClasses) => `
             <i data-lucide="flame" class="${colorClasses.textAccent}"></i>
           </div>
           <h3 class="text-xl ${colorClasses.textHeading}">Gas</h3>
-          <p class="mt-3 text-sm leading-relaxed ${colorClasses.textMuted}">Empresa autorizada, Instalacion de calderas y calentadores de gas, certificados y alta en industria.</p>
+          <p class="mt-3 text-sm leading-relaxed ${colorClasses.textMuted}">Empresa autorizada, Instalación de calderas y calentadores de gas, certificados y alta en industria.</p>
         </div>
         <!-- Tarjeta 3 -->
         <div class="group relative overflow-hidden rounded-2xl ${colorClasses.bgCard} p-8 shadow-sm transition-all hover-glow hover:-translate-y-1 border ${colorClasses.borderClass}">
