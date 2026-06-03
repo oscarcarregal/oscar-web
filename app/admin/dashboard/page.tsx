@@ -33,6 +33,7 @@ import {
   Filter,
   Star,
   Menu,
+  Maximize,
 } from "lucide-react";
 
 /* ═══════════════════════════════ TYPES ═══════════════════════════════ */
@@ -98,6 +99,65 @@ async function api<T>(url: string, opts?: RequestInit): Promise<T> {
     throw new Error(data.error || `Error ${res.status}`);
   }
   return res.json();
+}
+
+/* ═══════════════════════════════ LIGHTBOX ═══════════════════════════════ */
+
+function LightboxModal({
+  src,
+  alt = "Imagen ampliada",
+  onClose,
+}: {
+  src: string;
+  alt?: string;
+  onClose: () => void;
+}) {
+  // Prevent body scroll when open
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative flex h-full max-h-[90vh] w-full max-w-[90vw] items-center justify-center animate-fade-up"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute -right-2 -top-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-colors hover:bg-white/20 sm:-right-10 sm:top-0"
+          aria-label="Cerrar imagen"
+        >
+          <X size={20} />
+        </button>
+        <div className="relative h-full w-full">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="90vw"
+            className="object-contain"
+            priority
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /* ═══════════════════════════════ DASHBOARD ═══════════════════════════════ */
@@ -783,6 +843,156 @@ function PresupuestosPanel({
 
 /* ═══════════════════════════════ REFORMAS ═══════════════════════════════ */
 
+function AdminReformaCard({
+  reforma,
+  isFeatured,
+  onEdit,
+  onDelete,
+}: {
+  reforma: Reforma;
+  isFeatured: boolean;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const [imgIdx, setImgIdx] = useState(0);
+  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startCycle = () => {
+    if (reforma.images.length <= 1) return;
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(
+      () => setImgIdx((prev) => (prev + 1) % reforma.images.length),
+      900
+    );
+  };
+
+  const stopCycle = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setImgIdx(0);
+  };
+
+  return (
+    <div
+      className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-[#161b27] shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/20"
+      onClick={onEdit}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      role="button"
+      tabIndex={0}
+    >
+      <div
+        className="relative h-64 overflow-hidden bg-[#1e2435]"
+        onMouseEnter={startCycle}
+        onMouseLeave={stopCycle}
+        onTouchStart={startCycle}
+        onTouchEnd={stopCycle}
+      >
+        {reforma.images.length > 0 ? (
+          reforma.images.map((src, i) => (
+            <Image
+              key={src}
+              src={`/reformas/${reforma.id}/${src}`}
+              alt={reforma.title}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className={`object-cover transition-all duration-700 ${
+                i === imgIdx ? "opacity-100" : "opacity-0"
+              } ${hovered ? "scale-105" : "scale-100"}`}
+            />
+          ))
+        ) : (
+          <div className="flex h-full items-center justify-center text-[#475569]">
+            <ImagesIcon size={32} />
+          </div>
+        )}
+        
+        <div
+          className={`absolute inset-0 bg-gradient-to-t from-[#0f1117]/80 via-transparent to-transparent transition-opacity duration-500 ${
+            hovered ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        <div className="absolute right-3 top-3 z-10 flex items-center gap-1.5">
+          {isFeatured && (
+            <span className="rounded-full border border-indigo-500/30 bg-indigo-600/90 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm shadow-sm">
+              DESTACADO
+            </span>
+          )}
+          <span className="flex items-center gap-1.5 rounded-full border border-white/15 bg-black/40 px-2.5 py-1 text-xs text-white backdrop-blur-sm shadow-sm">
+            <ImagesIcon size={12} />
+            <span className="font-medium">{reforma.images.length}</span>
+          </span>
+        </div>
+
+        {/* Hover Action buttons */}
+        <div
+          className={`absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between transition-all duration-400 ${
+            hovered ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+          }`}
+        >
+          <div className="flex items-center gap-1.5 rounded-full bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg transition-all hover:bg-indigo-500">
+            <Edit3 size={12} />
+            Editar
+          </div>
+          <div className="flex gap-2">
+            {reforma.images.length > 0 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxImg(`/reformas/${reforma.id}/${reforma.images[imgIdx]}`);
+                }}
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white shadow-lg backdrop-blur-sm transition-all hover:bg-black/80 hover:scale-110"
+                aria-label="Ampliar"
+              >
+                <Maximize size={12} />
+              </button>
+            )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-red-500/90 text-white shadow-lg backdrop-blur-sm transition-all hover:bg-red-500 hover:scale-110"
+              aria-label="Eliminar"
+            >
+              <Trash2 size={12} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-1 flex-col p-7">
+        <h3 className="text-xl text-[#e2e8f0] transition-colors group-hover:text-indigo-300">
+          {reforma.title || "(Sin título)"}
+        </h3>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-[#94a3b8] line-clamp-3">
+          {reforma.description}
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {reforma.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-[#1e2435] px-3 py-1 text-[11px] font-medium tracking-wide text-[#94a3b8]"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {lightboxImg && (
+        <LightboxModal
+          src={lightboxImg}
+          alt={reforma.title}
+          onClose={() => setLightboxImg(null)}
+        />
+      )}
+    </div>
+  );
+}
+
 function ReformasPanel({
   reformas,
   config,
@@ -1010,75 +1220,13 @@ function ReformasPanel({
       {/* ── Grid de todas las reformas ── */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {reformas.map((r) => (
-          <div
+          <AdminReformaCard
             key={r.id}
-            className="group overflow-hidden rounded-xl border border-white/8 bg-[#161b27] transition-all hover:border-indigo-500/30"
-          >
-            {/* Thumbnail */}
-            <div className="relative h-40 bg-[#1e2435]">
-              {r.images.length > 0 ? (
-                <Image
-                  src={`/reformas/${r.id}/${r.images[0]}`}
-                  alt={r.title}
-                  fill
-                  sizes="300px"
-                  className="object-cover"
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center text-[#475569]">
-                  <ImagesIcon size={32} />
-                </div>
-              )}
-              <div className="absolute right-2 top-2 flex gap-1.5">
-                {featuredList.includes(r.id) && (
-                  <span className="rounded-md bg-indigo-600/90 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
-                    DESTACADO
-                  </span>
-                )}
-                <span className="rounded-md bg-black/50 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
-                  {r.images.length} fotos
-                </span>
-              </div>
-            </div>
-
-            <div className="p-4">
-              <h3 className="truncate text-sm font-semibold text-[#e2e8f0]">
-                {r.title || "(Sin título)"}
-              </h3>
-              {r.tags.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {r.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md bg-indigo-500/12 px-1.5 py-0.5 text-[10px] text-indigo-400/80"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                  {r.tags.length > 3 && (
-                    <span className="text-[10px] text-[#475569]">
-                      +{r.tags.length - 3}
-                    </span>
-                  )}
-                </div>
-              )}
-              <div className="mt-3 flex gap-2">
-                <button
-                  onClick={() => setEditing(r)}
-                  className="flex items-center gap-1.5 rounded-lg bg-[#1e2435] px-3 py-1.5 text-xs text-[#94a3b8] transition-colors hover:bg-[#252d3d] hover:text-[#e2e8f0]"
-                >
-                  <Edit3 size={12} />
-                  Editar
-                </button>
-                <button
-                  onClick={() => handleDelete(r.id)}
-                  className="ml-auto rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-red-500/10 hover:text-red-400"
-                >
-                  <Trash2 size={12} />
-                </button>
-              </div>
-            </div>
-          </div>
+            reforma={r}
+            isFeatured={featuredList.includes(r.id)}
+            onEdit={() => setEditing(r)}
+            onDelete={() => handleDelete(r.id)}
+          />
         ))}
       </div>
 
@@ -1137,8 +1285,9 @@ function ReformaEditor({
   const [title, setTitle] = useState(reforma?.title ?? "");
   // `location` field removed — no longer tracked
   const [description, setDescription] = useState(reforma?.description ?? "");
-  const [selectedTags, setSelectedTags] = useState<string[]>(reforma?.tags ?? []);
   const [images, setImages] = useState<string[]>(reforma?.images ?? []);
+  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>(reforma?.tags ?? []);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
@@ -1432,12 +1581,29 @@ function ReformaEditor({
                         <GripVertical size={16} className="text-white/0 transition-colors group-hover:text-white/70" />
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleDeleteImage(img)}
-                      className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                    >
-                      <X size={10} />
-                    </button>
+                    {/* Botones on hover */}
+                    <div className="absolute -right-1 -top-1 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setLightboxImg(`/reformas/${reforma.id}/${img}`);
+                        }}
+                        className="flex h-6 w-6 items-center justify-center rounded-full bg-black/80 text-white hover:bg-black hover:scale-110 transition-all"
+                        aria-label="Ampliar"
+                      >
+                        <Maximize size={10} />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteImage(img);
+                        }}
+                        className="flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 hover:scale-110 transition-all"
+                        aria-label="Eliminar"
+                      >
+                        <X size={10} />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1473,6 +1639,13 @@ function ReformaEditor({
           </div>
         </div>
       </div>
+
+      {lightboxImg && (
+        <LightboxModal
+          src={lightboxImg}
+          onClose={() => setLightboxImg(null)}
+        />
+      )}
     </div>
   );
 }
@@ -1572,6 +1745,7 @@ function CarouselPanel({
     config?.heroCarousel ?? []
   );
   const [showAddModal, setShowAddModal] = useState(false);
+  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
 
@@ -1690,14 +1864,26 @@ function CarouselPanel({
               </button>
             </div>
 
-            <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-[#1e2435]">
+            <div className="group relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-[#1e2435]">
               <Image
                 src={`/reformas/${slide.reforma}/${slide.image}`}
                 alt=""
                 fill
                 sizes="96px"
-                className="object-cover"
+                className="object-cover transition-transform duration-300 group-hover:scale-110"
               />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-[1px] transition-opacity group-hover:opacity-100">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxImg(`/reformas/${slide.reforma}/${slide.image}`);
+                  }}
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/40"
+                  aria-label="Ampliar"
+                >
+                  <Maximize size={12} />
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 min-w-0">
@@ -1779,6 +1965,13 @@ function CarouselPanel({
             </div>
           </div>
         </div>
+      )}
+
+      {lightboxImg && (
+        <LightboxModal
+          src={lightboxImg}
+          onClose={() => setLightboxImg(null)}
+        />
       )}
     </div>
   );
@@ -2238,6 +2431,7 @@ function LocalizacionPanel({
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -2398,12 +2592,29 @@ function LocalizacionPanel({
                           />
                         </div>
                       </div>
-                      <button
-                        onClick={() => handleDeletePhoto(photo.src)}
-                        className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                      >
-                        <X size={10} />
-                      </button>
+                      {/* Botones on hover */}
+                      <div className="absolute -right-1 -top-1 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLightboxImg(photo.src);
+                          }}
+                          className="flex h-6 w-6 items-center justify-center rounded-full bg-black/80 text-white hover:bg-black hover:scale-110 transition-all"
+                          aria-label="Ampliar"
+                        >
+                          <Maximize size={10} />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeletePhoto(photo.src);
+                          }}
+                          className="flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 hover:scale-110 transition-all"
+                          aria-label="Eliminar"
+                        >
+                          <X size={10} />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -2439,12 +2650,29 @@ function LocalizacionPanel({
                       />
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleDeletePhoto(photo.src)}
-                    className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                  >
-                    <X size={10} />
-                  </button>
+                  {/* Botones on hover */}
+                  <div className="absolute -right-1 -top-1 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setLightboxImg(photo.src);
+                      }}
+                      className="flex h-6 w-6 items-center justify-center rounded-full bg-black/80 text-white hover:bg-black hover:scale-110 transition-all"
+                      aria-label="Ampliar"
+                    >
+                      <Maximize size={10} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeletePhoto(photo.src);
+                      }}
+                      className="flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 hover:scale-110 transition-all"
+                      aria-label="Eliminar"
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
                 </div>
                 );
               })}
@@ -2576,6 +2804,13 @@ function LocalizacionPanel({
         )}
         Guardar cambios
       </button>
+
+      {lightboxImg && (
+        <LightboxModal
+          src={lightboxImg}
+          onClose={() => setLightboxImg(null)}
+        />
+      )}
     </div>
   );
 }
