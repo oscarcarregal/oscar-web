@@ -154,16 +154,16 @@ export default function AdminDashboard() {
 
   if (sessionExpired) {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-[#0A0A0A]">
-        <div className="flex flex-col items-center gap-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 px-8 py-10 text-center">
+      <div className="flex min-h-dvh items-center justify-center bg-[#0f1117]">
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-amber-500/25 bg-amber-500/8 px-8 py-10 text-center">
           <AlertCircle size={32} className="text-amber-400" />
-          <h2 className="font-heading text-lg text-white">Sesión expirada</h2>
-          <p className="text-sm text-white/40">
+          <h2 className="font-heading text-lg text-[#e2e8f0]">Sesión expirada</h2>
+          <p className="text-sm text-[#94a3b8]">
             Tu sesión ha expirado por inactividad.<br />Vuelve a iniciar sesión para continuar.
           </p>
           <button
             onClick={() => router.replace("/admin")}
-            className="mt-2 rounded-lg bg-copper px-5 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-80"
+            className="mt-2 rounded-lg bg-indigo-600 px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-indigo-500"
           >
             Ir al login
           </button>
@@ -174,10 +174,10 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-[#0A0A0A]">
+      <div className="flex min-h-dvh items-center justify-center bg-[#0f1117]">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 size={24} className="animate-spin text-copper" />
-          <p className="text-xs text-white/30">Cargando panel…</p>
+          <Loader2 size={24} className="animate-spin text-indigo-400" />
+          <p className="text-xs text-[#64748b]">Cargando panel…</p>
         </div>
       </div>
     );
@@ -197,22 +197,22 @@ export default function AdminDashboard() {
   const cerradoCount = presupuestos.filter((p) => p.estado === "cerrado").length;
 
   return (
-    <div className="flex min-h-dvh bg-[#0A0A0A] text-white">
+    <div className="flex min-h-dvh bg-[#0f1117] text-[#e2e8f0]">
 
       {/* ── Barra superior fija en móvil ── */}
-      <header className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center gap-3 border-b border-white/6 bg-[#0D0D0D] px-4 md:hidden">
+      <header className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center gap-3 border-b border-white/8 bg-[#111420] px-4 md:hidden">
         <button
           onClick={() => setSidebarOpen(true)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-white/40 hover:bg-white/5 hover:text-white"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-[#64748b] hover:bg-white/6 hover:text-[#e2e8f0] transition-colors"
           aria-label="Abrir menú"
         >
           <Menu size={20} />
         </button>
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-400">
           Admin Panel
         </p>
         {newCount > 0 && (
-          <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-copper text-[10px] font-bold text-white">
+          <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white">
             {newCount}
           </span>
         )}
@@ -228,19 +228,19 @@ export default function AdminDashboard() {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
           {/* Panel lateral */}
           <aside
-            className="absolute left-0 top-0 flex h-full w-64 flex-col border-r border-white/6 bg-[#0D0D0D]"
+            className="absolute left-0 top-0 flex h-full w-64 flex-col border-r border-white/8 bg-[#111420]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-white/6 px-5 py-5">
+            <div className="flex items-center justify-between border-b border-white/8 px-5 py-5">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-400">
                   Admin Panel
                 </p>
-                <p className="mt-1 text-[10px] text-white/25">Oscar Carregal</p>
+                <p className="mt-1 text-[10px] text-[#475569]">Oscar Carregal</p>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="rounded-lg p-1.5 text-white/30 hover:bg-white/5 hover:text-white"
+                className="rounded-lg p-1.5 text-[#64748b] hover:bg-white/6 hover:text-[#e2e8f0] transition-colors"
                 aria-label="Cerrar menú"
               >
                 <X size={16} />
@@ -248,45 +248,45 @@ export default function AdminDashboard() {
             </div>
             <div className="px-5 pb-4 pt-3">
               <div className="flex gap-1.5">
-                <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-green-500/10 px-2 py-2">
-                  <span className="text-base font-bold leading-none text-green-400">{newCount}</span>
-                  <span className="text-[8px] font-semibold uppercase tracking-wide text-green-400/60">Nuevas</span>
+                <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-emerald-500/12 px-2 py-2">
+                  <span className="text-base font-bold leading-none text-emerald-400">{newCount}</span>
+                  <span className="text-[8px] font-semibold uppercase tracking-wide text-emerald-500/70">Nuevas</span>
                 </div>
-                <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-blue-500/10 px-2 py-2">
+                <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-blue-500/12 px-2 py-2">
                   <span className="text-base font-bold leading-none text-blue-400">{contactadoCount}</span>
-                  <span className="text-[8px] font-semibold uppercase tracking-wide text-blue-400/60">Seguim.</span>
+                  <span className="text-[8px] font-semibold uppercase tracking-wide text-blue-500/70">Seguim.</span>
                 </div>
-                <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-white/5 px-2 py-2">
-                  <span className="text-base font-bold leading-none text-white/40">{cerradoCount}</span>
-                  <span className="text-[8px] font-semibold uppercase tracking-wide text-white/20">Cerradas</span>
+                <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-white/6 px-2 py-2">
+                  <span className="text-base font-bold leading-none text-[#64748b]">{cerradoCount}</span>
+                  <span className="text-[8px] font-semibold uppercase tracking-wide text-[#475569]">Cerradas</span>
                 </div>
               </div>
             </div>
-            <nav className="flex-1 space-y-1 px-3 py-2">
+            <nav className="flex-1 space-y-0.5 px-3 py-2">
               {tabs.map((t) => (
                 <button
                   key={t.key}
                   onClick={() => { setTab(t.key); setSidebarOpen(false); }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 ${
                     tab === t.key
-                      ? "bg-copper/10 text-copper"
-                      : "text-white/40 hover:bg-white/5 hover:text-white/70"
+                      ? "bg-indigo-500/15 text-indigo-300 font-medium"
+                      : "text-[#64748b] hover:bg-white/5 hover:text-[#94a3b8]"
                   }`}
                 >
                   <t.icon size={16} />
                   {t.label}
                   {t.key === "presupuestos" && newCount > 0 && (
-                    <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-copper text-[10px] font-bold text-white">
+                    <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white">
                       {newCount}
                     </span>
                   )}
                 </button>
               ))}
             </nav>
-            <div className="border-t border-white/6 px-3 py-4">
+            <div className="border-t border-white/8 px-3 py-4">
               <button
                 onClick={handleLogout}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/30 transition-colors hover:bg-red-500/10 hover:text-red-400"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[#64748b] transition-colors hover:bg-red-500/10 hover:text-red-400"
               >
                 <LogOut size={16} />
                 Cerrar sesión
@@ -297,45 +297,45 @@ export default function AdminDashboard() {
       )}
 
       {/* ── Sidebar fijo (escritorio ≥ md) ── */}
-      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-white/6 bg-[#0D0D0D] md:flex">
-        <div className="border-b border-white/6 px-5 py-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">
+      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-white/8 bg-[#111420] md:flex">
+        <div className="border-b border-white/8 px-5 py-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-400">
             Admin Panel
           </p>
-          <p className="mt-1 text-[10px] text-white/25">Oscar Carregal</p>
+          <p className="mt-1 text-[10px] text-[#475569]">Oscar Carregal</p>
 
           {/* Contadores de consultas */}
           <div className="mt-4 flex gap-1.5">
-            <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-green-500/10 px-2 py-2">
-              <span className="text-base font-bold leading-none text-green-400">{newCount}</span>
-              <span className="text-[8px] font-semibold uppercase tracking-wide text-green-400/60">Nuevas</span>
+            <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-emerald-500/12 px-2 py-2">
+              <span className="text-base font-bold leading-none text-emerald-400">{newCount}</span>
+              <span className="text-[8px] font-semibold uppercase tracking-wide text-emerald-500/70">Nuevas</span>
             </div>
-            <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-blue-500/10 px-2 py-2">
+            <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-blue-500/12 px-2 py-2">
               <span className="text-base font-bold leading-none text-blue-400">{contactadoCount}</span>
-              <span className="text-[8px] font-semibold uppercase tracking-wide text-blue-400/60">Seguim.</span>
+              <span className="text-[8px] font-semibold uppercase tracking-wide text-blue-500/70">Seguim.</span>
             </div>
-            <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-white/5 px-2 py-2">
-              <span className="text-base font-bold leading-none text-white/40">{cerradoCount}</span>
-              <span className="text-[8px] font-semibold uppercase tracking-wide text-white/20">Cerradas</span>
+            <div className="flex flex-1 flex-col items-center gap-0.5 rounded-lg bg-white/6 px-2 py-2">
+              <span className="text-base font-bold leading-none text-[#64748b]">{cerradoCount}</span>
+              <span className="text-[8px] font-semibold uppercase tracking-wide text-[#475569]">Cerradas</span>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4">
+        <nav className="flex-1 space-y-0.5 px-3 py-4">
           {tabs.map((t) => (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
               className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 ${
                 tab === t.key
-                  ? "bg-copper/10 text-copper"
-                  : "text-white/40 hover:bg-white/5 hover:text-white/70"
+                  ? "bg-indigo-500/15 text-indigo-300 font-medium"
+                  : "text-[#64748b] hover:bg-white/5 hover:text-[#94a3b8]"
               }`}
             >
               <t.icon size={16} />
               {t.label}
               {t.key === "presupuestos" && newCount > 0 && (
-                <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-copper text-[10px] font-bold text-white">
+                <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white">
                   {newCount}
                 </span>
               )}
@@ -343,10 +343,10 @@ export default function AdminDashboard() {
           ))}
         </nav>
 
-        <div className="border-t border-white/6 px-3 py-4">
+        <div className="border-t border-white/8 px-3 py-4">
           <button
             onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/30 transition-colors hover:bg-red-500/10 hover:text-red-400"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[#64748b] transition-colors hover:bg-red-500/10 hover:text-red-400"
           >
             <LogOut size={16} />
             Cerrar sesión
@@ -391,9 +391,9 @@ export default function AdminDashboard() {
 
 function StatusBadge({ estado }: { estado: string }) {
   const styles: Record<string, { bg: string; text: string; icon: typeof Clock }> = {
-    nuevo: { bg: "bg-green-500/15", text: "text-green-400", icon: AlertCircle },
-    contactado: { bg: "bg-blue-500/15", text: "text-blue-400", icon: Clock },
-    cerrado: { bg: "bg-white/10", text: "text-white/40", icon: CheckCircle },
+    nuevo: { bg: "bg-emerald-500/15 border border-emerald-500/25", text: "text-emerald-400", icon: AlertCircle },
+    contactado: { bg: "bg-blue-500/15 border border-blue-500/25", text: "text-blue-400", icon: Clock },
+    cerrado: { bg: "bg-slate-500/15 border border-slate-500/20", text: "text-[#94a3b8]", icon: CheckCircle },
   };
 
   const s = styles[estado] ?? styles.nuevo;
@@ -521,17 +521,17 @@ function PresupuestosPanel({
   };
 
   const estadoColors: Record<string, { active: string; inactive: string }> = {
-    nuevo: { active: "bg-green-500/20 text-green-400 border-green-500/30", inactive: "bg-white/5 text-white/30 border-white/8" },
-    contactado: { active: "bg-blue-500/20 text-blue-400 border-blue-500/30", inactive: "bg-white/5 text-white/30 border-white/8" },
-    cerrado: { active: "bg-white/15 text-white/60 border-white/20", inactive: "bg-white/5 text-white/30 border-white/8" },
+    nuevo: { active: "bg-emerald-500/20 text-emerald-400 border-emerald-500/35", inactive: "bg-[#1e2435] text-[#64748b] border-white/8" },
+    contactado: { active: "bg-blue-500/20 text-blue-400 border-blue-500/35", inactive: "bg-[#1e2435] text-[#64748b] border-white/8" },
+    cerrado: { active: "bg-slate-500/20 text-[#94a3b8] border-slate-400/25", inactive: "bg-[#1e2435] text-[#64748b] border-white/8" },
   };
 
   return (
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-heading text-2xl">Consultas</h1>
-          <p className="mt-1 text-sm text-white/30">
+          <h1 className="font-heading text-2xl text-[#e2e8f0]">Consultas</h1>
+          <p className="mt-1 text-sm text-[#64748b]">
             {presupuestos.length} consultas recibidas
           </p>
         </div>
@@ -541,19 +541,19 @@ function PresupuestosPanel({
       <div className="mt-6 space-y-4">
         {/* Search */}
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#475569]" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre…"
-            className="w-full rounded-lg border border-white/8 bg-white/5 pl-10 pr-4 py-2.5 text-sm text-white outline-none transition-all focus:border-copper/40 placeholder:text-white/20"
+            className="w-full rounded-lg border border-white/10 bg-[#1e2435] pl-10 pr-4 py-2.5 text-sm text-[#e2e8f0] outline-none transition-all focus:border-indigo-500/40 placeholder:text-[#475569]"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           {/* Estado filters */}
           <div className="flex items-center gap-1.5">
-            <Filter size={14} className="text-white/20" />
+            <Filter size={14} className="text-[#475569]" />
             {(["nuevo", "contactado", "cerrado"] as EstadoFilter[]).map((e) => (
               <button
                 key={e}
@@ -571,7 +571,7 @@ function PresupuestosPanel({
 
           {/* Sort */}
           <div className="flex items-center gap-1.5">
-            <ArrowUpDown size={14} className="text-white/20" />
+            <ArrowUpDown size={14} className="text-[#475569]" />
             {([
               { field: "fecha" as SortField, label: "Fecha" },
               { field: "estado" as SortField, label: "Estado" },
@@ -582,8 +582,8 @@ function PresupuestosPanel({
                 onClick={() => toggleSort(s.field)}
                 className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                   sortField === s.field
-                    ? "bg-copper/15 text-copper"
-                    : "bg-white/5 text-white/30 hover:bg-white/10"
+                    ? "bg-indigo-500/20 text-indigo-300"
+                    : "bg-[#1e2435] text-[#64748b] hover:bg-[#252d3d] hover:text-[#94a3b8]"
                 }`}
               >
                 {s.label}
@@ -599,14 +599,14 @@ function PresupuestosPanel({
       {/* List */}
       <div className="mt-4 space-y-3">
         {filtered.length === 0 && (
-          <p className="py-12 text-center text-sm text-white/20">
+          <p className="py-12 text-center text-sm text-[#475569]">
             No hay consultas con estos filtros
           </p>
         )}
         {filtered.map((p) => (
           <div
             key={p.id}
-            className="overflow-hidden rounded-xl border border-white/6 bg-[#141414]"
+            className="overflow-hidden rounded-xl border border-white/8 bg-[#161b27] transition-all"
           >
             <button
               onClick={() =>
@@ -616,8 +616,8 @@ function PresupuestosPanel({
             >
               <StatusBadge estado={p.estado} />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{p.nombre}</p>
-                <p className="text-xs text-white/30">
+                <p className="text-sm font-medium truncate text-[#e2e8f0]">{p.nombre}</p>
+                <p className="text-xs text-[#64748b]">
                   {p.servicio} ·{" "}
                   {new Date(p.fecha).toLocaleDateString("es-ES", {
                     day: "numeric",
@@ -636,51 +636,51 @@ function PresupuestosPanel({
             </button>
 
             {expanded === p.id && (
-              <div className="border-t border-white/6 p-5">
+              <div className="border-t border-white/8 p-5">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <p className="text-[10px] uppercase tracking-wider text-white/20">
+                    <p className="text-[10px] uppercase tracking-wider text-[#475569]">
                       Teléfono
                     </p>
                     {p.telefono ? (
                       <a
                         href={`tel:${p.telefono}`}
-                        className="mt-0.5 flex items-center gap-1.5 text-sm text-copper hover:underline"
+                        className="mt-0.5 flex items-center gap-1.5 text-sm text-indigo-400 hover:text-indigo-300 hover:underline"
                       >
                         <PhoneIcon size={12} />
                         {p.telefono}
                       </a>
                     ) : (
-                      <p className="mt-0.5 text-sm text-white/30">—</p>
+                      <p className="mt-0.5 text-sm text-[#475569]">—</p>
                     )}
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-wider text-white/20">
+                    <p className="text-[10px] uppercase tracking-wider text-[#475569]">
                       Email
                     </p>
                     {p.email ? (
                       <a
                         href={`mailto:${p.email}`}
-                        className="mt-0.5 flex items-center gap-1.5 text-sm text-copper hover:underline"
+                        className="mt-0.5 flex items-center gap-1.5 text-sm text-indigo-400 hover:text-indigo-300 hover:underline"
                       >
                         <Mail size={12} />
                         {p.email}
                       </a>
                     ) : (
-                      <p className="mt-0.5 text-sm text-white/30">—</p>
+                      <p className="mt-0.5 text-sm text-[#475569]">—</p>
                     )}
                   </div>
                 </div>
                 <div className="mt-4">
-                  <p className="text-[10px] uppercase tracking-wider text-white/20">
+                  <p className="text-[10px] uppercase tracking-wider text-[#475569]">
                     Descripción
                   </p>
-                  <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-white/60">
+                  <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-[#94a3b8]">
                     {p.descripcion}
                   </p>
                 </div>
                 <div className="mt-5 flex flex-wrap items-center gap-2">
-                  <p className="text-[10px] uppercase tracking-wider text-white/20">
+                  <p className="text-[10px] uppercase tracking-wider text-[#475569]">
                     Estado:
                   </p>
                   {["nuevo", "contactado", "cerrado"].map((e) => (
@@ -690,8 +690,8 @@ function PresupuestosPanel({
                       disabled={saving}
                       className={`rounded-lg px-3 py-1 text-xs font-semibold capitalize transition-all ${
                         p.estado === e
-                          ? "bg-copper text-white"
-                          : "bg-white/5 text-white/40 hover:bg-white/10"
+                          ? "bg-indigo-600 text-white"
+                          : "bg-[#1e2435] text-[#64748b] hover:bg-[#252d3d] hover:text-[#94a3b8]"
                       }`}
                     >
                       {e}
@@ -699,7 +699,7 @@ function PresupuestosPanel({
                   ))}
                   <button
                     onClick={() => deletePresupuesto(p.id)}
-                    className="ml-auto rounded-lg p-1.5 text-white/20 transition-colors hover:bg-red-500/10 hover:text-red-400"
+                    className="ml-auto rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-red-500/10 hover:text-red-400"
                     title="Eliminar"
                   >
                     <Trash2 size={14} />
@@ -795,14 +795,14 @@ function ReformasPanel({
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl">Reformas</h1>
-          <p className="mt-1 text-sm text-white/30">
+          <h1 className="font-heading text-2xl text-[#e2e8f0]">Reformas</h1>
+          <p className="mt-1 text-sm text-[#64748b]">
             {reformas.length} proyectos
           </p>
         </div>
         <button
           onClick={() => setCreating(true)}
-          className="flex items-center gap-2 rounded-lg bg-copper px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-copper-light"
+          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-indigo-500"
         >
           <Plus size={16} />
           Nueva Reforma
@@ -810,7 +810,7 @@ function ReformasPanel({
       </div>
 
       {/* ── Selector de reformas destacadas ── */}
-      <section className="mt-8 rounded-xl border border-white/6 bg-[#141414] p-6">
+      <section className="mt-8 rounded-xl border border-white/8 bg-[#161b27] p-6">
         <div
           role="button"
           tabIndex={0}
@@ -824,16 +824,16 @@ function ReformasPanel({
           className="flex items-center justify-between cursor-pointer"
         >
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400">
               Reformas Destacadas
             </h2>
-            <p className="mt-0.5 text-xs text-white/30">
+            <p className="mt-0.5 text-xs text-[#64748b]">
               Aparecen en la portada · máx. 3
             </p>
           </div>
           <div className="flex items-center gap-2">
             {savingFeatured && (
-              <Loader2 size={14} className="animate-spin text-white/30" />
+              <Loader2 size={14} className="animate-spin text-[#64748b]" />
             )}
             {/* Botón para colapsar/expandir la sección */}
             <button
@@ -841,7 +841,7 @@ function ReformasPanel({
                 e.stopPropagation();
                 setFeaturedOpen((v) => !v);
               }}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-white/30 transition-colors hover:bg-white/5 hover:text-white/60"
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-[#64748b] transition-colors hover:bg-white/6 hover:text-[#94a3b8]"
             >
               {featuredOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               {featuredOpen ? "Minimizar" : "Expandir"}
@@ -860,7 +860,7 @@ function ReformasPanel({
               /* Slot relleno — muestra thumbnail + título + botón eliminar */
               <div
                 key={slot}
-                className="group relative overflow-hidden rounded-xl border border-white/8 bg-[#1A1A1A]"
+                className="group relative overflow-hidden rounded-xl border border-white/10 bg-[#1e2435]"
               >
                 <div className="relative aspect-[4/3]">
                   {reforma.images.length > 0 ? (
@@ -872,8 +872,8 @@ function ReformasPanel({
                       className="object-cover"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center bg-[#222]">
-                      <ImagesIcon size={24} className="text-white/10" />
+                    <div className="flex h-full items-center justify-center bg-[#252d3d]">
+                      <ImagesIcon size={24} className="text-[#475569]" />
                     </div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -881,7 +881,7 @@ function ReformasPanel({
                     {reforma.title || "(Sin título)"}
                   </p>
                   {/* Número de slot */}
-                  <span className="absolute left-2 top-2 rounded-md bg-copper/80 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+                  <span className="absolute left-2 top-2 rounded-md bg-indigo-600/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
                     {slot + 1}
                   </span>
                 </div>
@@ -901,15 +901,15 @@ function ReformasPanel({
                 disabled={!isNextEmpty}
                 className={`group aspect-[4/3] rounded-xl border-2 border-dashed transition-all ${
                   isNextEmpty
-                    ? "cursor-pointer border-white/15 bg-[#1A1A1A] hover:border-copper/50 hover:bg-copper/5"
-                    : "cursor-not-allowed border-white/6 bg-[#161616] opacity-40"
+                    ? "cursor-pointer border-indigo-500/25 bg-[#1e2435] hover:border-indigo-500/50 hover:bg-indigo-500/8"
+                    : "cursor-not-allowed border-white/6 bg-[#161b27] opacity-40"
                 }`}
               >
                 <div className="flex h-full flex-col items-center justify-center gap-2">
                   <div
                     className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${
                       isNextEmpty
-                        ? "border-white/15 bg-white/5 group-hover:border-copper/40 group-hover:bg-copper/10"
+                        ? "border-indigo-500/25 bg-indigo-500/8 group-hover:border-indigo-500/50 group-hover:bg-indigo-500/15"
                         : "border-white/8 bg-white/3"
                     }`}
                   >
@@ -917,7 +917,7 @@ function ReformasPanel({
                       size={18}
                       className={`transition-colors ${
                         isNextEmpty
-                          ? "text-white/25 group-hover:text-copper"
+                          ? "text-indigo-400/50 group-hover:text-indigo-400"
                           : "text-white/10"
                       }`}
                     />
@@ -925,7 +925,7 @@ function ReformasPanel({
                   <span
                     className={`text-[11px] transition-colors ${
                       isNextEmpty
-                        ? "text-white/20 group-hover:text-copper/60"
+                        ? "text-[#475569] group-hover:text-indigo-400/80"
                         : "text-white/10"
                     }`}
                   >
@@ -945,10 +945,10 @@ function ReformasPanel({
         {reformas.map((r) => (
           <div
             key={r.id}
-            className="group overflow-hidden rounded-xl border border-white/6 bg-[#141414] transition-all hover:border-white/12"
+            className="group overflow-hidden rounded-xl border border-white/8 bg-[#161b27] transition-all hover:border-indigo-500/30"
           >
             {/* Thumbnail */}
-            <div className="relative h-40 bg-[#1A1A1A]">
+            <div className="relative h-40 bg-[#1e2435]">
               {r.images.length > 0 ? (
                 <Image
                   src={`/reformas/${r.id}/${r.images[0]}`}
@@ -958,13 +958,13 @@ function ReformasPanel({
                   className="object-cover"
                 />
               ) : (
-                <div className="flex h-full items-center justify-center text-white/10">
+                <div className="flex h-full items-center justify-center text-[#475569]">
                   <ImagesIcon size={32} />
                 </div>
               )}
               <div className="absolute right-2 top-2 flex gap-1.5">
                 {featuredList.includes(r.id) && (
-                  <span className="rounded-md bg-copper/80 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
+                  <span className="rounded-md bg-indigo-600/90 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
                     DESTACADO
                   </span>
                 )}
@@ -975,7 +975,7 @@ function ReformasPanel({
             </div>
 
             <div className="p-4">
-              <h3 className="truncate text-sm font-semibold">
+              <h3 className="truncate text-sm font-semibold text-[#e2e8f0]">
                 {r.title || "(Sin título)"}
               </h3>
               {r.tags.length > 0 && (
@@ -983,13 +983,13 @@ function ReformasPanel({
                   {r.tags.slice(0, 3).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-white/30"
+                      className="rounded-md bg-indigo-500/12 px-1.5 py-0.5 text-[10px] text-indigo-400/80"
                     >
                       {tag}
                     </span>
                   ))}
                   {r.tags.length > 3 && (
-                    <span className="text-[10px] text-white/20">
+                    <span className="text-[10px] text-[#475569]">
                       +{r.tags.length - 3}
                     </span>
                   )}
@@ -998,14 +998,14 @@ function ReformasPanel({
               <div className="mt-3 flex gap-2">
                 <button
                   onClick={() => setEditing(r)}
-                  className="flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-1.5 text-xs text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+                  className="flex items-center gap-1.5 rounded-lg bg-[#1e2435] px-3 py-1.5 text-xs text-[#94a3b8] transition-colors hover:bg-[#252d3d] hover:text-[#e2e8f0]"
                 >
                   <Edit3 size={12} />
                   Editar
                 </button>
                 <button
                   onClick={() => handleDelete(r.id)}
-                  className="ml-auto rounded-lg p-1.5 text-white/15 transition-colors hover:bg-red-500/10 hover:text-red-400"
+                  className="ml-auto rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-red-500/10 hover:text-red-400"
                 >
                   <Trash2 size={12} />
                 </button>
@@ -1192,7 +1192,7 @@ function ReformaEditor({
   };
 
   const inputClass =
-    "w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-all focus:border-copper/40 focus:ring-1 focus:ring-copper/20 placeholder:text-white/15";
+    "w-full rounded-lg border border-white/10 bg-[#1e2435] px-3 py-2.5 text-sm text-[#e2e8f0] outline-none transition-all focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/15 placeholder:text-[#475569]";
 
   return (
     <div
@@ -1200,23 +1200,23 @@ function ReformaEditor({
       onClick={onClose}
     >
       <div
-        className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-5 sm:p-8"
+        className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-white/10 bg-[#161b27] p-5 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-2 text-white/30 hover:bg-white/5 hover:text-white"
+          className="absolute right-4 top-4 rounded-lg p-2 text-[#64748b] hover:bg-white/6 hover:text-[#e2e8f0] transition-colors"
         >
           <X size={18} />
         </button>
 
-        <h2 className="font-heading text-xl">
+        <h2 className="font-heading text-xl text-[#e2e8f0]">
           {isNew ? "Nueva Reforma" : `Editar — ${reforma.title || reforma.id}`}
         </h2>
 
         <div className="mt-6 space-y-5">
           <div>
-            <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/30">
+            <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-[#64748b]">
               Título <span className="text-red-400">*</span>
             </label>
             <input
@@ -1230,7 +1230,7 @@ function ReformaEditor({
           {/* Ubicación eliminada del editor */}
 
           <div>
-            <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/30">
+            <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-[#64748b]">
               Descripción <span className="text-red-400">*</span>
             </label>
             <textarea
@@ -1244,7 +1244,7 @@ function ReformaEditor({
 
           {/* Tags dropdown */}
           <div>
-            <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/30">
+            <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-[#64748b]">
               Tags
             </label>
             <div ref={tagDropdownRef} className="relative">
@@ -1258,14 +1258,14 @@ function ReformaEditor({
                     setTagDropdownOpen(!tagDropdownOpen);
                   }
                 }}
-                className="flex w-full items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white transition-all hover:border-white/20"
+                className="flex w-full items-center justify-between rounded-lg border border-white/10 bg-[#1e2435] px-3 py-2.5 text-sm text-[#e2e8f0] transition-all hover:border-white/20"
               >
                 <span className="flex flex-wrap gap-1.5">
                   {selectedTags.length > 0 ? (
                     selectedTags.map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center gap-1 rounded-md bg-copper/15 px-2 py-0.5 text-xs text-copper"
+                        className="inline-flex items-center gap-1 rounded-md bg-indigo-500/15 px-2 py-0.5 text-xs text-indigo-300"
                       >
                         {tag}
                         <button
@@ -1274,23 +1274,23 @@ function ReformaEditor({
                             e.stopPropagation();
                             toggleTag(tag);
                           }}
-                          className="text-copper/60 hover:text-copper"
+                          className="text-indigo-400/60 hover:text-indigo-300"
                         >
                           <X size={10} />
                         </button>
                       </span>
                     ))
                   ) : (
-                    <span className="text-white/20">Seleccionar tags…</span>
+                    <span className="text-[#475569]">Seleccionar tags…</span>
                   )}
                 </span>
-                <ChevronDown size={14} className="shrink-0 text-white/30" />
+                <ChevronDown size={14} className="shrink-0 text-[#64748b]" />
               </div>
 
               {tagDropdownOpen && (
-                <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-white/10 bg-[#1A1A1A] py-1 shadow-xl">
+                <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-white/10 bg-[#1e2435] py-1 shadow-xl">
                   {availableTags.length === 0 && (
-                    <p className="px-3 py-2 text-xs text-white/20">No hay tags configurados</p>
+                    <p className="px-3 py-2 text-xs text-[#475569]">No hay tags configurados</p>
                   )}
                   {availableTags.map((tag) => (
                     <button
@@ -1298,17 +1298,17 @@ function ReformaEditor({
                       type="button"
                       onClick={() => toggleTag(tag)}
                       className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-white/5 ${
-                        selectedTags.includes(tag) ? "text-copper" : "text-white/60"
+                        selectedTags.includes(tag) ? "text-indigo-300" : "text-[#94a3b8]"
                       }`}
                     >
                       <div
                         className={`flex h-4 w-4 items-center justify-center rounded border ${
                           selectedTags.includes(tag)
-                            ? "border-copper bg-copper/20"
+                            ? "border-indigo-500 bg-indigo-500/25"
                             : "border-white/20"
                         }`}
                       >
-                        {selectedTags.includes(tag) && <CheckCircle size={10} className="text-copper" />}
+                        {selectedTags.includes(tag) && <CheckCircle size={10} className="text-indigo-400" />}
                       </div>
                       {tag}
                     </button>
@@ -1322,10 +1322,10 @@ function ReformaEditor({
           {!isNew && (
             <div>
               <div className="flex items-center justify-between">
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-white/30">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-[#64748b]">
                   Imágenes ({images.length})
                 </label>
-                <label className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-white/5 px-3 py-1.5 text-xs text-white/50 transition-colors hover:bg-white/10 hover:text-white">
+                <label className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#1e2435] px-3 py-1.5 text-xs text-[#94a3b8] transition-colors hover:bg-[#252d3d] hover:text-[#e2e8f0]">
                   <Upload size={12} />
                   {uploading ? "Subiendo…" : "Subir imágenes"}
                   <input
@@ -1339,7 +1339,7 @@ function ReformaEditor({
                 </label>
               </div>
 
-              <p className="mt-1 text-[10px] text-white/15">Arrastra para reordenar</p>
+              <p className="mt-1 text-[10px] text-[#475569]">Arrastra para reordenar</p>
 
               <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6">
                 {images.map((img, i) => (
@@ -1353,7 +1353,7 @@ function ReformaEditor({
                       dragIndex === i ? "opacity-50" : ""
                     }`}
                   >
-                    <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1A1A1A]">
+                    <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1e2435]">
                       <Image
                         src={`/reformas/${reforma.id}/${img}`}
                         alt=""
@@ -1387,14 +1387,14 @@ function ReformaEditor({
           <div className="ml-auto flex gap-3">
             <button
               onClick={onClose}
-              className="rounded-lg bg-white/5 px-5 py-2.5 text-sm text-white/40 hover:bg-white/10"
+              className="rounded-lg bg-[#1e2435] px-5 py-2.5 text-sm text-[#64748b] hover:bg-[#252d3d] hover:text-[#94a3b8] transition-colors"
             >
               Cancelar
             </button>
             <button
               onClick={handleSave}
               disabled={saving || !canSave}
-              className="flex items-center gap-2 rounded-lg bg-copper px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-copper-light disabled:opacity-40"
+              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-indigo-500 disabled:opacity-40"
             >
               {saving ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -1431,24 +1431,24 @@ function FeaturedPickerModal({
       onClick={onClose}
     >
       <div
-        className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-5 sm:p-8"
+        className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/10 bg-[#161b27] p-5 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-2 text-white/30 hover:bg-white/5 hover:text-white"
+          className="absolute right-4 top-4 rounded-lg p-2 text-[#64748b] hover:bg-white/6 hover:text-[#e2e8f0] transition-colors"
         >
           <X size={18} />
         </button>
 
-        <h2 className="font-heading text-xl">Seleccionar reforma destacada</h2>
-        <p className="mt-1 text-sm text-white/30">
+        <h2 className="font-heading text-xl text-[#e2e8f0]">Seleccionar reforma destacada</h2>
+        <p className="mt-1 text-sm text-[#64748b]">
           Elige la reforma que aparecerá en la portada
         </p>
 
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
           {reformas.length === 0 ? (
-            <p className="col-span-3 py-8 text-center text-sm text-white/20">
+            <p className="col-span-3 py-8 text-center text-sm text-[#475569]">
               Todas las reformas ya están destacadas
             </p>
           ) : (
@@ -1456,9 +1456,9 @@ function FeaturedPickerModal({
               <button
                 key={r.id}
                 onClick={() => onSelect(r.id)}
-                className="group overflow-hidden rounded-xl border border-white/6 bg-[#141414] text-left transition-all hover:border-copper/40 hover:bg-copper/5"
+                className="group overflow-hidden rounded-xl border border-white/8 bg-[#161b27] text-left transition-all hover:border-indigo-500/40 hover:bg-indigo-500/5"
               >
-                <div className="relative h-28 bg-[#1A1A1A]">
+                <div className="relative h-28 bg-[#1e2435]">
                   {r.images.length > 0 ? (
                     <Image
                       src={`/reformas/${r.id}/${r.images[0]}`}
@@ -1469,15 +1469,15 @@ function FeaturedPickerModal({
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center">
-                      <ImagesIcon size={24} className="text-white/10" />
+                      <ImagesIcon size={24} className="text-[#475569]" />
                     </div>
                   )}
                 </div>
                 <div className="p-3">
-                  <p className="line-clamp-1 text-xs font-semibold text-white/70 transition-colors group-hover:text-white">
+                  <p className="line-clamp-1 text-xs font-semibold text-[#94a3b8] transition-colors group-hover:text-[#e2e8f0]">
                     {r.title || "(Sin título)"}
                   </p>
-                  <p className="mt-0.5 text-[10px] text-white/25">
+                  <p className="mt-0.5 text-[10px] text-[#475569]">
                     {r.images.length} {r.images.length === 1 ? "foto" : "fotos"}
                   </p>
                 </div>
@@ -1571,27 +1571,27 @@ function CarouselPanel({
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl">Carrusel Hero</h1>
-          <p className="mt-1 text-sm text-white/30">
+          <h1 className="font-heading text-2xl text-[#e2e8f0]">Carrusel Hero</h1>
+          <p className="mt-1 text-sm text-[#64748b]">
             {slides.length} slides configurados
           </p>
         </div>
         <div className="flex items-center gap-3">
           {saveStatus === "saving" && (
-            <span className="flex items-center gap-1.5 text-xs text-white/30">
+            <span className="flex items-center gap-1.5 text-xs text-[#64748b]">
               <Loader2 size={12} className="animate-spin" />
               Guardando…
             </span>
           )}
           {saveStatus === "saved" && (
-            <span className="flex items-center gap-1.5 text-xs text-green-400/70">
+            <span className="flex items-center gap-1.5 text-xs text-emerald-400">
               <CheckCircle size={12} />
               Guardado
             </span>
           )}
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 rounded-lg bg-copper px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-copper-light"
+            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-indigo-500"
           >
             <Plus size={16} />
             Añadir Slide
@@ -1604,26 +1604,26 @@ function CarouselPanel({
         {slides.map((slide, i) => (
           <div
             key={`${slide.reforma}-${slide.image}-${i}`}
-            className="flex items-center gap-4 rounded-xl border border-white/6 bg-[#141414] p-3"
+            className="flex items-center gap-4 rounded-xl border border-white/8 bg-[#161b27] p-3"
           >
             <div className="flex flex-col gap-1">
               <button
                 onClick={() => moveSlide(i, -1)}
                 disabled={i === 0}
-                className="p-0.5 text-white/20 hover:text-white/50 disabled:opacity-20"
+                className="p-0.5 text-[#475569] hover:text-[#94a3b8] disabled:opacity-20 transition-colors"
               >
                 <ChevronUp size={14} />
               </button>
               <button
                 onClick={() => moveSlide(i, 1)}
                 disabled={i === slides.length - 1}
-                className="p-0.5 text-white/20 hover:text-white/50 disabled:opacity-20"
+                className="p-0.5 text-[#475569] hover:text-[#94a3b8] disabled:opacity-20 transition-colors"
               >
                 <ChevronDown size={14} />
               </button>
             </div>
 
-            <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-[#1A1A1A]">
+            <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-[#1e2435]">
               <Image
                 src={`/reformas/${slide.reforma}/${slide.image}`}
                 alt=""
@@ -1634,20 +1634,20 @@ function CarouselPanel({
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] text-white/30">
+              <p className="text-[10px] text-[#64748b]">
                 {getReformaTitle(slide.reforma)}
               </p>
               <input
                 value={slide.caption}
                 onChange={(e) => updateCaption(i, e.target.value)}
                 placeholder="Pie de foto del slide…"
-                className="mt-1 w-full rounded-md border border-white/8 bg-white/3 px-2 py-1.5 text-xs text-white outline-none focus:border-copper/30"
+                className="mt-1 w-full rounded-md border border-white/10 bg-[#1e2435] px-2 py-1.5 text-xs text-[#e2e8f0] outline-none focus:border-indigo-500/40 placeholder:text-[#475569]"
               />
             </div>
 
             <button
               onClick={() => removeSlide(i)}
-              className="rounded-lg p-2 text-white/15 hover:bg-red-500/10 hover:text-red-400"
+              className="rounded-lg p-2 text-[#475569] hover:bg-red-500/10 hover:text-red-400 transition-colors"
             >
               <Trash2 size={14} />
             </button>
@@ -1662,18 +1662,18 @@ function CarouselPanel({
           onClick={() => setShowAddModal(false)}
         >
           <div
-            className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/8 bg-[#111111] p-5 sm:p-8"
+            className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/10 bg-[#161b27] p-5 sm:p-8"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setShowAddModal(false)}
-              className="absolute right-4 top-4 rounded-lg p-2 text-white/30 hover:bg-white/5 hover:text-white"
+              className="absolute right-4 top-4 rounded-lg p-2 text-[#64748b] hover:bg-white/6 hover:text-[#e2e8f0] transition-colors"
             >
               <X size={18} />
             </button>
 
-            <h2 className="font-heading text-xl">Añadir Slide al Carrusel</h2>
-            <p className="mt-1 text-sm text-white/30">
+            <h2 className="font-heading text-xl text-[#e2e8f0]">Añadir Slide al Carrusel</h2>
+            <p className="mt-1 text-sm text-[#64748b]">
               Selecciona una imagen de tus reformas
             </p>
 
@@ -1682,7 +1682,7 @@ function CarouselPanel({
                 .filter((r) => r.images.length > 0)
                 .map((r) => (
                   <div key={r.id}>
-                    <p className="text-xs font-medium text-white/40">
+                    <p className="text-xs font-medium text-[#94a3b8]">
                       {r.title || "(Sin título)"}
                     </p>
                     <div className="mt-2 grid grid-cols-5 gap-2 sm:grid-cols-7">
@@ -1690,7 +1690,7 @@ function CarouselPanel({
                         <button
                           key={img}
                           onClick={() => addSlide(r.id, img)}
-                          className="relative aspect-square overflow-hidden rounded-lg border-2 border-transparent transition-all hover:border-copper hover:scale-105"
+                          className="relative aspect-square overflow-hidden rounded-lg border-2 border-transparent transition-all hover:border-indigo-500 hover:scale-105"
                         >
                           <Image
                             src={`/reformas/${r.id}/${img}`}
@@ -1705,7 +1705,7 @@ function CarouselPanel({
                   </div>
                 ))}
               {reformas.filter((r) => r.images.length > 0).length === 0 && (
-                <p className="py-8 text-center text-sm text-white/20">
+                <p className="py-8 text-center text-sm text-[#475569]">
                   No hay reformas con imágenes. Sube imágenes a una reforma primero.
                 </p>
               )}
@@ -1788,7 +1788,7 @@ function ConfigPanel({
 
 
   const inputClass =
-    "w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-all focus:border-copper/40 placeholder:text-white/15";
+    "w-full rounded-lg border border-white/10 bg-[#1e2435] px-3 py-2.5 text-sm text-[#e2e8f0] outline-none transition-all focus:border-indigo-500/40 placeholder:text-[#475569]";
 
   const biz = business as Record<string, unknown>;
   const insta = (biz.instagram ?? {}) as Record<string, string>;
@@ -1798,8 +1798,8 @@ function ConfigPanel({
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl">Configuración</h1>
-          <p className="mt-1 text-sm text-white/30">
+          <h1 className="font-heading text-2xl text-[#e2e8f0]">Configuración</h1>
+          <p className="mt-1 text-sm text-[#64748b]">
             Datos del negocio y etiquetas
           </p>
         </div>
@@ -1818,13 +1818,13 @@ function ConfigPanel({
 
       <div className="mt-6 space-y-8">
           {/* Business Info */}
-          <section className="rounded-xl border border-white/6 bg-[#141414] p-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
+          <section className="rounded-xl border border-white/8 bg-[#161b27] p-6">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400">
               Datos del Negocio
             </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
                   Nombre de marca
                 </label>
                 <input
@@ -1834,7 +1834,7 @@ function ConfigPanel({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
                   Eslogan
                 </label>
                 <input
@@ -1846,7 +1846,7 @@ function ConfigPanel({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
                   Teléfono
                 </label>
                 <input
@@ -1858,7 +1858,7 @@ function ConfigPanel({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
                   Email
                 </label>
                 <input
@@ -1868,7 +1868,7 @@ function ConfigPanel({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
                   Experiencia
                 </label>
                 <input
@@ -1880,7 +1880,7 @@ function ConfigPanel({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
                   Instagram URL
                 </label>
                 <input
@@ -1892,7 +1892,7 @@ function ConfigPanel({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
                   Instagram handle
                 </label>
                 <input
@@ -1904,7 +1904,7 @@ function ConfigPanel({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
                   Horario - Días
                 </label>
                 <input
@@ -1916,7 +1916,7 @@ function ConfigPanel({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
                   Horario - Horas
                 </label>
                 <input
@@ -1932,8 +1932,8 @@ function ConfigPanel({
           </section>
 
           {/* Tags */}
-          <section className="rounded-xl border border-white/6 bg-[#141414] p-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
+          <section className="rounded-xl border border-white/8 bg-[#161b27] p-6">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400">
               Tags de Servicios
             </h2>
             <div className="mt-4">
@@ -1941,12 +1941,12 @@ function ConfigPanel({
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="group inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white/60"
+                    className="group inline-flex items-center gap-1.5 rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-3 py-1.5 text-sm text-indigo-300"
                   >
                     {tag}
                     <button
                       onClick={() => removeTag(tag)}
-                      className="rounded-full p-0.5 text-white/20 transition-colors hover:bg-red-500/20 hover:text-red-400"
+                      className="rounded-full p-0.5 text-indigo-400/40 transition-colors hover:bg-red-500/20 hover:text-red-400"
                     >
                       <X size={12} />
                     </button>
@@ -1964,13 +1964,13 @@ function ConfigPanel({
                 <button
                   onClick={addTag}
                   disabled={!newTag.trim()}
-                  className="flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/40 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-30"
+                  className="flex items-center gap-1.5 rounded-lg bg-[#1e2435] px-4 py-2 text-sm text-[#64748b] transition-colors hover:bg-[#252d3d] hover:text-[#e2e8f0] disabled:opacity-30"
                 >
                   <Plus size={14} />
                   Añadir
                 </button>
               </div>
-              <p className="mt-2 text-[10px] text-white/20">
+              <p className="mt-2 text-[10px] text-[#475569]">
                 Se usan en los filtros de la página de trabajos y en el editor de reformas.
               </p>
             </div>
@@ -1979,7 +1979,7 @@ function ConfigPanel({
           <button
             onClick={handleSaveVisual}
             disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-copper px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-copper-light disabled:opacity-40"
+            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-indigo-500 disabled:opacity-40"
           >
             {saving ? (
               <Loader2 size={14} className="animate-spin" />
@@ -2036,15 +2036,15 @@ function ChangePasswordForm() {
     }
   };
 
-  const inputClass = "w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-all focus:border-copper/40 placeholder:text-white/15";
+  const inputClass = "w-full rounded-lg border border-white/10 bg-[#1e2435] px-3 py-2.5 text-sm text-[#e2e8f0] outline-none transition-all focus:border-indigo-500/40 placeholder:text-[#475569]";
 
   return (
-    <section className="rounded-xl border border-red-500/20 bg-[#1A1111] p-6 mt-8">
+    <section className="rounded-xl border border-red-500/20 bg-[#1e1620] p-6 mt-8">
       <h2 className="text-sm font-semibold uppercase tracking-wider text-red-400 flex items-center gap-2">
         <AlertCircle size={16} />
         Seguridad
       </h2>
-      <p className="mt-2 text-xs text-white/40">
+      <p className="mt-2 text-xs text-[#64748b]">
         Cambia la contraseña de acceso al panel de administración. Por seguridad, te recomendamos usar una contraseña fuerte.
       </p>
       
@@ -2054,14 +2054,14 @@ function ChangePasswordForm() {
         </div>
       )}
       {success && (
-        <div className="mt-4 rounded-lg border border-green-500/20 bg-green-500/10 px-4 py-2 text-xs text-green-400">
+        <div className="mt-4 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-xs text-emerald-400">
           ¡Contraseña cambiada con éxito!
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4 max-w-sm">
         <div>
-          <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+          <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
             Contraseña actual
           </label>
           <div className="relative">
@@ -2075,14 +2075,14 @@ function ChangePasswordForm() {
             <button
               type="button"
               onClick={() => setShowCurrent(!showCurrent)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#94a3b8] transition-colors"
             >
               {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+          <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
             Nueva contraseña
           </label>
           <div className="relative">
@@ -2097,14 +2097,14 @@ function ChangePasswordForm() {
             <button
               type="button"
               onClick={() => setShowNew(!showNew)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#94a3b8] transition-colors"
             >
               {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+          <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
             Confirmar nueva contraseña
           </label>
           <div className="relative">
@@ -2119,7 +2119,7 @@ function ChangePasswordForm() {
             <button
               type="button"
               onClick={() => setShowConfirm(!showConfirm)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#94a3b8] transition-colors"
             >
               {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -2128,7 +2128,7 @@ function ChangePasswordForm() {
         <button
           type="submit"
           disabled={saving || !currentPassword || !newPassword || !confirmPassword}
-          className="w-full flex items-center justify-center gap-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 px-6 py-2.5 text-sm font-semibold transition-all hover:bg-red-500/30 hover:text-red-300 disabled:opacity-40"
+          className="w-full flex items-center justify-center gap-2 rounded-lg bg-red-500/15 text-red-400 border border-red-500/25 px-6 py-2.5 text-sm font-semibold transition-all hover:bg-red-500/25 hover:text-red-300 disabled:opacity-40"
         >
           {saving ? (
             <Loader2 size={14} className="animate-spin" />
@@ -2259,26 +2259,26 @@ function LocalizacionPanel({
   const mosaicPhotos = photos.length >= 3 ? [photos[2], photos[0], photos[1]] : photos;
 
   const inputClass =
-    "w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none transition-all focus:border-copper/40 placeholder:text-white/15";
+    "w-full rounded-lg border border-white/10 bg-[#1e2435] px-3 py-2.5 text-sm text-[#e2e8f0] outline-none transition-all focus:border-indigo-500/40 placeholder:text-[#475569]";
 
   return (
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-heading text-2xl">Localización</h1>
-          <p className="mt-1 text-sm text-white/30">
+          <h1 className="font-heading text-2xl text-[#e2e8f0]">Localización</h1>
+          <p className="mt-1 text-sm text-[#64748b]">
             Fotos del showroom y datos de ubicación
           </p>
         </div>
       </div>
 
       {/* ── Fotos del showroom ── */}
-      <section className="mt-8 rounded-xl border border-white/6 bg-[#141414] p-6">
+      <section className="mt-8 rounded-xl border border-white/8 bg-[#161b27] p-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400">
             Fotos del Showroom
           </h2>
-          <label className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-white/5 px-3 py-1.5 text-xs text-white/50 transition-colors hover:bg-white/10 hover:text-white">
+          <label className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#1e2435] px-3 py-1.5 text-xs text-[#94a3b8] transition-colors hover:bg-[#252d3d] hover:text-[#e2e8f0]">
             <Upload size={12} />
             {uploading ? "Subiendo…" : "Subir fotos"}
             <input
@@ -2294,17 +2294,17 @@ function LocalizacionPanel({
 
         {photos.length > 0 ? (
           <>
-            <p className="mt-2 text-[10px] text-white/20">
+            <p className="mt-2 text-[10px] text-[#475569]">
               Arrastra para reordenar · {photos.length} fotos
             </p>
 
             {/* Grid de fotos con drag & drop */}
             <div className="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-5 items-end">
-              {/* Contenedor agrupador de las 3 fotos principales con borde naranja único */}
+              {/* Contenedor agrupador de las 3 fotos principales con borde único */}
               {photos.length >= 3 && (
                 <div className="col-span-3 flex flex-col gap-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-copper">Destacadas en web</span>
-                <div className="grid grid-cols-3 gap-3 rounded-xl ring-[4px] ring-copper p-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-400">Destacadas en web</span>
+                <div className="grid grid-cols-3 gap-3 rounded-xl ring-[4px] ring-indigo-500/50 p-1">
                   {photos.slice(0, 3).map((photo, i) => (
                     <div
                       key={photo.src}
@@ -2316,7 +2316,7 @@ function LocalizacionPanel({
                         dragIndex === i ? "opacity-50" : ""
                       }`}
                     >
-                      <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1A1A1A]">
+                      <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1e2435]">
                         <Image
                           src={photo.src}
                           alt={photo.alt || ""}
@@ -2357,7 +2357,7 @@ function LocalizacionPanel({
                     dragIndex === i ? "opacity-50" : ""
                   }`}
                 >
-                  <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1A1A1A]">
+                  <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1e2435]">
                     <Image
                       src={photo.src}
                       alt={photo.alt || ""}
@@ -2389,9 +2389,9 @@ function LocalizacionPanel({
             </div>
           </>
         ) : (
-          <div className="mt-4 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-white/10 py-10">
-            <ImagesIcon size={32} className="text-white/10" />
-            <p className="mt-3 text-sm text-white/20">
+          <div className="mt-4 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-indigo-500/20 py-10">
+            <ImagesIcon size={32} className="text-[#475569]" />
+            <p className="mt-3 text-sm text-[#475569]">
               Sin fotos. Sube imágenes del showroom.
             </p>
           </div>
@@ -2399,13 +2399,13 @@ function LocalizacionPanel({
       </section>
 
       {/* ── Dirección y localización ── */}
-      <section className="mt-6 rounded-xl border border-white/6 bg-[#141414] p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-copper">
+      <section className="mt-6 rounded-xl border border-white/8 bg-[#161b27] p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400">
           Dirección y Región
         </h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
               Calle y número
             </label>
             <input
@@ -2418,7 +2418,7 @@ function LocalizacionPanel({
             />
           </div>
           <div>
-            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
               Código postal
             </label>
             <input
@@ -2431,7 +2431,7 @@ function LocalizacionPanel({
             />
           </div>
           <div>
-            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
               Ciudad
             </label>
             <input
@@ -2444,7 +2444,7 @@ function LocalizacionPanel({
             />
           </div>
           <div className="sm:col-span-2">
-            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
               Región / Provincia
             </label>
             <input
@@ -2457,7 +2457,7 @@ function LocalizacionPanel({
             />
           </div>
           <div className="sm:col-span-2">
-            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
               Zona de trabajo
             </label>
             <input
@@ -2468,12 +2468,12 @@ function LocalizacionPanel({
               className={inputClass}
               placeholder="San Sebastián, Irún, Tolosa y alrededores"
             />
-            <p className="mt-1 text-[10px] text-white/20">
+            <p className="mt-1 text-[10px] text-[#475569]">
               Descripción de la zona de cobertura. Se muestra en la sección de contacto.
             </p>
           </div>
           <div className="sm:col-span-2">
-            <label className="mb-1 block text-[10px] uppercase tracking-wider text-white/30">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
               Coordenadas Google Maps
             </label>
             <input
@@ -2484,7 +2484,7 @@ function LocalizacionPanel({
               className={inputClass}
               placeholder="43.30739782667964,-2.0075817173451656"
             />
-            <p className="mt-1 text-[10px] text-white/20">
+            <p className="mt-1 text-[10px] text-[#475569]">
               Formato: latitud,longitud. Centra el mapa y genera el enlace de Google Maps.
             </p>
           </div>
@@ -2492,7 +2492,7 @@ function LocalizacionPanel({
       </section>
 
       {saveSuccess && (
-        <div className="mt-4 rounded-lg border border-green-500/20 bg-green-500/10 px-4 py-2.5 text-xs text-green-400">
+        <div className="mt-4 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-2.5 text-xs text-emerald-400">
           Cambios guardados correctamente
         </div>
       )}
@@ -2500,7 +2500,7 @@ function LocalizacionPanel({
       <button
         onClick={handleSave}
         disabled={saving}
-        className="mt-6 flex items-center gap-2 rounded-lg bg-copper px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-copper-light disabled:opacity-40"
+        className="mt-6 flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-indigo-500 disabled:opacity-40"
       >
         {saving ? (
           <Loader2 size={14} className="animate-spin" />
