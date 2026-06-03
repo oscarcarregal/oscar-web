@@ -38,7 +38,7 @@ function useHomeData() {
         setSiteConfig(config);
         const slides = config.heroCarousel.map((s) => ({
           ...s,
-          src: `/reformas/${s.reforma}/${s.image}`,
+          src: s.image,
         }));
         setHeroSlides(slides);
 

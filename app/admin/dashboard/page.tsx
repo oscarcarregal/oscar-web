@@ -892,7 +892,7 @@ function AdminReformaCard({
           reforma.images.map((src, i) => (
             <Image
               key={src}
-              src={`/reformas/${reforma.id}/${src}`}
+              src={src}
               alt={reforma.title}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -1119,7 +1119,7 @@ function ReformasPanel({
                 <div className="relative aspect-[4/3]">
                   {reforma.images.length > 0 ? (
                     <Image
-                      src={`/reformas/${reforma.id}/${reforma.images[0]}`}
+                      src={reforma.images[0].startsWith("http") ? reforma.images[0] : `/reformas/${reforma.id}/${reforma.images[0]}`}
                       alt={reforma.title}
                       fill
                       sizes="200px"
@@ -1548,7 +1548,7 @@ function ReformaEditor({
                   >
                     <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1e2435]">
                       <Image
-                        src={`/reformas/${reforma.id}/${img}`}
+                        src={img}
                         alt=""
                         fill
                         sizes="120px"
@@ -1563,7 +1563,7 @@ function ReformaEditor({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setLightboxImg(`/reformas/${reforma.id}/${img}`);
+                          setLightboxImg(img);
                         }}
                         className="flex h-6 w-6 items-center justify-center rounded-full bg-black/80 text-white hover:bg-black hover:scale-110 transition-all"
                         aria-label="Ampliar"
@@ -1678,7 +1678,7 @@ function FeaturedPickerModal({
                 <div className="relative h-28 bg-[#1e2435]">
                   {r.images.length > 0 ? (
                     <Image
-                      src={`/reformas/${r.id}/${r.images[0]}`}
+                      src={r.images[0]}
                       alt={r.title}
                       fill
                       sizes="200px"
@@ -1843,7 +1843,7 @@ function CarouselPanel({
 
             <div className="group relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-[#1e2435]">
               <Image
-                src={`/reformas/${slide.reforma}/${slide.image}`}
+                src={slide.image}
                 alt=""
                 fill
                 sizes="96px"
@@ -1853,7 +1853,7 @@ function CarouselPanel({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setLightboxImg(`/reformas/${slide.reforma}/${slide.image}`);
+                    setLightboxImg(slide.image);
                   }}
                   className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/40"
                   aria-label="Ampliar"
@@ -1923,7 +1923,7 @@ function CarouselPanel({
                           className="relative aspect-square overflow-hidden rounded-lg border-2 border-transparent transition-all hover:border-indigo-500 hover:scale-105"
                         >
                           <Image
-                            src={`/reformas/${r.id}/${img}`}
+                            src={img}
                             alt=""
                             fill
                             sizes="80px"
@@ -1966,6 +1966,8 @@ function ConfigPanel({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [migrating, setMigrating] = useState(false);
+  const [migratedStats, setMigratedStats] = useState("");
 
   const [business, setBusiness] = useState(config?.business ?? {});
   const [tags, setTags] = useState<string[]>(config?.tags ?? []);
@@ -2020,6 +2022,21 @@ function ConfigPanel({
       setError(err instanceof Error ? err.message : "Error");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleMigrateBlob = async () => {
+    if (!confirm("Esto subirá todas las fotos locales a Vercel Blob y actualizará la base de datos. Asegúrate de haber hecho deploy en Vercel antes de pulsar esto. ¿Continuar?")) return;
+    setMigrating(true);
+    setMigratedStats("");
+    try {
+      const res = await api<{ migratedCount: number }>("/api/admin/migrate", { method: "POST" });
+      setMigratedStats(`Éxito: Se han migrado ${res.migratedCount} imágenes a Vercel Blob.`);
+      onRefresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Error migrando");
+    } finally {
+      setMigrating(false);
     }
   };
 
@@ -2228,6 +2245,33 @@ function ConfigPanel({
 
           {/* Seguridad / Cambio de Contraseña */}
           <ChangePasswordForm />
+
+          {/* SECCION HERRAMIENTAS MIGRACION */}
+          <section className="rounded-xl border border-indigo-500/30 bg-[#161b27] p-5 sm:p-6 shadow-sm mt-8">
+            <h2 className="text-sm font-semibold text-[#e2e8f0] uppercase tracking-wide">
+              Herramientas de Desarrollador
+            </h2>
+            <p className="mt-2 text-xs text-[#94a3b8]">
+              Utiliza esta herramienta para migrar las imágenes almacenadas localmente al nuevo servidor en la nube (Vercel Blob). Tras ejecutarla, las URLs de todas las fotos de las reformas y la tienda se actualizarán.
+            </p>
+            
+            {migratedStats && (
+              <div className="mt-4 rounded-lg bg-emerald-500/10 p-3 text-sm text-emerald-400 border border-emerald-500/20">
+                {migratedStats}
+              </div>
+            )}
+
+            <div className="mt-4 flex">
+              <button
+                onClick={handleMigrateBlob}
+                disabled={migrating}
+                className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-indigo-500 disabled:opacity-40"
+              >
+                {migrating ? <Loader2 size={14} className="animate-spin" /> : <Hammer size={14} />}
+                {migrating ? "Migrando..." : "Migrar Imágenes a Blob"}
+              </button>
+            </div>
+          </section>
 
         </div>
     </div>

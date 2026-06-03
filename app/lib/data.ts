@@ -98,7 +98,7 @@ export async function fetchAllReformas(): Promise<ReformaProject[]> {
 
   return raw.map((r) => ({
     ...r,
-    imagePaths: r.images.map((img) => img.startsWith("http") ? img : `/reformas/${r.id}/${img}`),
+    imagePaths: r.images,
   }));
 }
 
