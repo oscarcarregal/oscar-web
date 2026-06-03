@@ -13,18 +13,13 @@ import { put, del } from "@vercel/blob";
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-function isValidImageBuffer(buf: Buffer): boolean {
-  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return true;
-  if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) return true;
-  if (buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 &&
-      buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50) return true;
-  return false;
-}
-
-function safeExtFromBuffer(buf: Buffer): string {
-  if (buf[0] === 0xff && buf[1] === 0xd8) return "jpg";
-  if (buf[0] === 0x89 && buf[1] === 0x50) return "png";
-  if (buf[0] === 0x52 && buf[1] === 0x49) return "webp";
+/** 
+ * Extensiones seguras basadas en MIME type 
+ */
+function safeExtFromMime(mime: string): string {
+  if (mime === "image/jpeg") return "jpg";
+  if (mime === "image/png") return "png";
+  if (mime === "image/webp") return "webp";
   return "jpg";
 }
 
@@ -68,15 +63,10 @@ export async function POST(req: NextRequest) {
       if (!ALLOWED_TYPES.includes(file.type)) continue;
       if (file.size > MAX_FILE_SIZE) continue;
 
-      const buffer = Buffer.from(await file.arrayBuffer());
-
-      // Validar magic number real del archivo
-      if (!isValidImageBuffer(buffer)) continue;
-
-      const ext = safeExtFromBuffer(buffer);
+      const ext = safeExtFromMime(file.type);
       const safeName = `tienda/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
-      const blob = await put(safeName, buffer, {
+      const blob = await put(safeName, file, {
         access: 'public',
         contentType: file.type
       });
@@ -98,9 +88,10 @@ export async function POST(req: NextRequest) {
       { success: true, files: savedPhotos },
       { headers: NO_STORE_HEADERS }
     );
-  } catch {
+  } catch (error: any) {
+    console.error("Error subiendo imagen tienda:", error);
     return NextResponse.json(
-      { error: "Error subiendo imágenes" },
+      { error: error.message || "Error subiendo imágenes" },
       { status: 500, headers: NO_STORE_HEADERS }
     );
   }

@@ -10,26 +10,13 @@ import { put, del } from "@vercel/blob";
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-/**
- * Valida los primeros bytes del buffer contra magic numbers conocidos.
- * Evita que un atacante suba un archivo renombrado como imagen.
+/** 
+ * Extensiones seguras basadas en MIME type 
  */
-function isValidImageBuffer(buf: Buffer): boolean {
-  // JPEG: FF D8 FF
-  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return true;
-  // PNG: 89 50 4E 47 0D 0A 1A 0A
-  if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) return true;
-  // WebP: 52 49 46 46 ... 57 45 42 50
-  if (buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 &&
-      buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50) return true;
-  return false;
-}
-
-/** Extensión segura derivada del magic number, no del nombre de archivo */
-function safeExtFromBuffer(buf: Buffer): string {
-  if (buf[0] === 0xff && buf[1] === 0xd8) return "jpg";
-  if (buf[0] === 0x89 && buf[1] === 0x50) return "png";
-  if (buf[0] === 0x52 && buf[1] === 0x49) return "webp";
+function safeExtFromMime(mime: string): string {
+  if (mime === "image/jpeg") return "jpg";
+  if (mime === "image/png") return "png";
+  if (mime === "image/webp") return "webp";
   return "jpg";
 }
 
@@ -90,15 +77,11 @@ export async function POST(
       if (!ALLOWED_TYPES.includes(file.type)) continue;
       if (file.size > MAX_FILE_SIZE) continue;
 
-      const buffer = Buffer.from(await file.arrayBuffer());
-
-      // Validar magic number real del archivo
-      if (!isValidImageBuffer(buffer)) continue;
-
-      const ext = safeExtFromBuffer(buffer);
+      const ext = safeExtFromMime(file.type);
       const safeName = `reformas/${safeId}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
-      const blob = await put(safeName, buffer, { 
+      // Usar directamente el objeto File es más eficiente en Vercel
+      const blob = await put(safeName, file, { 
         access: 'public',
         contentType: file.type
       });
@@ -115,8 +98,9 @@ export async function POST(
     }
 
     return NextResponse.json({ success: true, files: savedFiles });
-  } catch {
-    return NextResponse.json({ error: "Error subiendo imágenes" }, { status: 500 });
+  } catch (error: any) {
+    console.error("Error subiendo imagen de reforma:", error);
+    return NextResponse.json({ error: error.message || "Error subiendo imágenes" }, { status: 500 });
   }
 }
 

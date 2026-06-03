@@ -856,7 +856,6 @@ function AdminReformaCard({
 }) {
   const [hovered, setHovered] = useState(false);
   const [imgIdx, setImgIdx] = useState(0);
-  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const startCycle = () => {
@@ -936,30 +935,16 @@ function AdminReformaCard({
             <Edit3 size={12} />
             Editar
           </div>
-          <div className="flex gap-2">
-            {reforma.images.length > 0 && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLightboxImg(`/reformas/${reforma.id}/${reforma.images[imgIdx]}`);
-                }}
-                className="flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white shadow-lg backdrop-blur-sm transition-all hover:bg-black/80 hover:scale-110"
-                aria-label="Ampliar"
-              >
-                <Maximize size={12} />
-              </button>
-            )}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete();
-              }}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-red-500/90 text-white shadow-lg backdrop-blur-sm transition-all hover:bg-red-500 hover:scale-110"
-              aria-label="Eliminar"
-            >
-              <Trash2 size={12} />
-            </button>
-          </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-red-500/90 text-white shadow-lg backdrop-blur-sm transition-all hover:bg-red-500 hover:scale-110"
+            aria-label="Eliminar"
+          >
+            <Trash2 size={12} />
+          </button>
         </div>
       </div>
 
@@ -981,14 +966,6 @@ function AdminReformaCard({
           ))}
         </div>
       </div>
-
-      {lightboxImg && (
-        <LightboxModal
-          src={lightboxImg}
-          alt={reforma.title}
-          onClose={() => setLightboxImg(null)}
-        />
-      )}
     </div>
   );
 }
