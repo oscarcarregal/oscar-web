@@ -96,25 +96,25 @@ export default function Footer() {
               Contacto
             </h4>
             <ul className="mt-5 space-y-4 text-sm">
-              <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <Phone size={14} className="text-silver" />
-                </div>
+              <li>
                 <a
                   href={phoneHref}
-                  className="transition-colors hover:text-white"
+                  className="group flex items-center gap-3 transition-colors hover:text-white"
                 >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-white/10">
+                    <Phone size={14} className="text-silver transition-colors group-hover:text-white" />
+                  </div>
                   {formatPhoneNumber(business?.phoneNumber)}
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <Mail size={14} className="text-silver" />
-                </div>
+              <li>
                 <a
                   href={`mailto:${business?.email ?? ""}`}
-                  className="transition-colors hover:text-white"
+                  className="group flex items-center gap-3 transition-colors hover:text-white"
                 >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-white/10">
+                    <Mail size={14} className="text-silver transition-colors group-hover:text-white" />
+                  </div>
                   {business?.email}
                 </a>
               </li>

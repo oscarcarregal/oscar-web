@@ -68,36 +68,33 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
         </div>
 
         <div className="mt-16 grid gap-8 lg:grid-cols-3">
-          {contactItems.map((c, i) => (
-            <div
-              key={c.title}
-              className={`group flex flex-col items-center rounded-2xl bg-cream p-10 text-center transition-all duration-500 hover-glow hover:-translate-y-1 ${visible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-12"
-                }`}
-              style={{
-                transitionDelay: visible ? `${200 + i * 120}ms` : "0ms",
-              }}
-            >
-              <div className={`flex h-14 w-14 items-center justify-center rounded-xl transition-colors duration-300 ${c.iconBg}`}>
-                <c.icon className={c.iconColor} size={24} />
-              </div>
-              <h3 className="mt-5 text-xl text-carbon">{c.title}</h3>
-              {c.href ? (
-                <a
-                  href={c.href}
-                  className="mt-2 text-sm font-medium text-gray-dark transition-colors hover:text-copper"
-                >
-                  {c.line1}
-                </a>
-              ) : (
-                <p className="mt-2 text-sm font-medium text-gray-dark">
+          {contactItems.map((c, i) => {
+            const CardWrapper = c.href ? "a" : "div";
+            return (
+              <CardWrapper
+                key={c.title}
+                href={c.href}
+                target={c.href?.startsWith("http") ? "_blank" : undefined}
+                rel={c.href?.startsWith("http") ? "noopener noreferrer" : undefined}
+                className={`group flex flex-col items-center rounded-2xl bg-cream p-10 text-center transition-all duration-500 hover-glow hover:-translate-y-1 ${visible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-12"
+                  }`}
+                style={{
+                  transitionDelay: visible ? `${200 + i * 120}ms` : "0ms",
+                }}
+              >
+                <div className={`flex h-14 w-14 items-center justify-center rounded-xl transition-colors duration-300 ${c.iconBg}`}>
+                  <c.icon className={c.iconColor} size={24} />
+                </div>
+                <h3 className="mt-5 text-xl text-carbon">{c.title}</h3>
+                <p className="mt-2 text-sm font-medium text-gray-dark transition-colors group-hover:text-copper">
                   {c.line1}
                 </p>
-              )}
-              <p className="mt-1 text-xs text-silver">{c.line2}</p>
-            </div>
-          ))}
+                <p className="mt-1 text-xs text-silver">{c.line2}</p>
+              </CardWrapper>
+            );
+          })}
         </div>
       </div>
     </section>
