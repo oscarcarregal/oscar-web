@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { ReformaProject } from "../lib/data";
@@ -23,6 +23,28 @@ export default function GalleryModal({
     () => setCurrent((c) => (c + 1) % total),
     [total]
   );
+
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    window.history.pushState({ galleryModalOpen: true }, "");
+
+    const handlePopState = () => {
+      onCloseRef.current();
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      if (window.history.state?.galleryModalOpen) {
+        window.history.back();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
