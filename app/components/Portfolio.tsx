@@ -7,8 +7,9 @@ import Link from "next/link";
 import { ArrowRight, Instagram } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import type { ReformaProject } from "../lib/data";
+import GalleryModal from "./GalleryModal";
 
-function ProjectCard({ project, index, visible }: { project: ReformaProject; index: number; visible: boolean }) {
+function ProjectCard({ project, index, visible, onOpen }: { project: ReformaProject; index: number; visible: boolean; onOpen: () => void }) {
   const [imgIdx, setImgIdx] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -28,8 +29,17 @@ function ProjectCard({ project, index, visible }: { project: ReformaProject; ind
 
   return (
     <div
-      className={`group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover-glow hover:-translate-y-1 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+      className={`group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover-glow hover:-translate-y-1 cursor-pointer ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
         }`}
+      onClick={onOpen}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen();
+        }
+      }}
       style={{ transitionDelay: visible ? `${200 + index * 120}ms` : "0ms" }}
     >
       <div
@@ -99,6 +109,7 @@ function ProjectCard({ project, index, visible }: { project: ReformaProject; ind
 
 export default function Portfolio({ projects, instagramUrl }: { projects: ReformaProject[], instagramUrl?: string }) {
   const { ref, visible } = useScrollReveal();
+  const [modalProject, setModalProject] = useState<ReformaProject | null>(null);
 
   return (
     <section id="trabajos" className="scroll-mt-28 bg-white py-28 md:py-36">
@@ -125,7 +136,7 @@ export default function Portfolio({ projects, instagramUrl }: { projects: Reform
         {projects.length > 0 ? (
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((p, i) => (
-              <ProjectCard key={p.id} project={p} index={i} visible={visible} />
+              <ProjectCard key={p.id} project={p} index={i} visible={visible} onOpen={() => setModalProject(p)} />
             ))}
           </div>
         ) : (
@@ -165,6 +176,13 @@ export default function Portfolio({ projects, instagramUrl }: { projects: Reform
           )}
         </div>
       </div>
+
+      {modalProject && (
+        <GalleryModal
+          project={modalProject}
+          onClose={() => setModalProject(null)}
+        />
+      )}
     </section>
   );
 }

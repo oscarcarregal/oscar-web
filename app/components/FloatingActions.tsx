@@ -26,7 +26,7 @@ export default function FloatingActions({ phoneNumber }: FloatingActionsProps) {
 
   /* URL de WhatsApp con número formateado (sin espacios ni guiones) */
   const waNumber = phoneNumber?.replace(/\D/g, "");
-  const waUrl = waNumber ? `https://wa.me/34${waNumber}` : null;
+  const waUrl = waNumber ? `whatsapp://send?phone=34${waNumber}` : null;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">

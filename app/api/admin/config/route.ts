@@ -1,10 +1,7 @@
-import { getBaseUrl } from "@/app/lib/base-url";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, NO_STORE_HEADERS } from "@/app/lib/admin-auth";
 import { sanitizeConfigPayload } from "@/app/lib/config-security";
 import { redis } from "@/app/lib/redis";
-
-
 
 export async function GET() {
   if (!(await requireAuth())) {
@@ -15,12 +12,7 @@ export async function GET() {
   }
 
   try {
-    let data = await redis.get("site:config");
-    if (!data) {
-      const baseUrl = getBaseUrl();
-      const res = await fetch(`${baseUrl}/config.json`);
-      if (res.ok) data = await res.json();
-    }
+    const data = await redis.get("site:config");
     return NextResponse.json(data, { headers: NO_STORE_HEADERS });
   } catch {
     return NextResponse.json(
