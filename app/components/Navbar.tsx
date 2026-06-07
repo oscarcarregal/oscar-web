@@ -62,6 +62,19 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /* Fix Next.js hash scrolling on cross-page navigation with lazy images */
+  useEffect(() => {
+    if (pathname === "/" && typeof window !== "undefined" && window.location.hash) {
+      const id = window.location.hash.substring(1);
+      if (HOME_SECTION_IDS.includes(id)) {
+        const timer = setTimeout(() => {
+          scrollToSection(id);
+        }, 500);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [pathname]);
+
   /* Gestión de clicks en enlaces con hash */
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,

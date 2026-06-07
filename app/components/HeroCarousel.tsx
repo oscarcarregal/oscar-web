@@ -133,7 +133,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
       {/* Indicadores inferiores */}
       <div className="absolute bottom-8 left-0 right-0 z-10 flex flex-col items-center gap-4">
         <span className="rounded-full border border-white/10 bg-black/30 px-4 py-1.5 text-xs font-medium text-white/80 backdrop-blur-sm">
-          {slides[current]?.caption}
+          {slides[current]?.caption?.split(" — ")[0]}
         </span>
         <div className="flex items-center gap-2.5">
           {slides.map((_, i) => (
