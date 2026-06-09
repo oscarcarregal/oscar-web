@@ -43,6 +43,9 @@ export const metadata: Metadata = {
     locale: "es_ES",
     siteName: "Oscar Carregal · Fontanería & Reformas",
   },
+  verification: {
+    google: "RKSxJFzK6Z2x6XJ_0m03zPVqmRK7MHpLa6DvQDya1H4",
+  },
 };
 
 export default async function RootLayout({
