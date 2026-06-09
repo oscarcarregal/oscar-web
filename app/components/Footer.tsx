@@ -32,7 +32,7 @@ export default function Footer() {
     : DEFAULT_SCHEDULE;
 
   return (
-    <footer className="relative bg-carbon-light text-white/90">
+    <footer className="relative bg-carbon text-white/80">
       {/* Top decorative border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
@@ -71,7 +71,7 @@ export default function Footer() {
 
           {/* Col 2 – Quick links */}
           <div className="md:col-span-3">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
               Enlaces
             </h4>
             <ul className="mt-5 space-y-3">
@@ -97,7 +97,7 @@ export default function Footer() {
 
           {/* Col 3 – Contact info */}
           <div className="md:col-span-4">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
               Contacto
             </h4>
             <ul className="mt-5 space-y-4 text-sm">
@@ -123,34 +123,23 @@ export default function Footer() {
                   {business?.email}
                 </a>
               </li>
-              <li>
-                {storeAddress ? (
-                  <a
-                    href={`https://maps.google.com/maps?q=${encodeURIComponent(
-                      `${storeAddress.street.toLowerCase().includes("local") ? storeAddress.street : storeAddress.street + ", local 1"}, ${storeAddress.postalCode} ${storeAddress.city}`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-3 transition-colors hover:text-white"
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-white/10">
-                      <MapPin size={14} className="text-silver transition-colors group-hover:text-white" />
-                    </div>
-                    <span className="text-sm text-white/80">
-                      {storeAddress.street.toLowerCase().includes("local") ? storeAddress.street : storeAddress.street + ", local 1"}, {storeAddress.postalCode} {storeAddress.city}
-                    </span>
-                  </a>
-                ) : null}
+              <li className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
+                  <MapPin size={14} className="text-silver" />
+                </div>
+                {storeAddress
+                  ? `${storeAddress.street.toLowerCase().includes("local") ? storeAddress.street : storeAddress.street + ", local 1"}, ${storeAddress.postalCode} ${storeAddress.city}`
+                  : null}
               </li>
               <li className="flex items-start gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 shrink-0">
                   <Clock size={14} className="text-silver" />
                 </div>
-                <div className="mt-1 text-white/80 flex flex-wrap gap-x-3 gap-y-1">
+                <div className="mt-1 text-white flex flex-wrap gap-x-3 gap-y-1">
                   {scheduleEntries.filter(e => e.open).map((entry, i) => (
                     <span key={i} className="whitespace-nowrap">
                       <strong className="font-medium text-white/90 mr-1">{entry.days}</strong>
-                      <span className="text-white/80">{formatScheduleEntry(entry)}</span>
+                      {formatScheduleEntry(entry)}
                     </span>
                   ))}
                 </div>
@@ -161,10 +150,10 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-16 flex flex-col items-center gap-4 border-t border-white/8 pt-8 sm:flex-row sm:justify-between">
-          <p className="text-xs text-white/80">
+          <p className="text-xs text-white/70">
             {footer?.copyrightLine}
           </p>
-          <p className="text-xs text-white/80">
+          <p className="text-xs text-white/70">
             {footer?.copyrightNote}
           </p>
         </div>
