@@ -123,23 +123,34 @@ export default function Footer() {
                   {business?.email}
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
-                  <MapPin size={14} className="text-silver" />
-                </div>
-                {storeAddress
-                  ? `${storeAddress.street.toLowerCase().includes("local") ? storeAddress.street : storeAddress.street + ", local 1"}, ${storeAddress.postalCode} ${storeAddress.city}`
-                  : null}
+              <li>
+                {storeAddress ? (
+                  <a
+                    href={`https://maps.google.com/maps?q=${encodeURIComponent(
+                      `${storeAddress.street.toLowerCase().includes("local") ? storeAddress.street : storeAddress.street + ", local 1"}, ${storeAddress.postalCode} ${storeAddress.city}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-3 transition-colors hover:text-white"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-white/10">
+                      <MapPin size={14} className="text-silver transition-colors group-hover:text-white" />
+                    </div>
+                    <span className="text-sm text-white/80">
+                      {storeAddress.street.toLowerCase().includes("local") ? storeAddress.street : storeAddress.street + ", local 1"}, {storeAddress.postalCode} {storeAddress.city}
+                    </span>
+                  </a>
+                ) : null}
               </li>
               <li className="flex items-start gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 shrink-0">
                   <Clock size={14} className="text-silver" />
                 </div>
-                <div className="mt-1 text-silver flex flex-wrap gap-x-3 gap-y-1">
+                <div className="mt-1 text-white/80 flex flex-wrap gap-x-3 gap-y-1">
                   {scheduleEntries.filter(e => e.open).map((entry, i) => (
                     <span key={i} className="whitespace-nowrap">
-                      <strong className="font-medium text-white/90 mr-1">{entry.days}</strong> 
-                      {formatScheduleEntry(entry)}
+                      <strong className="font-medium text-white/90 mr-1">{entry.days}</strong>
+                      <span className="text-white/80">{formatScheduleEntry(entry)}</span>
                     </span>
                   ))}
                 </div>

@@ -168,7 +168,7 @@ export default function Navbar() {
         <Link href="/" className="shrink-0 group">
           <Image
             src="/assets/Logo_texto-removebg-preview.png"
-            alt="Oscar Carregal – Fontanería & Reformas"
+            alt="Oscar Carregal - Fontanero y Reformas Integrales en San Sebastián"
             width={200}
             height={50}
             priority

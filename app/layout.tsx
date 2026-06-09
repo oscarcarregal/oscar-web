@@ -2,6 +2,8 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, Outfit } from "next/font/google";
 import "./globals.css";
+import { LocalBusinessSEO } from "./components/SEO";
+import { fetchConfig } from "./lib/data";
 
 /* Fuentes optimizadas con next/font (se sirven como assets estáticos) */
 const dmSerif = DM_Serif_Display({
@@ -43,13 +45,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const config = await fetchConfig();
+
   return (
     <html lang="es" className={`${dmSerif.variable} ${outfit.variable}`} suppressHydrationWarning>
+      <head>
+        <LocalBusinessSEO config={config} />
+      </head>
       <body suppressHydrationWarning className="grain-overlay">
         {children}
       </body>
