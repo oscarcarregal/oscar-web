@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://oscarcarregal.com/sitemap.xml
+Sitemap: https://oscarcarregal.es/sitemap.xml

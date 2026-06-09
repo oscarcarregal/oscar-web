@@ -21,7 +21,7 @@ export async function sendNotificationEmail({
     return false;
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL || "info@oscarcarregal.com"; // Email de destino
+  const adminEmail = process.env.ADMIN_EMAIL || "info@oscarcarregal.es"; // Email de destino
 
   try {
     const { data, error } = await resend.emails.send({
@@ -61,7 +61,7 @@ export async function sendNotificationEmail({
             </div>
             
             <div style="margin-top: 32px; text-align: center;">
-              <a href="https://oscarcarregal.com/admin/dashboard" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Ver en el Panel de Control</a>
+              <a href="https://oscarcarregal.es/admin/dashboard" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Ver en el Panel de Control</a>
             </div>
           </div>
         </div>
