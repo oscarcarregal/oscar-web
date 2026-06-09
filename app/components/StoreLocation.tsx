@@ -6,7 +6,7 @@ import Image from "next/image";
 import { MapPin, Clock, ArrowUpRight, ChevronLeft, ChevronRight, X, CalendarCheck } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import type { SiteConfig } from "../lib/data";
-import { DEFAULT_SCHEDULE, formatScheduleEntry, getOpenStatus } from "../lib/schedule";
+import { DEFAULT_SCHEDULE, formatScheduleEntry } from "../lib/schedule";
 import AppointmentWidget from "./AppointmentWidget";
 
 export default function StoreLocation({ config }: { config: SiteConfig | null }) {
@@ -22,8 +22,6 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
   const scheduleEntries = (business?.scheduleEntries && business.scheduleEntries.length > 0)
     ? business.scheduleEntries
     : DEFAULT_SCHEDULE;
-
-  const openStatus = getOpenStatus(scheduleEntries);
 
   // Para mantener el layout actual (izquierda grande + dos a la derecha)
   const visibleMosaicPhotos = useMemo(() => {

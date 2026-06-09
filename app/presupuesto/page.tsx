@@ -24,7 +24,7 @@ import FloatingActions from "../components/FloatingActions";
 import { fetchConfig, type SiteConfig } from "../lib/data";
 import { formatPhoneNumber } from "../lib/phone";
 import { SidebarSkeleton } from "../components/Skeletons";
-import { DEFAULT_SCHEDULE, formatScheduleEntry, getOpenStatus } from "../lib/schedule";
+import { DEFAULT_SCHEDULE, formatScheduleEntry } from "../lib/schedule";
 
 /* ─────────────────────── TYPES ─────────────────────── */
 
@@ -400,8 +400,6 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
   const scheduleEntries = (business?.scheduleEntries && business.scheduleEntries.length > 0)
     ? business.scheduleEntries
     : DEFAULT_SCHEDULE;
-
-  const openStatus = getOpenStatus(scheduleEntries);
 
   const contactItems = [
     {

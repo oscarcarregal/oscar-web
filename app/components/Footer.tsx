@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, Clock, Instagram, ArrowUpRight } from "lucide-react";
 import { fetchConfig, type SiteConfig } from "../lib/data";
 import { formatPhoneNumber } from "../lib/phone";
-import { DEFAULT_SCHEDULE, getOpenStatus } from "../lib/schedule";
+import { DEFAULT_SCHEDULE, formatScheduleEntry } from "../lib/schedule";
 
 export default function Footer() {
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
