@@ -86,16 +86,16 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
             Nuestra Ubicación
           </span>
           <h2 className="mt-4 text-3xl text-carbon md:text-4xl lg:text-[2.75rem]">
-            Encuéntranos en{" "}
-            <br className="hidden sm:block" />
+            <span className="block">Encuéntranos en</span>
             <span className="text-gradient-copper">
               {locationTitle}
             </span>
           </h2>
           <span className="mx-auto mt-6 decorative-line" />
-          <p className="mt-6 text-base leading-relaxed text-silver">
-            Visítanos en nuestras instalaciones o contacta conmigo y me
-            desplazo a tu domicilio.
+          <p className="mt-6 text-base leading-relaxed text-silver max-w-lg mx-auto">
+            Visítanos en nuestras instalaciones
+            <br />
+            o contacta conmigo y me desplazo a tu domicilio
           </p>
         </div>
 
@@ -199,19 +199,25 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                   </a>
 
                   {/* Tabla de horarios por día */}
-                  <div className="mt-6 flex flex-col gap-1.5">
-                    {scheduleEntries.filter((e) => e.open).map((entry, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center justify-between text-sm"
-                      >
-                        <span className="font-medium text-gray-dark">{entry.days}</span>
-                        <span className="text-silver">
-                          {formatScheduleEntry(entry)}
-                          {entry.note ? <span className="ml-1.5 text-copper">· {entry.note}</span> : null}
-                        </span>
-                      </div>
-                    ))}
+                  <div className="mt-6 rounded-lg bg-gray-50/50 p-4 border border-gray-100">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Clock size={16} className="text-copper" />
+                      <span className="text-xs font-semibold uppercase tracking-wider text-gray-dark">Horario</span>
+                    </div>
+                    <div className="space-y-2.5">
+                      {scheduleEntries.filter((e) => e.open).map((entry, i) => (
+                        <div
+                          key={i}
+                          className="flex items-center justify-between py-2 px-2 rounded-md hover:bg-white/60 transition-colors"
+                        >
+                          <span className="font-medium text-gray-dark text-sm min-w-20">{entry.days}</span>
+                          <span className="flex-1 text-right text-silver text-sm">
+                            {formatScheduleEntry(entry)}
+                            {entry.note ? <span className="ml-2 text-copper text-xs font-medium">· {entry.note}</span> : null}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Badge cita previa */}

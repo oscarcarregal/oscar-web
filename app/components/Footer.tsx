@@ -32,7 +32,7 @@ export default function Footer() {
     : DEFAULT_SCHEDULE;
 
   return (
-    <footer className="relative bg-carbon text-white/80">
+    <footer className="relative bg-carbon-light text-white/90">
       {/* Top decorative border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
@@ -71,7 +71,7 @@ export default function Footer() {
 
           {/* Col 2 – Quick links */}
           <div className="md:col-span-3">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
               Enlaces
             </h4>
             <ul className="mt-5 space-y-3">
@@ -97,7 +97,7 @@ export default function Footer() {
 
           {/* Col 3 – Contact info */}
           <div className="md:col-span-4">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
               Contacto
             </h4>
             <ul className="mt-5 space-y-4 text-sm">
@@ -150,10 +150,10 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-16 flex flex-col items-center gap-4 border-t border-white/8 pt-8 sm:flex-row sm:justify-between">
-          <p className="text-xs text-white/70">
+          <p className="text-xs text-white/80">
             {footer?.copyrightLine}
           </p>
-          <p className="text-xs text-white/70">
+          <p className="text-xs text-white/80">
             {footer?.copyrightNote}
           </p>
         </div>

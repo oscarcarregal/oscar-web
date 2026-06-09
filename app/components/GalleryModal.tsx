@@ -104,19 +104,17 @@ export default function GalleryModal({
         {/* RIGHT (desktop) / TOP (mobile): Image Panel */}
         <div className="order-1 flex min-h-0 flex-col lg:order-2 lg:flex-1">
           {/* Main image */}
-          <div className="relative h-[52vh] shrink-0 bg-carbon-light sm:h-[60vh] lg:h-auto lg:min-h-0 lg:flex-1">
-            {project.imagePaths.map((src, i) => (
+          <div className="relative h-[52vh] shrink-0 bg-carbon-light sm:h-[60vh] lg:h-auto lg:min-h-0 lg:flex-1 overflow-hidden">
+            <div key={`img-${current}`} className="absolute inset-0 animate-in fade-in duration-300">
               <Image
-                key={src}
-                src={src}
-                alt={`${project.title} – Foto ${i + 1}`}
+                src={project.imagePaths[current]}
+                alt={`${project.title} – Foto ${current + 1}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 62vw"
-                className={`object-contain transition-all duration-500 ${i === current ? "opacity-100 scale-100" : "opacity-0 scale-[1.02]"
-                  }`}
-                priority={i === 0}
+                className="object-contain"
+                priority
               />
-            ))}
+            </div>
 
             {total > 1 && (
               <>
