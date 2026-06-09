@@ -3,9 +3,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { MapPin, Clock, ArrowUpRight, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { MapPin, Clock, ArrowUpRight, ChevronLeft, ChevronRight, X, CalendarCheck } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import type { SiteConfig } from "../lib/data";
+import { DEFAULT_SCHEDULE, formatScheduleEntry, getOpenStatus } from "../lib/schedule";
+import AppointmentWidget from "./AppointmentWidget";
 
 export default function StoreLocation({ config }: { config: SiteConfig | null }) {
   const { ref, visible } = useScrollReveal();
@@ -16,8 +18,14 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
   const [viewerOpen, setViewerOpen] = useState(false);
   const [currentPhoto, setCurrentPhoto] = useState(0);
 
-  // Para mantener el layout actual (izquierda grande + dos a la derecha),
-  // usamos izquierda = foto sin número, derecha arriba = (8), derecha abajo = (5).
+  // Horarios: usar los estructurados si existen, si no, los por defecto
+  const scheduleEntries = (business?.scheduleEntries && business.scheduleEntries.length > 0)
+    ? business.scheduleEntries
+    : DEFAULT_SCHEDULE;
+
+  const openStatus = getOpenStatus(scheduleEntries);
+
+  // Para mantener el layout actual (izquierda grande + dos a la derecha)
   const visibleMosaicPhotos = useMemo(() => {
     if (storePhotos.length < 3) return storePhotos;
     return [storePhotos[2], storePhotos[0], storePhotos[1]];
@@ -164,7 +172,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
               />
             </div>
 
-            {/* Tarjeta de dirección */}
+            {/* Tarjeta de dirección + horario */}
             <div className="rounded-2xl bg-white p-7 shadow-sm transition-all duration-300 hover-glow">
               <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-red-500/10">
@@ -181,21 +189,57 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                   <p className="mt-2 text-xs text-silver">
                     Gipuzkoa, País Vasco
                   </p>
-                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
-                    <span className="inline-flex items-center gap-2 text-xs text-silver">
-                      <Clock size={14} className="text-silver" />
-                      {business?.schedule.compact}
-                    </span>
-                    <a
-                      href={`https://maps.google.com/maps?q=${mapsQuery}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-dark transition-colors hover:text-carbon"
-                    >
-                      Abrir en Google Maps
-                      <ArrowUpRight size={12} />
-                    </a>
+
+                  {/* Indicador abierto ahora */}
+                  {openStatus.label && (
+                    <div className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${openStatus.isOpen
+                      ? "bg-green-50 text-green-700 border border-green-200"
+                      : "bg-gray-50 text-silver border border-gray-200"
+                      }`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${openStatus.isOpen ? "bg-green-500 animate-pulse" : "bg-gray-400"}`} />
+                      {openStatus.label}
+                    </div>
+                  )}
+
+                  {/* Tabla de horarios por día */}
+                  <div className="mt-4 rounded-xl border border-gray-100 bg-cream overflow-hidden">
+                    {scheduleEntries.map((entry, i) => (
+                      <div
+                        key={i}
+                        className={`flex items-center justify-between px-4 py-2.5 text-sm ${i < scheduleEntries.length - 1 ? "border-b border-gray-100" : ""}`}
+                      >
+                        <span className="font-medium text-gray-dark">{entry.days}</span>
+                        <span className={`text-xs font-medium ${entry.open ? "text-carbon" : "text-silver"}`}>
+                          {formatScheduleEntry(entry)}
+                          {entry.note ? <span className="ml-1.5 text-copper">· {entry.note}</span> : null}
+                        </span>
+                      </div>
+                    ))}
                   </div>
+
+                  {/* Badge cita previa */}
+                  <div className="mt-4 flex items-center gap-2 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3">
+                    <CalendarCheck size={16} className="shrink-0 text-amber-600" />
+                    <p className="text-xs text-amber-700">
+                      <span className="font-semibold">Solo con cita previa.</span>
+                      {" "}La confirmación de Google no es definitiva; Oscar revisará su agenda y te contactará si necesita proponer otra fecha.
+                    </p>
+                  </div>
+
+                  {/* Botón de reserva + enlace Google Maps */}
+                  <div className="mt-2">
+                    <AppointmentWidget appointmentUrl={storeAddress?.appointmentUrl} />
+                  </div>
+
+                  <a
+                    href={`https://maps.google.com/maps?q=${mapsQuery}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-gray-dark transition-colors hover:text-carbon"
+                  >
+                    Abrir en Google Maps
+                    <ArrowUpRight size={12} />
+                  </a>
                 </div>
               </div>
             </div>

@@ -31,6 +31,15 @@ export interface StoreAddress {
   region: string;
   serviceArea: string;
   mapsQuery: string;
+  /** URL de Google Appointment Scheduling para el iframe de reservas */
+  appointmentUrl?: string;
+}
+
+export interface ScheduleEntry {
+  days: string;
+  open: string | null;
+  close: string | null;
+  note?: string;
 }
 
 export interface BusinessConfig {
@@ -47,6 +56,7 @@ export interface BusinessConfig {
     hours: string;
     compact: string;
   };
+  scheduleEntries?: ScheduleEntry[];
   responseTime: string;
   experience: string;
 }

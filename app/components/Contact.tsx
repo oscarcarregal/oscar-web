@@ -1,7 +1,7 @@
 /* Sección de contacto con tarjetas de información */
 "use client";
 
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, CalendarCheck } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import { formatPhoneNumber } from "../lib/phone";
 import type { SiteConfig } from "../lib/data";
@@ -37,19 +37,19 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
     {
       icon: MapPin,
       title: "Visita nuestro local",
-      // primera linea: Calle y número
       line1: config?.storeAddress
         ? (config.storeAddress.street.toLowerCase().includes("local") ? config.storeAddress.street : `${config.storeAddress.street}, local 1`)
         : "Avenida de Tolosa 89, local 1",
-      // Segunda linea: CP + Ciudad
-      line2: config?.storeAddress
-        ? `${config.storeAddress.postalCode} ${config.storeAddress.city}`
-        : undefined,
-      href: "https://maps.google.com/maps?q=" + config?.storeAddress?.mapsQuery,
+      line2: "⚠️ Solo con cita previa",
+      href: "#ubicacion",
       iconColor: "text-red-500",
       iconBg: "bg-red-500/10 group-hover:bg-red-500/20",
     },
   ];
+
+  // The location card is special: render it separately with the appointment badge
+  const regularItems = contactItems.slice(0, 2);
+  const locationItem = contactItems[2];
 
   return (
     <section id="contacto" className="scroll-mt-28 bg-white py-28 md:py-36">
@@ -68,7 +68,7 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
         </div>
 
         <div className="mt-16 grid gap-8 lg:grid-cols-3">
-          {contactItems.map((c, i) => {
+          {regularItems.map((c, i) => {
             const CardWrapper = c.href ? "a" : "div";
             return (
               <CardWrapper
@@ -95,6 +95,26 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
               </CardWrapper>
             );
           })}
+
+          {/* Location card — links to #ubicacion section */}
+          <a
+            href="#ubicacion"
+            className={`group flex flex-col items-center rounded-2xl bg-cream p-10 text-center transition-all duration-500 hover-glow hover:-translate-y-1 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+            style={{ transitionDelay: visible ? "440ms" : "0ms" }}
+          >
+            <div className={`flex h-14 w-14 items-center justify-center rounded-xl transition-colors duration-300 ${locationItem.iconBg}`}>
+              <locationItem.icon className={locationItem.iconColor} size={24} />
+            </div>
+            <h3 className="mt-5 text-xl text-carbon">{locationItem.title}</h3>
+            <p className="mt-2 text-sm font-medium text-gray-dark transition-colors group-hover:text-copper">
+              {locationItem.line1}
+            </p>
+            {/* Appointment badge */}
+            <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[11px] font-semibold text-amber-700">
+              <CalendarCheck size={11} />
+              Solo con cita previa
+            </span>
+          </a>
         </div>
       </div>
     </section>

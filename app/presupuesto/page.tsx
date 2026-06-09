@@ -24,6 +24,7 @@ import FloatingActions from "../components/FloatingActions";
 import { fetchConfig, type SiteConfig } from "../lib/data";
 import { formatPhoneNumber } from "../lib/phone";
 import { SidebarSkeleton } from "../components/Skeletons";
+import { DEFAULT_SCHEDULE, formatScheduleEntry, getOpenStatus } from "../lib/schedule";
 
 /* ─────────────────────── TYPES ─────────────────────── */
 
@@ -396,15 +397,18 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
   const business = config?.business;
   const phoneHref = business?.phoneNumber ? `tel:+34${business.phoneNumber}` : undefined;
 
+  const scheduleEntries = (business?.scheduleEntries && business.scheduleEntries.length > 0)
+    ? business.scheduleEntries
+    : DEFAULT_SCHEDULE;
+
+  const openStatus = getOpenStatus(scheduleEntries);
+
   const contactItems = [
     {
       icon: Phone,
       title: "Teléfono",
       text: formatPhoneNumber(business?.phoneNumber),
-      sub:
-        business?.schedule.days && business?.schedule.hours
-          ? `${business.schedule.days} · ${business.schedule.hours}`
-          : "",
+      sub: null,
       href: phoneHref,
       iconColor: "text-green-500",
       iconBg: "bg-green-500/10",
@@ -428,15 +432,6 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
       href: undefined,
       iconColor: "text-red-500",
       iconBg: "bg-red-500/10",
-    },
-    {
-      icon: Clock,
-      title: "Horario",
-      text: business?.schedule.days,
-      sub: business?.schedule.hours,
-      href: undefined,
-      iconColor: "text-amber-500",
-      iconBg: "bg-amber-500/10",
     },
   ];
 
@@ -472,10 +467,49 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
                 ) : (
                   <p className="text-sm font-medium text-carbon">{c.text}</p>
                 )}
-                <p className="text-xs text-silver">{c.sub}</p>
+                {c.sub && <p className="text-xs text-silver">{c.sub}</p>}
               </div>
             </div>
           ))}
+
+          {/* Horario estructurado */}
+          <div className="flex items-start gap-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10">
+              <Clock className="text-amber-500" size={18} />
+            </div>
+            <div className="flex-1">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-silver">
+                Horario
+              </p>
+              {openStatus.label && (
+                <div className={`mt-1 mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+                  openStatus.isOpen
+                    ? "bg-green-50 text-green-700 border border-green-200"
+                    : "bg-gray-50 text-silver border border-gray-200"
+                }`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${
+                    openStatus.isOpen ? "bg-green-500 animate-pulse" : "bg-gray-400"
+                  }`} />
+                  {openStatus.label}
+                </div>
+              )}
+              <div className="rounded-xl border border-gray-100 bg-cream overflow-hidden">
+                {scheduleEntries.map((entry, i) => (
+                  <div
+                    key={i}
+                    className={`flex items-center justify-between px-3 py-2 text-xs ${
+                      i < scheduleEntries.length - 1 ? "border-b border-gray-100" : ""
+                    }`}
+                  >
+                    <span className="font-medium text-gray-dark">{entry.days}</span>
+                    <span className={entry.open ? "text-carbon" : "text-silver"}>
+                      {formatScheduleEntry(entry)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

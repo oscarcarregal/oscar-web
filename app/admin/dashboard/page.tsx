@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { type ScheduleEntry } from "../../lib/data";
 import {
   LayoutDashboard,
   FileText,
@@ -70,10 +71,11 @@ interface StoreAddress {
   region?: string;
   serviceArea?: string;
   mapsQuery?: string;
+  appointmentUrl?: string;
 }
 
 interface SiteConfig {
-  business: Record<string, unknown>;
+  business: any;
   storeAddress?: StoreAddress;
   storePhotos?: { src: string; alt: string }[];
   footer: Record<string, unknown>;
@@ -1319,18 +1321,21 @@ function ReformaEditor({
     }
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!reforma) return;
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  const processFiles = async (files: FileList | File[]) => {
+    if (!reforma || files.length === 0) return;
+    
+    const formData = new FormData();
+    let hasImage = false;
+    for (const file of Array.from(files)) {
+      if (file.type.startsWith("image/")) {
+        formData.append("images", file);
+        hasImage = true;
+      }
+    }
+    if (!hasImage) return;
 
     setUploading(true);
     try {
-      const formData = new FormData();
-      for (const file of Array.from(files)) {
-        formData.append("images", file);
-      }
-
       const res = await api<{ files: string[] }>(
         `/api/admin/reformas/${reforma.id}/images`,
         { method: "POST", body: formData }
@@ -1344,6 +1349,29 @@ function ReformaEditor({
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) processFiles(e.target.files);
+  };
+
+  useEffect(() => {
+    if (isNew) return;
+    const handlePaste = (e: ClipboardEvent) => {
+      // Ignorar pegado en inputs de texto para no interferir
+      if (
+        (e.target instanceof HTMLInputElement && e.target.type !== "file") ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+      if (e.clipboardData?.files && e.clipboardData.files.length > 0) {
+        e.preventDefault();
+        processFiles(e.clipboardData.files);
+      }
+    };
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [reforma?.id, isNew]);
 
   const handleDeleteImage = async (filename: string) => {
     if (!reforma) return;
@@ -1972,7 +2000,7 @@ function ConfigPanel({
   const [newTag, setNewTag] = useState("");
 
   const updateBusiness = (key: string, value: string) => {
-    setBusiness((prev) => ({ ...prev, [key]: value }));
+    setBusiness((prev: any) => ({ ...prev, [key]: value }));
   };
 
   const updateNestedBusiness = (
@@ -1980,7 +2008,7 @@ function ConfigPanel({
     key: string,
     value: string
   ) => {
-    setBusiness((prev) => ({
+    setBusiness((prev: any) => ({
       ...prev,
       [parent]: { ...(prev as Record<string, Record<string, string>>)[parent], [key]: value },
     }));
@@ -2404,7 +2432,17 @@ function LocalizacionPanel({
     region: config?.storeAddress?.region ?? "",
     serviceArea: config?.storeAddress?.serviceArea ?? "",
     mapsQuery: config?.storeAddress?.mapsQuery ?? "",
+    appointmentUrl: config?.storeAddress?.appointmentUrl ?? "",
   });
+  const [scheduleEntries, setScheduleEntries] = useState<ScheduleEntry[]>(
+    (config?.business?.scheduleEntries && config.business.scheduleEntries.length > 0)
+      ? config.business.scheduleEntries
+      : [
+          { days: "Lun–Vie", open: "08:00", close: "19:00" },
+          { days: "Sáb",     open: "09:00", close: "12:00" },
+          { days: "Dom",     open: null,    close: null },
+        ]
+  );
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
@@ -2413,15 +2451,21 @@ function LocalizacionPanel({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /* Sube imágenes al endpoint /api/admin/tienda/images */
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  const processFiles = async (files: FileList | File[]) => {
+    if (files.length === 0) return;
+    
+    const formData = new FormData();
+    let hasImage = false;
+    for (const file of Array.from(files)) {
+      if (file.type.startsWith("image/")) {
+        formData.append("images", file);
+        hasImage = true;
+      }
+    }
+    if (!hasImage) return;
+
     setUploading(true);
     try {
-      const formData = new FormData();
-      for (const file of Array.from(files)) {
-        formData.append("images", file);
-      }
       const res = await api<{ files: { src: string; alt: string }[] }>(
         "/api/admin/tienda/images",
         { method: "POST", body: formData }
@@ -2435,6 +2479,28 @@ function LocalizacionPanel({
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) processFiles(e.target.files);
+  };
+
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      // Ignorar pegado en inputs de texto
+      if (
+        (e.target instanceof HTMLInputElement && e.target.type !== "file") ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+      if (e.clipboardData?.files && e.clipboardData.files.length > 0) {
+        e.preventDefault();
+        processFiles(e.clipboardData.files);
+      }
+    };
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, []);
 
   /* Elimina una foto del disco y la quita del array local */
   const handleDeletePhoto = async (src: string) => {
@@ -2480,6 +2546,10 @@ function LocalizacionPanel({
           storeAddress: {
             ...(config.storeAddress ?? {}),
             ...address,
+          },
+          business: {
+            ...(config.business ?? {}),
+            scheduleEntries,
           },
         }),
       });
@@ -2760,7 +2830,96 @@ function LocalizacionPanel({
               Formato: latitud,longitud. Centra el mapa y genera el enlace de Google Maps.
             </p>
           </div>
+          <div className="sm:col-span-2">
+            <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
+              URL de cita previa (Google Appointment Scheduling)
+            </label>
+            <input
+              value={address.appointmentUrl ?? ""}
+              onChange={(e) =>
+                setAddress((prev) => ({ ...prev, appointmentUrl: e.target.value }))
+              }
+              className={inputClass}
+              placeholder="https://calendar.app.google/..."
+            />
+            <p className="mt-1 text-[10px] text-[#475569]">
+              URL del formulario de citas de Google Calendar. Se usa en el botón "Solicitar visita al local".
+            </p>
+          </div>
         </div>
+      </section>
+
+      {/* ── Horarios por día ── */}
+      <section className="mt-6 rounded-xl border border-white/8 bg-[#161b27] p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-indigo-400">
+          Horario de atención
+        </h2>
+        <p className="mt-1 text-[10px] text-[#475569]">
+          Define el horario por bloque de días. Deja "Apertura" vacío para marcarlo como cerrado.
+        </p>
+        <div className="mt-4 space-y-2">
+          {scheduleEntries.map((entry, i) => (
+            <div key={i} className="grid grid-cols-[1fr_100px_100px_80px_auto] items-center gap-2">
+              <input
+                value={entry.days}
+                onChange={(e) => {
+                  const updated = [...scheduleEntries];
+                  updated[i] = { ...updated[i], days: e.target.value };
+                  setScheduleEntries(updated);
+                }}
+                className={`${inputClass} text-xs`}
+                placeholder="Lun–Vie"
+              />
+              <input
+                value={entry.open ?? ""}
+                onChange={(e) => {
+                  const updated = [...scheduleEntries];
+                  updated[i] = { ...updated[i], open: e.target.value || null };
+                  setScheduleEntries(updated);
+                }}
+                className={`${inputClass} text-xs`}
+                placeholder="08:00"
+              />
+              <input
+                value={entry.close ?? ""}
+                onChange={(e) => {
+                  const updated = [...scheduleEntries];
+                  updated[i] = { ...updated[i], close: e.target.value || null };
+                  setScheduleEntries(updated);
+                }}
+                className={`${inputClass} text-xs`}
+                placeholder="19:00"
+              />
+              <input
+                value={entry.note ?? ""}
+                onChange={(e) => {
+                  const updated = [...scheduleEntries];
+                  updated[i] = { ...updated[i], note: e.target.value };
+                  setScheduleEntries(updated);
+                }}
+                className={`${inputClass} text-xs`}
+                placeholder="Nota"
+              />
+              <button
+                onClick={() => setScheduleEntries(scheduleEntries.filter((_, j) => j !== i))}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#64748b] hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                aria-label="Eliminar fila"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          ))}
+          <div className="grid grid-cols-[1fr_100px_100px_80px_auto] gap-2 text-[9px] uppercase tracking-wider text-[#475569] px-1">
+            <span>Días</span><span>Apertura</span><span>Cierre</span><span>Nota</span><span />
+          </div>
+        </div>
+        <button
+          onClick={() => setScheduleEntries([...scheduleEntries, { days: "", open: "", close: "", note: "" }])}
+          className="mt-3 flex items-center gap-1.5 rounded-lg bg-[#1e2435] px-3 py-1.5 text-xs text-[#94a3b8] transition-colors hover:bg-[#252d3d] hover:text-[#e2e8f0]"
+        >
+          <Plus size={12} />
+          Añadir fila
+        </button>
       </section>
 
       {saveSuccess && (
