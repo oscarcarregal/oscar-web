@@ -210,11 +210,7 @@ export function sanitizeConfigPayload(input: unknown): ValidationResult<Sanitize
         hours: asString(schedule.hours, 120),
         compact: asString(schedule.compact, 120),
       },
-      location: {
-        city: asString(location.city, 120),
-        serviceArea: asString(location.serviceArea, 180),
-        region: asString(location.region, 180),
-      },
+
       responseTime: asString(business.responseTime, 180),
       experience: asString(business.experience, 180),
     },
