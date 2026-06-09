@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, Clock, Instagram, ArrowUpRight } from "lucide-react";
 import { fetchConfig, type SiteConfig } from "../lib/data";
 import { formatPhoneNumber } from "../lib/phone";
+import { DEFAULT_SCHEDULE, getOpenStatus } from "../lib/schedule";
 
 export default function Footer() {
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
@@ -25,6 +26,12 @@ export default function Footer() {
   const footer = siteConfig?.footer;
   const storeAddress = siteConfig?.storeAddress;
   const phoneHref = business?.phoneNumber ? `tel:+34${business.phoneNumber}` : undefined;
+
+  const scheduleEntries = (business?.scheduleEntries && business.scheduleEntries.length > 0)
+    ? business.scheduleEntries
+    : DEFAULT_SCHEDULE;
+
+  const openStatus = getOpenStatus(scheduleEntries);
 
   return (
     <footer className="relative bg-carbon text-white/80">
@@ -130,7 +137,18 @@ export default function Footer() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
                   <Clock size={14} className="text-silver" />
                 </div>
-                {business?.schedule.compact}
+                <div className="flex flex-col">
+                  {openStatus.label && (
+                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold w-fit ${
+                      openStatus.isOpen
+                        ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                        : "bg-white/10 text-silver border border-white/10"
+                    }`}>
+                      <span className={`h-1 w-1 rounded-full ${openStatus.isOpen ? "bg-green-400 animate-pulse" : "bg-gray-500"}`} />
+                      {openStatus.label}
+                    </span>
+                  )}
+                </div>
               </li>
             </ul>
           </div>
