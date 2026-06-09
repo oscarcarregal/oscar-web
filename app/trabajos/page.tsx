@@ -44,7 +44,6 @@ export default async function TrabajosPage() {
         projects={projects}
         tags={config.tags}
         phoneNumber={config.business?.phoneNumber ?? ""}
-        city={config.storeAddress?.city ?? "San Sebastián"}
       />
       <Footer />
       <FloatingActions phoneNumber={config.business?.phoneNumber} />

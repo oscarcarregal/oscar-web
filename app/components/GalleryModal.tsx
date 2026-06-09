@@ -108,7 +108,7 @@ export default function GalleryModal({
             <div key={`img-${current}`} className="absolute inset-0 animate-in fade-in duration-300">
               <Image
                 src={project.imagePaths[current]}
-                alt={`${project.title} - Reforma integral en San Sebastián - Foto ${current + 1}`}
+                alt={`${project.title} - Reforma integral - Foto ${current + 1}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 62vw"
                 className="object-contain"
