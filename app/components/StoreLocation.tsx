@@ -190,26 +190,25 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                     Gipuzkoa, País Vasco
                   </p>
 
-                  {/* Indicador abierto ahora */}
-                  {openStatus.label && (
-                    <div className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${openStatus.isOpen
-                      ? "bg-green-50 text-green-700 border border-green-200"
-                      : "bg-gray-50 text-silver border border-gray-200"
-                      }`}>
-                      <span className={`h-1.5 w-1.5 rounded-full ${openStatus.isOpen ? "bg-green-500 animate-pulse" : "bg-gray-400"}`} />
-                      {openStatus.label}
-                    </div>
-                  )}
+                  <a
+                    href={`https://maps.google.com/maps?q=${mapsQuery}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-gray-dark transition-colors hover:text-carbon"
+                  >
+                    Abrir en Google Maps
+                    <ArrowUpRight size={12} />
+                  </a>
 
                   {/* Tabla de horarios por día */}
-                  <div className="mt-4 rounded-xl border border-gray-100 bg-cream overflow-hidden">
-                    {scheduleEntries.map((entry, i) => (
+                  <div className="mt-6 flex flex-col gap-1.5">
+                    {scheduleEntries.filter((e) => e.open).map((entry, i) => (
                       <div
                         key={i}
-                        className={`flex items-center justify-between px-4 py-2.5 text-sm ${i < scheduleEntries.length - 1 ? "border-b border-gray-100" : ""}`}
+                        className="flex items-center justify-between text-sm"
                       >
                         <span className="font-medium text-gray-dark">{entry.days}</span>
-                        <span className={`text-xs font-medium ${entry.open ? "text-carbon" : "text-silver"}`}>
+                        <span className="text-silver">
                           {formatScheduleEntry(entry)}
                           {entry.note ? <span className="ml-1.5 text-copper">· {entry.note}</span> : null}
                         </span>
@@ -226,20 +225,10 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                     </p>
                   </div>
 
-                  {/* Botón de reserva + enlace Google Maps */}
+                  {/* Botón de reserva */}
                   <div className="mt-2">
                     <AppointmentWidget appointmentUrl={storeAddress?.appointmentUrl} />
                   </div>
-
-                  <a
-                    href={`https://maps.google.com/maps?q=${mapsQuery}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-gray-dark transition-colors hover:text-carbon"
-                  >
-                    Abrir en Google Maps
-                    <ArrowUpRight size={12} />
-                  </a>
                 </div>
               </div>
             </div>

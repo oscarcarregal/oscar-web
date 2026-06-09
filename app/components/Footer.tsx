@@ -31,8 +31,6 @@ export default function Footer() {
     ? business.scheduleEntries
     : DEFAULT_SCHEDULE;
 
-  const openStatus = getOpenStatus(scheduleEntries);
-
   return (
     <footer className="relative bg-carbon text-white/80">
       {/* Top decorative border */}
@@ -133,21 +131,17 @@ export default function Footer() {
                   ? `${storeAddress.street.toLowerCase().includes("local") ? storeAddress.street : storeAddress.street + ", local 1"}, ${storeAddress.postalCode} ${storeAddress.city}`
                   : null}
               </li>
-              <li className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
+              <li className="flex items-start gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 shrink-0">
                   <Clock size={14} className="text-silver" />
                 </div>
-                <div className="flex flex-col">
-                  {openStatus.label && (
-                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold w-fit ${
-                      openStatus.isOpen
-                        ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                        : "bg-white/10 text-silver border border-white/10"
-                    }`}>
-                      <span className={`h-1 w-1 rounded-full ${openStatus.isOpen ? "bg-green-400 animate-pulse" : "bg-gray-500"}`} />
-                      {openStatus.label}
+                <div className="mt-1 text-silver flex flex-wrap gap-x-3 gap-y-1">
+                  {scheduleEntries.filter(e => e.open).map((entry, i) => (
+                    <span key={i} className="whitespace-nowrap">
+                      <strong className="font-medium text-white/90 mr-1">{entry.days}</strong> 
+                      {formatScheduleEntry(entry)}
                     </span>
-                  )}
+                  ))}
                 </div>
               </li>
             </ul>

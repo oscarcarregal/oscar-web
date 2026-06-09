@@ -478,34 +478,15 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
               <Clock className="text-amber-500" size={18} />
             </div>
             <div className="flex-1">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-silver">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-silver mb-1">
                 Horario
               </p>
-              {openStatus.label && (
-                <div className={`mt-1 mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
-                  openStatus.isOpen
-                    ? "bg-green-50 text-green-700 border border-green-200"
-                    : "bg-gray-50 text-silver border border-gray-200"
-                }`}>
-                  <span className={`h-1.5 w-1.5 rounded-full ${
-                    openStatus.isOpen ? "bg-green-500 animate-pulse" : "bg-gray-400"
-                  }`} />
-                  {openStatus.label}
-                </div>
-              )}
-              <div className="rounded-xl border border-gray-100 bg-cream overflow-hidden">
-                {scheduleEntries.map((entry, i) => (
-                  <div
-                    key={i}
-                    className={`flex items-center justify-between px-3 py-2 text-xs ${
-                      i < scheduleEntries.length - 1 ? "border-b border-gray-100" : ""
-                    }`}
-                  >
-                    <span className="font-medium text-gray-dark">{entry.days}</span>
-                    <span className={entry.open ? "text-carbon" : "text-silver"}>
-                      {formatScheduleEntry(entry)}
-                    </span>
-                  </div>
+              <div className="flex flex-col gap-1">
+                {scheduleEntries.filter((e) => e.open).map((entry, i) => (
+                  <p key={i} className="text-sm font-medium text-carbon">
+                    <span className="mr-2">{entry.days}</span>
+                    <span className="text-silver font-normal">{formatScheduleEntry(entry)}</span>
+                  </p>
                 ))}
               </div>
             </div>
