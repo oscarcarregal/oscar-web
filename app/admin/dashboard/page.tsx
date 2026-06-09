@@ -2168,31 +2168,6 @@ function ConfigPanel({
                   className={inputClass}
                 />
               </div>
-              <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
-                  Horario - Días
-                </label>
-                <input
-                  value={schedule.days ?? ""}
-                  onChange={(e) =>
-                    updateNestedBusiness("schedule", "days", e.target.value)
-                  }
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
-                  Horario - Horas
-                </label>
-                <input
-                  value={schedule.hours ?? ""}
-                  onChange={(e) =>
-                    updateNestedBusiness("schedule", "hours", e.target.value)
-                  }
-                  className={inputClass}
-                />
-              </div>
-              {/* Campos de localización eliminados de la configuración */}
             </div>
           </section>
 
