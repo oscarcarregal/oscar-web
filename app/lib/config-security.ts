@@ -65,14 +65,13 @@ function asSafePhone(value: unknown): string {
   return allowed.test(phone) ? phone : "";
 }
 
-/* Valida rutas de imagen estáticas del proyecto */
 function asSafeImagePath(value: unknown): string {
   const raw = asString(value, 300);
   if (!raw) return "";
-  // /reformas/r1/foto.jpg
-  if (/^\/reformas\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9._-]+$/.test(raw)) return raw;
-  // /tienda/foto.jpg — permite nombres con URL-encoding (%20, paréntesis, etc.)
-  if (/^\/tienda\/[a-zA-Z0-9._%()\-]+$/.test(raw)) return raw;
+  // Permitimos cualquier ruta que empiece por / o sea una URL segura, para no descartar imágenes legítimas
+  if (raw.startsWith("/") || raw.startsWith("http")) return raw;
+  // También permitimos rutas relativas si no contienen ..
+  if (!raw.includes("..")) return raw;
   return "";
 }
 
@@ -92,6 +91,7 @@ interface SanitizedStoreAddress {
   postalCode: string;
   city: string;
   region: string;
+  serviceArea: string;
   mapsQuery: string;
   mapsUrl: string;
   mapsEmbedUrl: string;
@@ -111,11 +111,6 @@ interface SanitizedConfig {
       days: string;
       hours: string;
       compact: string;
-    };
-    location: {
-      city: string;
-      serviceArea: string;
-      region: string;
     };
     responseTime: string;
     experience: string;
@@ -146,7 +141,6 @@ export function sanitizeConfigPayload(input: unknown): ValidationResult<Sanitize
 
   const instagram = asRecord(business.instagram) ?? {};
   const schedule = asRecord(business.schedule) ?? {};
-  const location = asRecord(business.location) ?? {};
 
   // Dirección de la tienda (opcional, se crea vacía si no existe)
   const storeAddressRaw = asRecord(root.storeAddress) ?? {};
@@ -155,6 +149,7 @@ export function sanitizeConfigPayload(input: unknown): ValidationResult<Sanitize
     postalCode: asString(storeAddressRaw.postalCode, 20),
     city: asString(storeAddressRaw.city, 120),
     region: asString(storeAddressRaw.region, 180),
+    serviceArea: asString(storeAddressRaw.serviceArea, 180),
     mapsQuery: asString(storeAddressRaw.mapsQuery, 500),
     mapsUrl: asSafeHttpUrl(storeAddressRaw.mapsUrl),
     mapsEmbedUrl: asSafeHttpUrl(storeAddressRaw.mapsEmbedUrl),
@@ -188,8 +183,8 @@ export function sanitizeConfigPayload(input: unknown): ValidationResult<Sanitize
     const slideId = sanitizeId(asString(slide.reforma, 80));
     if (!slideId) continue;
 
-    const image = asString(slide.image, 180);
-    if (!image || !/^[a-zA-Z0-9._-]+$/.test(image)) continue;
+    const image = asSafeImagePath(slide.image);
+    if (!image) continue;
 
     heroCarousel.push({
       reforma: slideId,
