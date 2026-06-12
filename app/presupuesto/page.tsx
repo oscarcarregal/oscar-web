@@ -394,18 +394,28 @@ function PresupuestoForm() {
 /* ─────────────────────── SIDEBAR ─────────────────────── */
 
 function ContactSidebar({ config }: { config: SiteConfig | null }) {
-  const business = config?.business;
-  const phoneHref = business?.phoneNumber ? `tel:+34${business.phoneNumber}` : undefined;
+  /* ── Fallbacks SEO: datos visibles incluso sin Redis ── */
+  const phone = config?.business?.phoneNumber ?? "600670867";
+  const email = config?.business?.email ?? "oscarcarregalfontaneria@gmail.com";
+  const responseTime = config?.business?.responseTime ?? "Respuesta en menos de 24h";
+  const serviceArea = config?.storeAddress?.serviceArea ?? "San Sebastián, Donostia y Gipuzkoa";
+  const street = config?.storeAddress?.street ?? "Avenida de Tolosa 89";
+  const postalCode = config?.storeAddress?.postalCode ?? "20018";
+  const city = config?.storeAddress?.city ?? "San Sebastián";
 
-  const scheduleEntries = (business?.scheduleEntries && business.scheduleEntries.length > 0)
-    ? business.scheduleEntries
+  const phoneHref = `tel:+34${phone}`;
+
+  const scheduleEntries = (config?.business?.scheduleEntries && config.business.scheduleEntries.length > 0)
+    ? config.business.scheduleEntries
     : DEFAULT_SCHEDULE;
+
+  const streetFull = street.toLowerCase().includes("local") ? street : `${street}, local 1`;
 
   const contactItems = [
     {
       icon: Phone,
       title: "Teléfono",
-      text: formatPhoneNumber(business?.phoneNumber),
+      text: formatPhoneNumber(phone),
       sub: null,
       href: phoneHref,
       iconColor: "text-green-500",
@@ -414,19 +424,17 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
     {
       icon: Mail,
       title: "Email",
-      text: business?.email,
-      sub: business?.responseTime,
-      href: business?.email ? `mailto:${business.email}` : undefined,
+      text: email,
+      sub: responseTime,
+      href: `mailto:${email}`,
       iconColor: "text-indigo-500",
       iconBg: "bg-indigo-500/10",
     },
     {
       icon: MapPin,
       title: "Zona de Trabajo",
-      text: config?.storeAddress?.serviceArea,
-      sub: config?.storeAddress
-        ? `${config.storeAddress.street.toLowerCase().includes("local") ? config.storeAddress.street : config.storeAddress.street + ", local 1"}, ${config.storeAddress.postalCode} ${config.storeAddress.city}`
-        : undefined,
+      text: serviceArea,
+      sub: `${streetFull}, ${postalCode} ${city}`,
       href: undefined,
       iconColor: "text-red-500",
       iconBg: "bg-red-500/10",
@@ -499,8 +507,9 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
           <h3 className="font-heading text-xl">Trato directo y personal</h3>
           <ul className="mt-5 space-y-3.5 text-sm text-white/70">
             {[
-              "Comunicación directa conmigo",
-              "Valoración adaptada a tu proyecto",
+              `Más de 15 años trabajando en Donostia`,
+              `Respuesta garantizada en menos de 24h`,
+              `Llama ahora: ${formatPhoneNumber(phone)}`,
               "Sin letra pequeña ni sorpresas",
             ].map((item) => (
               <li key={item} className="flex items-center gap-3">
@@ -537,7 +546,7 @@ export default function PresupuestoPage() {
     })();
   }, []);
 
-  const business = siteConfig?.business;
+  const phone = siteConfig?.business?.phoneNumber ?? "600670867";
 
   return (
     <>
@@ -591,7 +600,7 @@ export default function PresupuestoPage() {
       </section>
 
       <Footer />
-      <FloatingActions phoneNumber={business?.phoneNumber} />
+      <FloatingActions phoneNumber={phone} />
     </>
   );
 }

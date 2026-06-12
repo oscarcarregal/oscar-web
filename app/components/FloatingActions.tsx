@@ -13,23 +13,32 @@ export default function FloatingActions({ phoneNumber }: FloatingActionsProps) {
 
   /* Fallback SEO: botón WhatsApp siempre visible */
   const effectivePhone = phoneNumber || "600670867";
+  const waNumber = effectivePhone.replace(/\D/g, "");
+  
+  /* Fallback inicial seguro (SSR) */
+  const [waUrl, setWaUrl] = useState(`https://wa.me/34${waNumber}`);
 
-  /* Mostrar solo el botón de volver arriba tras hacer scroll */
+  /* Mostrar solo el botón de volver arriba tras hacer scroll y detectar dispositivo */
   useEffect(() => {
     const onScroll = () => {
       setShowTop(window.scrollY > 800);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    
+    // Detectar si es móvil para usar el esquema directo
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) {
+      setWaUrl(`whatsapp://send?phone=34${waNumber}`);
+    } else {
+      setWaUrl(`https://web.whatsapp.com/send?phone=34${waNumber}`);
+    }
+
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [waNumber]);
 
   const scrollToTop = () =>
     window.scrollTo({ top: 0, behavior: "smooth" });
-
-  /* URL de WhatsApp con número formateado (sin espacios ni guiones) */
-  const waNumber = effectivePhone.replace(/\D/g, "");
-  const waUrl = `whatsapp://send?phone=34${waNumber}`;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
