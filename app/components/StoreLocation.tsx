@@ -88,7 +88,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
           <h2 className="mt-4 text-3xl text-carbon md:text-4xl lg:text-[2.75rem]">
             <span className="block">Encuéntranos en</span>
             <span className="text-gradient-copper">
-              {locationTitle}
+              {locationTitle} · Donostia
             </span>
           </h2>
           <span className="mx-auto mt-6 decorative-line" />

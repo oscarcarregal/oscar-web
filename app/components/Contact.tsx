@@ -9,18 +9,21 @@ import type { SiteConfig } from "../lib/data";
 export default function Contact({ config }: { config: SiteConfig | null }) {
   const { ref, visible } = useScrollReveal();
 
-  const business = config?.business;
-  const phoneHref = business?.phoneNumber ? `tel:+34${business.phoneNumber}` : undefined;
+  /* ── Fallbacks SEO: datos visibles incluso antes del fetch ── */
+  const phone = config?.business?.phoneNumber ?? "600670867";
+  const email = config?.business?.email ?? "oscarcarregalfontaneria@gmail.com";
+  const schedule = config?.business?.schedule;
+  const phoneHref = `tel:+34${phone}`;
 
   const contactItems = [
     {
       icon: Phone,
       title: "Teléfono",
-      line1: formatPhoneNumber(business?.phoneNumber),
+      line1: formatPhoneNumber(phone),
       line2:
-        business?.schedule.days && business?.schedule.hours
-          ? `${business.schedule.days} · ${business.schedule.hours}`
-          : "",
+        schedule?.days && schedule?.hours
+          ? `${schedule.days} · ${schedule.hours}`
+          : "Lun–Vie · 08:00–19:00",
       href: phoneHref,
       iconColor: "text-green-500",
       iconBg: "bg-green-500/10 group-hover:bg-green-500/20",
@@ -28,9 +31,9 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
     {
       icon: Mail,
       title: "Email",
-      line1: business?.email,
-      line2: business?.responseTime,
-      href: business?.email ? `mailto:${business.email}` : undefined,
+      line1: email,
+      line2: config?.business?.responseTime ?? "Respuesta en menos de 24h",
+      href: `mailto:${email}`,
       iconColor: "text-indigo-500",
       iconBg: "bg-indigo-500/10 group-hover:bg-indigo-500/20",
     },

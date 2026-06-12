@@ -2,9 +2,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Nuestros Trabajos",
+  title: "Trabajos Realizados · Fontanería y Reformas en San Sebastián",
   description:
-    "Galería de reformas integrales, instalaciones de fontanería y proyectos realizados por Oscar Carregal en San Sebastián y alrededores.",
+    "Galería de reformas integrales, instalaciones de fontanería y proyectos realizados por Oscar Carregal en San Sebastián (Donostia), Gipuzkoa.",
 };
 
 export default function TrabajosLayout({

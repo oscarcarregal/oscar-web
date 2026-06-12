@@ -7,7 +7,9 @@ import { useScrollReveal } from "../hooks/useScrollReveal";
 
 export default function CTA({ phoneNumber }: { phoneNumber: string }) {
   const { ref, visible } = useScrollReveal();
-  const phoneHref = phoneNumber ? `tel:+34${phoneNumber}` : "#";
+  /* Fallback SEO: enlace tel: siempre funcional */
+  const phone = phoneNumber || "600670867";
+  const phoneHref = `tel:+34${phone}`;
 
   return (
     <section className="relative overflow-hidden bg-carbon py-24 md:py-32">

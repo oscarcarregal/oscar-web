@@ -11,6 +11,9 @@ interface FloatingActionsProps {
 export default function FloatingActions({ phoneNumber }: FloatingActionsProps) {
   const [showTop, setShowTop] = useState(false);
 
+  /* Fallback SEO: botón WhatsApp siempre visible */
+  const effectivePhone = phoneNumber || "600670867";
+
   /* Mostrar solo el botón de volver arriba tras hacer scroll */
   useEffect(() => {
     const onScroll = () => {
@@ -25,8 +28,8 @@ export default function FloatingActions({ phoneNumber }: FloatingActionsProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
   /* URL de WhatsApp con número formateado (sin espacios ni guiones) */
-  const waNumber = phoneNumber?.replace(/\D/g, "");
-  const waUrl = waNumber ? `whatsapp://send?phone=34${waNumber}` : null;
+  const waNumber = effectivePhone.replace(/\D/g, "");
+  const waUrl = `whatsapp://send?phone=34${waNumber}`;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">

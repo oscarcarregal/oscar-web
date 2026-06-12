@@ -81,7 +81,10 @@ export default function Home() {
     }
   }, [loading]);
 
-  const business = siteConfig?.business;
+  /* Fallbacks SEO: datos de negocio siempre presentes en el HTML */
+  const phone = siteConfig?.business?.phoneNumber ?? "600670867";
+  const experience = siteConfig?.business?.experience ?? "Más de 15 años";
+  const igUrl = siteConfig?.business?.instagram?.url ?? "https://www.instagram.com/oscarcarregal_fontaneria/";
 
   return (
     <>
@@ -89,16 +92,16 @@ export default function Home() {
       {loading ? (
         <HomeSkeleton />
       ) : (
-        <HeroCarousel slides={heroSlides} experience={business?.experience} />
+        <HeroCarousel slides={heroSlides} experience={experience} />
       )}
       <Services />
-      {!loading && <Portfolio projects={featured} instagramUrl={business?.instagram?.url} />}
-      <WhyUs experience={business?.experience ?? ""} />
-      <CTA phoneNumber={business?.phoneNumber ?? ""} />
+      {!loading && <Portfolio projects={featured} instagramUrl={igUrl} />}
+      <WhyUs experience={experience} />
+      <CTA phoneNumber={phone} />
       <StoreLocation config={siteConfig} />
       <Contact config={siteConfig} />
       <Footer />
-      <FloatingActions phoneNumber={business?.phoneNumber} />
+      <FloatingActions phoneNumber={phone} />
     </>
   );
 }

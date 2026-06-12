@@ -2,9 +2,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contacto · Cuéntame tu proyecto",
+  title: "Contacto · Pide Presupuesto de Fontanería y Reformas",
   description:
-    "Contacta directamente conmigo para reformas, fontanería, gas o calefacción en San Sebastián. Trato personalizado y comunicación directa.",
+    "Contacta con Oscar Carregal para reformas, fontanería, gas o calefacción en San Sebastián (Donostia), Gipuzkoa. Trato personalizado y presupuesto sin compromiso.",
 };
 
 export default function PresupuestoLayout({

@@ -22,13 +22,23 @@ export default function Footer() {
     })();
   }, []);
 
-  const business = siteConfig?.business;
-  const footer = siteConfig?.footer;
+  /* ── Fallbacks SEO: aseguran que Google siempre ve datos de contacto en el HTML ── */
+  const phone = siteConfig?.business?.phoneNumber ?? "600670867";
+  const email = siteConfig?.business?.email ?? "oscarcarregalfontaneria@gmail.com";
+  const brandName = siteConfig?.business?.brandName ?? "Oscar Carregal";
+  const igUrl = siteConfig?.business?.instagram?.url ?? "https://www.instagram.com/oscarcarregal_fontaneria/";
+  const igHandle = siteConfig?.business?.instagram?.handle ?? "@oscarcarregal_fontaneria";
+  const footerDesc = siteConfig?.footer?.description ?? "Servicios profesionales de fontanería, gas, calefacción y reformas integrales en San Sebastián (Donostia), Gipuzkoa. Más de 15 años de experiencia.";
+  const copyrightLine = siteConfig?.footer?.copyrightLine ?? `© ${new Date().getFullYear()} Oscar Carregal · Fontanería & Reformas`;
+  const copyrightNote = siteConfig?.footer?.copyrightNote ?? "Todos los derechos reservados";
   const storeAddress = siteConfig?.storeAddress;
-  const phoneHref = business?.phoneNumber ? `tel:+34${business.phoneNumber}` : undefined;
+  const street = storeAddress?.street ?? "Avenida de Tolosa 89";
+  const postalCode = storeAddress?.postalCode ?? "20018";
+  const city = storeAddress?.city ?? "San Sebastián";
+  const phoneHref = `tel:+34${phone}`;
 
-  const scheduleEntries = (business?.scheduleEntries && business.scheduleEntries.length > 0)
-    ? business.scheduleEntries
+  const scheduleEntries = (siteConfig?.business?.scheduleEntries && siteConfig.business.scheduleEntries.length > 0)
+    ? siteConfig.business.scheduleEntries
     : DEFAULT_SCHEDULE;
 
   return (
@@ -48,23 +58,23 @@ export default function Footer() {
             >
               <Image
                 src="/assets/Logo_texto_fondo_gris-removebg-preview.png"
-                alt={business?.brandName ?? "Logo"}
+                alt={brandName}
                 width={180}
                 height={45}
                 className="h-10 w-auto cursor-default brightness-90"
               />
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed">
-              {footer?.description}
+              {footerDesc}
             </p>
             <a
-              href={business?.instagram.url}
+              href={igUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="group mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm transition-all duration-300 hover:border-white/25 hover:text-white"
             >
               <Instagram size={16} className="text-silver" />
-              {business?.instagram.handle}
+              {igHandle}
               <ArrowUpRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </div>
@@ -109,27 +119,25 @@ export default function Footer() {
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-white/10">
                     <Phone size={14} className="text-silver transition-colors group-hover:text-white" />
                   </div>
-                  {formatPhoneNumber(business?.phoneNumber)}
+                  {formatPhoneNumber(phone)}
                 </a>
               </li>
               <li>
                 <a
-                  href={`mailto:${business?.email ?? ""}`}
+                  href={`mailto:${email}`}
                   className="group flex items-center gap-3 transition-colors hover:text-white"
                 >
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-white/10">
                     <Mail size={14} className="text-silver transition-colors group-hover:text-white" />
                   </div>
-                  {business?.email}
+                  {email}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5">
                   <MapPin size={14} className="text-silver" />
                 </div>
-                {storeAddress
-                  ? `${storeAddress.street.toLowerCase().includes("local") ? storeAddress.street : storeAddress.street + ", local 1"}, ${storeAddress.postalCode} ${storeAddress.city}`
-                  : null}
+                {`${street.toLowerCase().includes("local") ? street : street + ", local 1"}, ${postalCode} ${city}`}
               </li>
               <li className="flex items-start gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 shrink-0">
@@ -151,10 +159,10 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-16 flex flex-col items-center gap-4 border-t border-white/8 pt-8 sm:flex-row sm:justify-between">
           <p className="text-xs text-white/70">
-            {footer?.copyrightLine}
+            {copyrightLine}
           </p>
           <p className="text-xs text-white/70">
-            {footer?.copyrightNote}
+            {copyrightNote}
           </p>
         </div>
       </div>

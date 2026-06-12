@@ -20,19 +20,16 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://oscarcarregal.es"),
+  alternates: {
+    canonical: "/",
+  },
   title: {
-    default: "Oscar Carregal · Fontanería & Reformas en San Sebastián",
-    template: "%s | Oscar Carregal",
+    default: "Oscar Carregal · Fontanero en San Sebastián · Donostia | Reformas Integrales",
+    template: "%s | Oscar Carregal · Fontanero San Sebastián",
   },
   description:
-    "Servicios profesionales de fontanería, gas, calefacción y reformas integrales en San Sebastián. Más de 15 años de experiencia. Presupuesto sin compromiso.",
-  keywords: [
-    "fontanería San Sebastián",
-    "reformas integrales Gipuzkoa",
-    "calefacción",
-    "gas",
-    "Oscar Carregal",
-  ],
+    "Fontanero profesional en San Sebastián (Donostia). Servicios de fontanería, gas, calefacción y reformas integrales en Gipuzkoa. Más de 15 años de experiencia. Presupuesto sin compromiso.",
   icons: {
     icon: "/assets/logo_sin_fondo.png",
     shortcut: "/assets/logo_sin_fondo.png",
@@ -41,7 +38,18 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_ES",
-    siteName: "Oscar Carregal · Fontanería & Reformas",
+    siteName: "Oscar Carregal · Fontanería & Reformas en San Sebastián",
+    images: [
+      {
+        url: "/assets/logo_sin_fondo.png",
+        width: 800,
+        height: 800,
+        alt: "Oscar Carregal - Fontanero y Reformas en San Sebastián, Donostia",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
   },
   verification: {
     google: "RKSxJFzK6Z2x6XJ_0m03zPVqmRK7MHpLa6DvQDya1H4",

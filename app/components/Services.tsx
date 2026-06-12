@@ -62,12 +62,12 @@ export default function Services() {
           <h2 className="mt-4 text-3xl text-carbon md:text-4xl lg:text-[2.75rem]">
             Soluciones profesionales
             <br className="hidden sm:block" />
-            para tu hogar
+            para tu hogar en Donostia
           </h2>
           <span className="mx-auto mt-6 decorative-line" />
           <p className="mt-6 text-base leading-relaxed text-silver">
-            Cubrimos todas las necesidades de tu vivienda con un equipo
-            cualificado y materiales de primera calidad.
+            Cubrimos todas las necesidades de tu vivienda en Donostia-San Sebastián
+            y alrededores de Gipuzkoa con un equipo cualificado y materiales de primera calidad.
           </p>
         </div>
 

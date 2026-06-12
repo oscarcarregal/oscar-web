@@ -4,10 +4,6 @@ import FloatingActions from "../components/FloatingActions";
 import { fetchConfig, fetchAllReformas } from "../lib/data";
 import TrabajosClient from "./TrabajosClient";
 
-export const metadata = {
-  title: "Trabajos Realizados | Fontanería y Reformas",
-  description: "Explora nuestra galería de proyectos: reformas de baños, cocinas, instalaciones de gas y trabajos de fontanería.",
-};
 
 /* ─────────────────────── HERO BANNER ─────────────────────── */
 

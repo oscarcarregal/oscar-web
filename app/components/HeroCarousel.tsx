@@ -63,14 +63,14 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
         </span>
 
         <h1 className="animate-fade-up delay-1 font-heading max-w-5xl text-[2.75rem] leading-[1.1] tracking-tight drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
-          Tu reforma de sueños,
+          Fontanero en San Sebastián
           <br />
-          <span className="text-gradient-copper">hecha realidad</span>
+          <span className="text-gradient-copper">Reformas integrales en Donostia</span>
         </h1>
 
         <p className="animate-fade-up delay-2 mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-white/80 md:text-xl">
-          Fontanería, gas, calefacción y reformas integrales con los mejores
-          materiales y un acabado impecable.
+          Tu reforma de sueños, hecha realidad. Fontanería, gas, calefacción
+          y reformas integrales en Donostia-San Sebastián y alrededores de Gipuzkoa.
         </p>
 
         <div className="animate-fade-up delay-3 mt-12 flex flex-col gap-4 sm:flex-row">

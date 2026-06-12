@@ -54,7 +54,7 @@ export default function WhyUs({ experience }: { experience: string }) {
             <span className="mt-6 decorative-line" />
             <p className="mt-6 text-base leading-relaxed text-silver">
               No somos una empresa más. Nos tomamos cada proyecto como si
-              fuera nuestro propio hogar.
+              fuera nuestro propio hogar, en San Sebastián, Donostia y toda Gipuzkoa.
             </p>
 
             <div className="mt-12 space-y-8">
