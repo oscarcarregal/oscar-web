@@ -1,5 +1,6 @@
 /* Validación y sanitización del payload de configuración del sitio */
 import { sanitizeId } from "@/app/lib/admin-auth";
+import type { WeeklySchedule, DaySchedule, Shift } from "@/app/lib/data";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -75,6 +76,47 @@ function asSafeImagePath(value: unknown): string {
   return "";
 }
 
+function asWeeklySchedule(value: unknown): WeeklySchedule | undefined {
+  const root = asRecord(value);
+  if (!root) return undefined;
+
+  const sanitizeShift = (item: unknown): Shift | null => {
+    const shift = asRecord(item);
+    if (!shift) return null;
+    const open = asString(shift.open, 5);
+    const close = asString(shift.close, 5);
+    if (/^\d{2}:\d{2}$/.test(open) && /^\d{2}:\d{2}$/.test(close)) {
+      return { open, close };
+    }
+    return null;
+  };
+
+  const sanitizeDay = (day: unknown): DaySchedule => {
+    const d = asRecord(day);
+    if (!d) return { isOpen: false, shifts: [] };
+    const shiftsRaw = Array.isArray(d.shifts) ? d.shifts : [];
+    const shifts: Shift[] = [];
+    for (const s of shiftsRaw) {
+      const shift = sanitizeShift(s);
+      if (shift) shifts.push(shift);
+    }
+    return {
+      isOpen: Boolean(d.isOpen),
+      shifts,
+    };
+  };
+
+  return {
+    monday: sanitizeDay(root.monday),
+    tuesday: sanitizeDay(root.tuesday),
+    wednesday: sanitizeDay(root.wednesday),
+    thursday: sanitizeDay(root.thursday),
+    friday: sanitizeDay(root.friday),
+    saturday: sanitizeDay(root.saturday),
+    sunday: sanitizeDay(root.sunday),
+  };
+}
+
 interface SanitizedSlide {
   reforma: string;
   image: string;
@@ -113,6 +155,7 @@ interface SanitizedConfig {
       hours: string;
       compact: string;
     };
+    weeklySchedule?: WeeklySchedule;
     responseTime: string;
     experience: string;
   };
@@ -212,6 +255,7 @@ export function sanitizeConfigPayload(input: unknown): ValidationResult<Sanitize
         hours: asString(schedule.hours, 120),
         compact: asString(schedule.compact, 120),
       },
+      weeklySchedule: asWeeklySchedule(business.weeklySchedule),
 
       responseTime: asString(business.responseTime, 180),
       experience: asString(business.experience, 180),

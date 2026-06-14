@@ -35,11 +35,24 @@ export interface StoreAddress {
   appointmentUrl?: string;
 }
 
-export interface ScheduleEntry {
-  days: string;
-  open: string | null;
-  close: string | null;
-  note?: string;
+export interface Shift {
+  open: string;
+  close: string;
+}
+
+export interface DaySchedule {
+  isOpen: boolean;
+  shifts: Shift[];
+}
+
+export interface WeeklySchedule {
+  monday: DaySchedule;
+  tuesday: DaySchedule;
+  wednesday: DaySchedule;
+  thursday: DaySchedule;
+  friday: DaySchedule;
+  saturday: DaySchedule;
+  sunday: DaySchedule;
 }
 
 export interface BusinessConfig {
@@ -56,7 +69,7 @@ export interface BusinessConfig {
     hours: string;
     compact: string;
   };
-  scheduleEntries?: ScheduleEntry[];
+  weeklySchedule?: WeeklySchedule;
   responseTime: string;
   experience: string;
 }

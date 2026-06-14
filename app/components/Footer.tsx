@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, Clock, Instagram, ArrowUpRight } from "lucide-react";
 import { fetchConfig, type SiteConfig } from "../lib/data";
 import { formatPhoneNumber } from "../lib/phone";
-import { DEFAULT_SCHEDULE, formatScheduleEntry } from "../lib/schedule";
+import { DEFAULT_WEEKLY_SCHEDULE, groupWeeklySchedule, formatShift } from "../lib/schedule";
 
 export default function Footer() {
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
@@ -37,9 +37,8 @@ export default function Footer() {
   const city = storeAddress?.city ?? "San Sebastián";
   const phoneHref = `tel:+34${phone}`;
 
-  const scheduleEntries = (siteConfig?.business?.scheduleEntries && siteConfig.business.scheduleEntries.length > 0)
-    ? siteConfig.business.scheduleEntries
-    : DEFAULT_SCHEDULE;
+  const schedule = siteConfig?.business?.weeklySchedule ?? DEFAULT_WEEKLY_SCHEDULE;
+  const groupedSchedule = groupWeeklySchedule(schedule);
 
   return (
     <footer className="relative bg-carbon text-white/80">
@@ -151,9 +150,9 @@ export default function Footer() {
                   <Clock size={14} className="text-silver" />
                 </div>
                 <div className="flex flex-wrap gap-x-3 gap-y-1">
-                  {scheduleEntries.filter(e => e.open).map((entry, i) => (
+                  {groupedSchedule.filter(g => g.isOpen).map((group, i) => (
                     <span key={i} className="whitespace-nowrap">
-                      {entry.days} {formatScheduleEntry(entry)}
+                      {group.daysLabel} {group.shifts.map(s => formatShift(s)).join(", ")}
                     </span>
                   ))}
                 </div>

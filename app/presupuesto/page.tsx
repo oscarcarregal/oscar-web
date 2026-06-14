@@ -24,7 +24,7 @@ import FloatingActions from "../components/FloatingActions";
 import { fetchConfig, type SiteConfig } from "../lib/data";
 import { formatPhoneNumber } from "../lib/phone";
 import { SidebarSkeleton } from "../components/Skeletons";
-import { DEFAULT_SCHEDULE, formatScheduleEntry } from "../lib/schedule";
+import { DEFAULT_WEEKLY_SCHEDULE, groupWeeklySchedule, formatShift } from "../lib/schedule";
 
 /* ─────────────────────── TYPES ─────────────────────── */
 
@@ -405,9 +405,8 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
 
   const phoneHref = `tel:+34${phone}`;
 
-  const scheduleEntries = (config?.business?.scheduleEntries && config.business.scheduleEntries.length > 0)
-    ? config.business.scheduleEntries
-    : DEFAULT_SCHEDULE;
+  const schedule = config?.business?.weeklySchedule ?? DEFAULT_WEEKLY_SCHEDULE;
+  const groupedSchedule = groupWeeklySchedule(schedule);
 
   const streetFull = street.toLowerCase().includes("local") ? street : `${street}, local 1`;
 
@@ -488,10 +487,10 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
                 Horario
               </p>
               <div className="flex flex-col gap-1">
-                {scheduleEntries.filter((e) => e.open).map((entry, i) => (
+                {groupedSchedule.filter((g) => g.isOpen).map((group, i) => (
                   <p key={i} className="text-sm font-medium text-carbon">
-                    <span className="mr-2">{entry.days}</span>
-                    <span className="text-silver font-normal">{formatScheduleEntry(entry)}</span>
+                    <span className="mr-2">{group.daysLabel}</span>
+                    <span className="text-silver font-normal">{group.shifts.map(s => formatShift(s)).join(", ")}</span>
                   </p>
                 ))}
               </div>

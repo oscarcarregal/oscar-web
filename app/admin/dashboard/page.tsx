@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { type ScheduleEntry } from "../../lib/data";
+import { type WeeklySchedule, type DaySchedule, type Shift } from "../../lib/data";
+import { DEFAULT_WEEKLY_SCHEDULE } from "../../lib/schedule";
 import {
   LayoutDashboard,
   FileText,
@@ -2409,14 +2410,8 @@ function LocalizacionPanel({
     mapsQuery: config?.storeAddress?.mapsQuery ?? "",
     appointmentUrl: config?.storeAddress?.appointmentUrl ?? "",
   });
-  const [scheduleEntries, setScheduleEntries] = useState<ScheduleEntry[]>(
-    (config?.business?.scheduleEntries && config.business.scheduleEntries.length > 0)
-      ? config.business.scheduleEntries
-      : [
-          { days: "Lun–Vie", open: "08:00", close: "19:00" },
-          { days: "Sáb",     open: "09:00", close: "12:00" },
-          { days: "Dom",     open: null,    close: null },
-        ]
+  const [weeklySchedule, setWeeklySchedule] = useState<WeeklySchedule>(
+    config?.business?.weeklySchedule ?? DEFAULT_WEEKLY_SCHEDULE
   );
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -2524,7 +2519,7 @@ function LocalizacionPanel({
           },
           business: {
             ...(config.business ?? {}),
-            scheduleEntries,
+            weeklySchedule,
           },
         }),
       });
@@ -2830,61 +2825,102 @@ function LocalizacionPanel({
           Horario de atención
         </h2>
         <p className="mt-1 text-[10px] text-[#475569]">
-          Define el horario por bloque de días. Deja "Apertura" vacío para marcarlo como cerrado.
+          Configura el horario día a día. Puedes añadir turnos de mañana y tarde con el botón +.
         </p>
-        <div className="mt-4 space-y-2">
-          <div className="grid grid-cols-[1fr_120px_120px_auto] gap-2 text-[9px] uppercase tracking-wider text-[#475569] px-1 pb-1">
-            <span>Días</span><span>Apertura</span><span>Cierre</span><span />
-          </div>
-          {scheduleEntries.map((entry, i) => (
-            <div key={i} className="grid grid-cols-[1fr_120px_120px_auto] items-center gap-2">
-              <input
-                value={entry.days}
-                onChange={(e) => {
-                  const updated = [...scheduleEntries];
-                  updated[i] = { ...updated[i], days: e.target.value };
-                  setScheduleEntries(updated);
-                }}
-                className={`${inputClass} text-xs`}
-                placeholder="Lun–Vie"
-              />
-              <input
-                type="time"
-                value={entry.open ?? ""}
-                onChange={(e) => {
-                  const updated = [...scheduleEntries];
-                  updated[i] = { ...updated[i], open: e.target.value || null };
-                  setScheduleEntries(updated);
-                }}
-                className={`${inputClass} text-xs [&::-webkit-calendar-picker-indicator]:invert-[0.6]`}
-              />
-              <input
-                type="time"
-                value={entry.close ?? ""}
-                onChange={(e) => {
-                  const updated = [...scheduleEntries];
-                  updated[i] = { ...updated[i], close: e.target.value || null };
-                  setScheduleEntries(updated);
-                }}
-                className={`${inputClass} text-xs [&::-webkit-calendar-picker-indicator]:invert-[0.6]`}
-              />
-              <button
-                onClick={() => setScheduleEntries(scheduleEntries.filter((_, j) => j !== i))}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#64748b] hover:bg-red-500/10 hover:text-red-400 transition-colors"
-                aria-label="Eliminar fila"
-              >
-                <X size={14} />
-              </button>
-            </div>
-          ))}
+        <div className="mt-4 flex flex-col gap-3">
+          {(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const).map((dayKey) => {
+            const dayLabels: Record<string, string> = {
+              monday: "Lunes", tuesday: "Martes", wednesday: "Miércoles",
+              thursday: "Jueves", friday: "Viernes", saturday: "Sábado", sunday: "Domingo"
+            };
+            const dayData = weeklySchedule[dayKey];
+
+            return (
+              <div key={dayKey} className="rounded-lg border border-white/5 bg-white/[0.02] p-3 flex flex-col gap-3 sm:flex-row sm:items-start">
+                {/* Header (Día + Toggle) */}
+                <div className="flex w-32 shrink-0 items-center justify-between sm:justify-start sm:gap-3">
+                  <span className={`text-xs font-medium ${dayData.isOpen ? "text-white" : "text-[#64748b]"}`}>
+                    {dayLabels[dayKey]}
+                  </span>
+                  <label className="relative inline-flex cursor-pointer items-center">
+                    <input
+                      type="checkbox"
+                      className="peer sr-only"
+                      checked={dayData.isOpen}
+                      onChange={(e) => {
+                        setWeeklySchedule(prev => ({
+                          ...prev,
+                          [dayKey]: {
+                            ...prev[dayKey],
+                            isOpen: e.target.checked,
+                            // Si se abre y no tiene turnos, añadir uno por defecto
+                            shifts: e.target.checked && prev[dayKey].shifts.length === 0 
+                              ? [{ open: "08:00", close: "19:00" }] 
+                              : prev[dayKey].shifts
+                          }
+                        }));
+                      }}
+                    />
+                    <div className="h-5 w-9 rounded-full bg-[#1e2435] peer-checked:bg-indigo-500 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500/50"></div>
+                  </label>
+                </div>
+
+                {/* Turnos */}
+                <div className="flex-1 flex flex-col gap-2">
+                  {!dayData.isOpen ? (
+                    <span className="text-xs text-[#64748b] h-8 flex items-center">Cerrado</span>
+                  ) : (
+                    <>
+                      {dayData.shifts.map((shift, shiftIdx) => (
+                        <div key={shiftIdx} className="flex items-center gap-2">
+                          <input
+                            type="time"
+                            value={shift.open}
+                            onChange={(e) => {
+                              const newShifts = [...dayData.shifts];
+                              newShifts[shiftIdx].open = e.target.value;
+                              setWeeklySchedule(prev => ({ ...prev, [dayKey]: { ...prev[dayKey], shifts: newShifts } }));
+                            }}
+                            className={`${inputClass} !py-1.5 text-xs w-[110px] [&::-webkit-calendar-picker-indicator]:invert-[0.6]`}
+                          />
+                          <span className="text-[#475569]">-</span>
+                          <input
+                            type="time"
+                            value={shift.close}
+                            onChange={(e) => {
+                              const newShifts = [...dayData.shifts];
+                              newShifts[shiftIdx].close = e.target.value;
+                              setWeeklySchedule(prev => ({ ...prev, [dayKey]: { ...prev[dayKey], shifts: newShifts } }));
+                            }}
+                            className={`${inputClass} !py-1.5 text-xs w-[110px] [&::-webkit-calendar-picker-indicator]:invert-[0.6]`}
+                          />
+                          <button
+                            onClick={() => {
+                              const newShifts = dayData.shifts.filter((_, idx) => idx !== shiftIdx);
+                              setWeeklySchedule(prev => ({ ...prev, [dayKey]: { ...prev[dayKey], shifts: newShifts } }));
+                            }}
+                            className="flex h-7 w-7 items-center justify-center rounded text-[#64748b] hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        onClick={() => {
+                          const newShifts = [...dayData.shifts, { open: "08:00", close: "19:00" }];
+                          setWeeklySchedule(prev => ({ ...prev, [dayKey]: { ...prev[dayKey], shifts: newShifts } }));
+                        }}
+                        className="self-start mt-1 flex items-center gap-1 rounded bg-[#1e2435] px-2 py-1 text-[10px] uppercase tracking-wider text-indigo-400 transition-colors hover:bg-indigo-500/10 hover:text-indigo-300"
+                      >
+                        <Plus size={10} /> Añadir turno
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
-        <button
-          onClick={() => setScheduleEntries([...scheduleEntries, { days: "", open: "", close: "" }])}
-          className="mt-3 flex items-center gap-1.5 rounded-lg bg-[#1e2435] px-3 py-1.5 text-xs text-[#94a3b8] transition-colors hover:bg-[#252d3d] hover:text-[#e2e8f0]"
-        >
-          <Plus size={12} />
-          Añadir fila
-        </button>
       </section>
 
       {saveSuccess && (

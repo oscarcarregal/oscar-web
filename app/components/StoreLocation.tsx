@@ -6,7 +6,7 @@ import Image from "next/image";
 import { MapPin, Clock, ArrowUpRight, ChevronLeft, ChevronRight, X, CalendarCheck } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import type { SiteConfig } from "../lib/data";
-import { DEFAULT_SCHEDULE, formatScheduleEntry } from "../lib/schedule";
+import { DEFAULT_WEEKLY_SCHEDULE, groupWeeklySchedule, formatShift } from "../lib/schedule";
 import AppointmentWidget from "./AppointmentWidget";
 
 export default function StoreLocation({ config }: { config: SiteConfig | null }) {
@@ -21,9 +21,8 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
   const [currentPhoto, setCurrentPhoto] = useState(0);
 
   // Horarios: usar los estructurados si existen, si no, los por defecto
-  const scheduleEntries = (business?.scheduleEntries && business.scheduleEntries.length > 0)
-    ? business.scheduleEntries
-    : DEFAULT_SCHEDULE;
+  const schedule = business?.weeklySchedule ?? DEFAULT_WEEKLY_SCHEDULE;
+  const groupedSchedule = groupWeeklySchedule(schedule);
 
   // Para mantener el layout actual (izquierda grande + dos a la derecha)
   const visibleMosaicPhotos = useMemo(() => {
@@ -207,15 +206,14 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                       <span className="text-xs font-semibold uppercase tracking-wider text-gray-dark">Horario</span>
                     </div>
                     <div className="space-y-2.5">
-                      {scheduleEntries.filter((e) => e.open).map((entry, i) => (
+                      {groupedSchedule.filter(g => g.isOpen).map((group, i) => (
                         <div
                           key={i}
                           className="flex items-center justify-between py-2 px-2 rounded-md hover:bg-white/60 transition-colors"
                         >
-                          <span className="font-medium text-gray-dark text-sm min-w-20">{entry.days}</span>
+                          <span className="font-medium text-gray-dark text-sm min-w-20">{group.daysLabel}</span>
                           <span className="flex-1 text-right text-silver text-sm">
-                            {formatScheduleEntry(entry)}
-                            {entry.note ? <span className="ml-2 text-copper text-xs font-medium">· {entry.note}</span> : null}
+                            {group.shifts.map(s => formatShift(s)).join(", ")}
                           </span>
                         </div>
                       ))}

@@ -1,25 +1,24 @@
-/**
- * Utilidades para los horarios estructurados por día.
- * Compatible con el formato antiguo (string) y el nuevo (ScheduleEntry[]).
- */
-import type { ScheduleEntry } from "./data";
+import type { WeeklySchedule, DaySchedule, Shift } from "./data";
 
-/** Horarios por defecto si no hay entradas configuradas en Redis */
-export const DEFAULT_SCHEDULE: ScheduleEntry[] = [
-  { days: "Lun–Vie", open: "08:00", close: "19:00" },
-  { days: "Sáb",     open: "09:00", close: "12:00" },
-  { days: "Dom",     open: null,    close: null },
-];
-
-/** Formatea un bloque de horario para mostrar ("08:00 – 19:00" | "Cerrado") */
-export function formatScheduleEntry(entry: ScheduleEntry): string {
-  if (!entry.open || !entry.close) return "Cerrado";
-  return `${entry.open} – ${entry.close}`;
-}
+export const DEFAULT_WEEKLY_SCHEDULE: WeeklySchedule = {
+  monday: { isOpen: true, shifts: [{ open: "08:00", close: "19:00" }] },
+  tuesday: { isOpen: true, shifts: [{ open: "08:00", close: "19:00" }] },
+  wednesday: { isOpen: true, shifts: [{ open: "08:00", close: "19:00" }] },
+  thursday: { isOpen: true, shifts: [{ open: "08:00", close: "19:00" }] },
+  friday: { isOpen: true, shifts: [{ open: "08:00", close: "19:00" }] },
+  saturday: { isOpen: true, shifts: [{ open: "09:00", close: "12:00" }] },
+  sunday: { isOpen: false, shifts: [] },
+};
 
 export interface OpenStatus {
   isOpen: boolean;
-  label: string; // "Abierto ahora · Cierra a las 19:00" | "Cerrado · Abre el Lun a las 8:00"
+  label: string; // "Abierto ahora · Cierra a las 19:00" | "Cerrado · Abre el Lun a las 08:00"
+}
+
+export interface GroupedSchedule {
+  daysLabel: string;
+  isOpen: boolean;
+  shifts: Shift[];
 }
 
 function toMinutes(time: string): number {
@@ -27,72 +26,123 @@ function toMinutes(time: string): number {
   return h * 60 + m;
 }
 
-const ORDERED_DAYS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
+const DAYS_ES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const DAYS_SHORT_ES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+const WEEK_KEYS: (keyof WeeklySchedule)[] = [
+  "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"
+];
 
-// day-of-week (0=Sun) → matching tokens
-const DAY_TOKENS: Record<number, string[]> = {
-  1: ["lun"], 2: ["mar"], 3: ["mie", "mié"], 4: ["jue"],
-  5: ["vie"], 6: ["sab", "sáb"], 0: ["dom"],
-};
+/**
+ * Calcula si el negocio está abierto en este momento.
+ */
+export function getOpenStatus(schedule: WeeklySchedule | undefined): OpenStatus {
+  if (!schedule) return { isOpen: false, label: "" };
 
-function normalizeStr(s: string) {
-  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-}
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0 = Sunday
+  const currentMin = now.getHours() * 60 + now.getMinutes();
 
-function coversDay(daysStr: string, dayOfWeek: number): boolean {
-  const norm = normalizeStr(daysStr);
-  const tokens = DAY_TOKENS[dayOfWeek] ?? [];
+  const todayKey = WEEK_KEYS[dayOfWeek];
+  const todayDay = schedule[todayKey];
 
-  // Direct match (e.g. "dom", "sáb")
-  if (tokens.some((t) => norm.startsWith(t))) return true;
+  if (todayDay.isOpen && todayDay.shifts.length > 0) {
+    // Buscar si estamos dentro de algún turno de hoy
+    for (const shift of todayDay.shifts) {
+      const openMin = toMinutes(shift.open);
+      const closeMin = toMinutes(shift.close);
 
-  // Range match (e.g. "lun–vie", "lun-vie")
-  const m = norm.match(/^(\w+)\s*[–\-]+\s*(\w+)$/);
-  if (m) {
-    const from = ORDERED_DAYS.findIndex((d) => m[1].startsWith(d));
-    const to   = ORDERED_DAYS.findIndex((d) => m[2].startsWith(d));
-    // map Sunday (0) to index 6 in ORDERED_DAYS
-    const todayIdx = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-    if (from !== -1 && to !== -1) {
-      return from <= to ? todayIdx >= from && todayIdx <= to
-                        : todayIdx >= from || todayIdx <= to;
+      if (currentMin >= openMin && currentMin < closeMin) {
+        return { isOpen: true, label: `Abierto ahora · Cierra a las ${shift.close}` };
+      }
+    }
+
+    // Buscar si hay algún turno más tarde hoy
+    const nextShiftToday = todayDay.shifts.find(s => toMinutes(s.open) > currentMin);
+    if (nextShiftToday) {
+      return { isOpen: false, label: `Cerrado · Abre hoy a las ${nextShiftToday.open}` };
     }
   }
-  return false;
+
+  // Ya cerró hoy (o nunca abrió) — buscar próximo día con horario
+  for (let i = 1; i <= 7; i++) {
+    const nextDayIdx = (dayOfWeek + i) % 7;
+    const nextDayKey = WEEK_KEYS[nextDayIdx];
+    const nextDay = schedule[nextDayKey];
+
+    if (nextDay.isOpen && nextDay.shifts.length > 0) {
+      // Ordenar los turnos por hora de apertura (por seguridad)
+      const firstShift = [...nextDay.shifts].sort((a, b) => toMinutes(a.open) - toMinutes(b.open))[0];
+      const dayName = i === 1 ? "mañana" : `el ${DAYS_ES[nextDayIdx]}`;
+      return { isOpen: false, label: `Cerrado · Abre ${dayName} a las ${firstShift.open}` };
+    }
+  }
+
+  return { isOpen: false, label: "Cerrado temporalmente" };
+}
+
+/** Formatea un turno ("08:00 – 19:00") */
+export function formatShift(shift: Shift): string {
+  return `${shift.open} – ${shift.close}`;
 }
 
 /**
- * Calcula si el negocio está abierto en este momento
- * según las entradas de horario configuradas.
+ * Agrupa días consecutivos que tienen exactamente los mismos turnos.
+ * Útil para mostrar "Lun - Vie: 08:00 - 19:00" en el frontend en lugar de 5 líneas.
  */
-export function getOpenStatus(entries: ScheduleEntry[]): OpenStatus {
-  if (!entries || entries.length === 0) return { isOpen: false, label: "" };
+export function groupWeeklySchedule(schedule: WeeklySchedule): GroupedSchedule[] {
+  // Orden visual empieza en Lunes (índices: 1, 2, 3, 4, 5, 6, 0)
+  const orderedIndices = [1, 2, 3, 4, 5, 6, 0];
+  
+  const days: { index: number; data: DaySchedule }[] = orderedIndices.map(idx => ({
+    index: idx,
+    data: schedule[WEEK_KEYS[idx]],
+  }));
 
-  const now = new Date();
-  const dayOfWeek = now.getDay();
-  const currentMin = now.getHours() * 60 + now.getMinutes();
+  const grouped: GroupedSchedule[] = [];
+  
+  const areShiftsEqual = (a: Shift[], b: Shift[]) => {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i].open !== b[i].open || a[i].close !== b[i].close) return false;
+    }
+    return true;
+  };
 
-  const todayEntry = entries.find((e) => coversDay(e.days, dayOfWeek));
+  let currentGroup: { startIdx: number; endIdx: number; data: DaySchedule } | null = null;
 
-  if (!todayEntry?.open || !todayEntry?.close) {
-    const nextOpen = entries.find((e) => e.open && e.close);
-    const nextLabel = nextOpen ? ` · Abre el ${nextOpen.days} a las ${nextOpen.open}` : "";
-    return { isOpen: false, label: `Cerrado${nextLabel}` };
+  for (let i = 0; i < days.length; i++) {
+    const day = days[i];
+
+    if (!currentGroup) {
+      currentGroup = { startIdx: day.index, endIdx: day.index, data: day.data };
+    } else {
+      if (currentGroup.data.isOpen === day.data.isOpen && areShiftsEqual(currentGroup.data.shifts, day.data.shifts)) {
+        // Expandir grupo
+        currentGroup.endIdx = day.index;
+      } else {
+        // Guardar grupo anterior
+        grouped.push({
+          daysLabel: getDaysLabel(currentGroup.startIdx, currentGroup.endIdx),
+          isOpen: currentGroup.data.isOpen,
+          shifts: currentGroup.data.shifts,
+        });
+        currentGroup = { startIdx: day.index, endIdx: day.index, data: day.data };
+      }
+    }
   }
 
-  const openMin  = toMinutes(todayEntry.open);
-  const closeMin = toMinutes(todayEntry.close);
-
-  if (currentMin >= openMin && currentMin < closeMin) {
-    return { isOpen: true, label: `Abierto ahora · Cierra a las ${todayEntry.close}` };
+  if (currentGroup) {
+    grouped.push({
+      daysLabel: getDaysLabel(currentGroup.startIdx, currentGroup.endIdx),
+      isOpen: currentGroup.data.isOpen,
+      shifts: currentGroup.data.shifts,
+    });
   }
 
-  if (currentMin < openMin) {
-    return { isOpen: false, label: `Cerrado · Abre hoy a las ${todayEntry.open}` };
-  }
+  return grouped;
+}
 
-  // Ya cerró hoy — buscar próximo día con horario
-  const nextOpen = entries.find((e) => e.open && e.close && !coversDay(e.days, dayOfWeek));
-  const nextLabel = nextOpen ? ` · Abre el ${nextOpen.days} a las ${nextOpen.open}` : "";
-  return { isOpen: false, label: `Cerrado${nextLabel}` };
+function getDaysLabel(startIdx: number, endIdx: number): string {
+  if (startIdx === endIdx) return DAYS_SHORT_ES[startIdx];
+  return `${DAYS_SHORT_ES[startIdx]}–${DAYS_SHORT_ES[endIdx]}`;
 }
