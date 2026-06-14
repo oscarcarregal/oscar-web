@@ -404,6 +404,9 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
   const city = config?.storeAddress?.city ?? "San Sebastián";
 
   const phoneHref = `tel:+34${phone}`;
+  const mapsLink = config?.storeAddress?.mapsQuery?.startsWith("http") 
+    ? config.storeAddress.mapsQuery 
+    : "https://maps.app.goo.gl/6HYDD7UbkvXhBi5L9";
 
   const schedule = config?.business?.weeklySchedule ?? DEFAULT_WEEKLY_SCHEDULE;
   const groupedSchedule = groupWeeklySchedule(schedule);
@@ -434,6 +437,7 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
       title: "Zona de Trabajo",
       text: serviceArea,
       sub: `${streetFull}, ${postalCode} ${city}`,
+      subHref: mapsLink,
       href: undefined,
       iconColor: "text-red-500",
       iconBg: "bg-red-500/10",
@@ -472,7 +476,13 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
                 ) : (
                   <p className="text-sm font-medium text-carbon">{c.text}</p>
                 )}
-                {c.sub && <p className="text-xs text-silver">{c.sub}</p>}
+                {c.sub && c.subHref ? (
+                  <a href={c.subHref} target="_blank" rel="noopener noreferrer" className="mt-1 flex items-center gap-1 text-xs font-medium text-silver transition-colors hover:text-carbon group">
+                    {c.sub} <ArrowUpRight size={10} className="opacity-0 transition-opacity group-hover:opacity-100" />
+                  </a>
+                ) : c.sub ? (
+                  <p className="mt-1 text-xs text-silver">{c.sub}</p>
+                ) : null}
               </div>
             </div>
           ))}
