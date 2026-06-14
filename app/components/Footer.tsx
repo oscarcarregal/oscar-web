@@ -146,15 +146,14 @@ export default function Footer() {
                   {`${street.toLowerCase().includes("local") ? street : street + ", local 1"}, ${postalCode} ${city}`}
                 </a>
               </li>
-              <li className="flex items-start gap-3">
+              <li className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 shrink-0">
                   <Clock size={14} className="text-silver" />
                 </div>
-                <div className="mt-1 text-white flex flex-wrap gap-x-3 gap-y-1">
+                <div className="flex flex-wrap gap-x-3 gap-y-1">
                   {scheduleEntries.filter(e => e.open).map((entry, i) => (
                     <span key={i} className="whitespace-nowrap">
-                      <strong className="text-silver">{entry.days}</strong>
-                      {formatScheduleEntry(entry)}
+                      {entry.days} {formatScheduleEntry(entry)}
                     </span>
                   ))}
                 </div>

@@ -153,6 +153,7 @@ export function sanitizeConfigPayload(input: unknown): ValidationResult<Sanitize
     mapsQuery: asString(storeAddressRaw.mapsQuery, 500),
     mapsUrl: asSafeHttpUrl(storeAddressRaw.mapsUrl),
     mapsEmbedUrl: asSafeHttpUrl(storeAddressRaw.mapsEmbedUrl),
+    appointmentUrl: asString(storeAddressRaw.appointmentUrl, 500),
   };
 
   // Fotos de la tienda (máx 10 fotos)

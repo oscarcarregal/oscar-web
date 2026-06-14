@@ -2791,7 +2791,7 @@ function LocalizacionPanel({
           </div>
           <div className="sm:col-span-2">
             <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#64748b]">
-              Coordenadas Google Maps
+              Enlace Google Maps
             </label>
             <input
               value={address.mapsQuery}
@@ -2799,10 +2799,10 @@ function LocalizacionPanel({
                 setAddress((prev) => ({ ...prev, mapsQuery: e.target.value }))
               }
               className={inputClass}
-              placeholder="43.30739782667964,-2.0075817173451656"
+              placeholder="https://maps.app.goo.gl/..."
             />
             <p className="mt-1 text-[10px] text-[#475569]">
-              Formato: latitud,longitud. Centra el mapa y genera el enlace de Google Maps.
+              Enlace directo al perfil del negocio. Se usa en los botones de "Abrir en Google Maps".
             </p>
           </div>
           <div className="sm:col-span-2">
@@ -2833,8 +2833,11 @@ function LocalizacionPanel({
           Define el horario por bloque de días. Deja "Apertura" vacío para marcarlo como cerrado.
         </p>
         <div className="mt-4 space-y-2">
+          <div className="grid grid-cols-[1fr_120px_120px_auto] gap-2 text-[9px] uppercase tracking-wider text-[#475569] px-1 pb-1">
+            <span>Días</span><span>Apertura</span><span>Cierre</span><span />
+          </div>
           {scheduleEntries.map((entry, i) => (
-            <div key={i} className="grid grid-cols-[1fr_100px_100px_80px_auto] items-center gap-2">
+            <div key={i} className="grid grid-cols-[1fr_120px_120px_auto] items-center gap-2">
               <input
                 value={entry.days}
                 onChange={(e) => {
@@ -2846,34 +2849,24 @@ function LocalizacionPanel({
                 placeholder="Lun–Vie"
               />
               <input
+                type="time"
                 value={entry.open ?? ""}
                 onChange={(e) => {
                   const updated = [...scheduleEntries];
                   updated[i] = { ...updated[i], open: e.target.value || null };
                   setScheduleEntries(updated);
                 }}
-                className={`${inputClass} text-xs`}
-                placeholder="08:00"
+                className={`${inputClass} text-xs [&::-webkit-calendar-picker-indicator]:invert-[0.6]`}
               />
               <input
+                type="time"
                 value={entry.close ?? ""}
                 onChange={(e) => {
                   const updated = [...scheduleEntries];
                   updated[i] = { ...updated[i], close: e.target.value || null };
                   setScheduleEntries(updated);
                 }}
-                className={`${inputClass} text-xs`}
-                placeholder="19:00"
-              />
-              <input
-                value={entry.note ?? ""}
-                onChange={(e) => {
-                  const updated = [...scheduleEntries];
-                  updated[i] = { ...updated[i], note: e.target.value };
-                  setScheduleEntries(updated);
-                }}
-                className={`${inputClass} text-xs`}
-                placeholder="Nota"
+                className={`${inputClass} text-xs [&::-webkit-calendar-picker-indicator]:invert-[0.6]`}
               />
               <button
                 onClick={() => setScheduleEntries(scheduleEntries.filter((_, j) => j !== i))}
@@ -2884,12 +2877,9 @@ function LocalizacionPanel({
               </button>
             </div>
           ))}
-          <div className="grid grid-cols-[1fr_100px_100px_80px_auto] gap-2 text-[9px] uppercase tracking-wider text-[#475569] px-1">
-            <span>Días</span><span>Apertura</span><span>Cierre</span><span>Nota</span><span />
-          </div>
         </div>
         <button
-          onClick={() => setScheduleEntries([...scheduleEntries, { days: "", open: "", close: "", note: "" }])}
+          onClick={() => setScheduleEntries([...scheduleEntries, { days: "", open: "", close: "" }])}
           className="mt-3 flex items-center gap-1.5 rounded-lg bg-[#1e2435] px-3 py-1.5 text-xs text-[#94a3b8] transition-colors hover:bg-[#252d3d] hover:text-[#e2e8f0]"
         >
           <Plus size={12} />
