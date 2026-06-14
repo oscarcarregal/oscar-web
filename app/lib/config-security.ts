@@ -95,6 +95,7 @@ interface SanitizedStoreAddress {
   mapsQuery: string;
   mapsUrl: string;
   mapsEmbedUrl: string;
+  appointmentUrl: string;
 }
 
 interface SanitizedConfig {
