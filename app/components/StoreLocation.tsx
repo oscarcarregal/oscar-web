@@ -163,7 +163,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
             <div className="relative flex-1 min-h-[300px] overflow-hidden rounded-2xl border border-gray-200/60 shadow-sm">
               <iframe
                 title="Ubicación de Oscar Carregal en San Sebastián"
-                src={`https://maps.google.com/maps?q=${mapsQuery}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapsQuery)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
                 className="absolute inset-0 h-full w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
