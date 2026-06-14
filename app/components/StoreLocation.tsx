@@ -14,7 +14,9 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
   const business = config?.business;
   const storeAddress = config?.storeAddress;
   const storePhotos = config?.storePhotos ?? [];
-  const mapsQuery = storeAddress?.mapsQuery ?? "43.30739782667964,-2.0075817173451656";
+  const mapsQuery = storeAddress?.mapsQuery && storeAddress.mapsQuery !== "43.30739782667964,-2.0075817173451656" 
+    ? storeAddress.mapsQuery 
+    : "Oscar Carregal Fontanería San Sebastián";
   const [viewerOpen, setViewerOpen] = useState(false);
   const [currentPhoto, setCurrentPhoto] = useState(0);
 
@@ -189,7 +191,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                   </p>
 
                   <a
-                    href={`https://maps.google.com/maps?q=${mapsQuery}`}
+                    href="https://maps.app.goo.gl/6HYDD7UbkvXhBi5L9"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-gray-dark transition-colors hover:text-carbon"
