@@ -36,6 +36,9 @@ export default function Footer() {
   const postalCode = storeAddress?.postalCode ?? "20018";
   const city = storeAddress?.city ?? "San Sebastián";
   const phoneHref = `tel:+34${phone}`;
+  const mapsLink = storeAddress?.mapsQuery?.startsWith("http") 
+    ? storeAddress.mapsQuery 
+    : "https://maps.app.goo.gl/6HYDD7UbkvXhBi5L9";
 
   const schedule = siteConfig?.business?.weeklySchedule ?? DEFAULT_WEEKLY_SCHEDULE;
   const groupedSchedule = groupWeeklySchedule(schedule);
@@ -134,7 +137,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://maps.app.goo.gl/6HYDD7UbkvXhBi5L9"
+                  href={mapsLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center gap-3 transition-colors hover:text-white"

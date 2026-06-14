@@ -14,9 +14,10 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
   const business = config?.business;
   const storeAddress = config?.storeAddress;
   const storePhotos = config?.storePhotos ?? [];
-  const mapsQuery = storeAddress?.mapsQuery && storeAddress.mapsQuery !== "43.30739782667964,-2.0075817173451656" 
+  const mapsLink = storeAddress?.mapsQuery?.startsWith("http") 
     ? storeAddress.mapsQuery 
-    : "Oscar Carregal Fontanería San Sebastián";
+    : "https://maps.app.goo.gl/6HYDD7UbkvXhBi5L9";
+  const iframeQuery = "Oscar Carregal Fontanería San Sebastián";
   const [viewerOpen, setViewerOpen] = useState(false);
   const [currentPhoto, setCurrentPhoto] = useState(0);
 
@@ -163,7 +164,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
             <div className="relative flex-1 min-h-[300px] overflow-hidden rounded-2xl border border-gray-200/60 shadow-sm">
               <iframe
                 title="Ubicación de Oscar Carregal en San Sebastián"
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapsQuery)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(iframeQuery)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
                 className="absolute inset-0 h-full w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -190,7 +191,7 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
                   </p>
 
                   <a
-                    href="https://maps.app.goo.gl/6HYDD7UbkvXhBi5L9"
+                    href={mapsLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-gray-dark transition-colors hover:text-carbon"
