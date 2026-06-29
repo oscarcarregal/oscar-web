@@ -478,7 +478,7 @@ function ContactSidebar({ config }: { config: SiteConfig | null }) {
                 )}
                 {c.sub && c.subHref ? (
                   <a href={c.subHref} target="_blank" rel="noopener noreferrer" className="mt-1 flex items-center gap-1 text-xs font-medium text-silver transition-colors hover:text-carbon group">
-                    {c.sub} <ArrowUpRight size={10} className="opacity-0 transition-opacity group-hover:opacity-100" />
+                    {c.sub} <ArrowRight size={10} className="opacity-0 transition-opacity group-hover:opacity-100" />
                   </a>
                 ) : c.sub ? (
                   <p className="mt-1 text-xs text-silver">{c.sub}</p>

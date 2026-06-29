@@ -20,7 +20,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://oscarcarregal.es"),
+  metadataBase: new URL("https://www.oscarcarregal.es"),
   alternates: {
     canonical: "/",
   },

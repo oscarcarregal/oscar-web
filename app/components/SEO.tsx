@@ -7,9 +7,9 @@ export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
     "@type": ["LocalBusiness", "Plumber", "HomeAndConstructionBusiness"],
     "name": config.business.brandName || "Oscar Carregal",
     "description": "Fontanero profesional en San Sebastián (Donostia). Servicios de fontanería, gas, calefacción y reformas integrales en Gipuzkoa. Más de 15 años de experiencia.",
-    "image": "https://oscarcarregal.es/assets/logo_sin_fondo.png",
-    "@id": "https://oscarcarregal.es",
-    "url": "https://oscarcarregal.es",
+    "image": "https://www.oscarcarregal.es/assets/logo_sin_fondo.png",
+    "@id": "https://www.oscarcarregal.es",
+    "url": "https://www.oscarcarregal.es",
     "telephone": `+34${config.business.phoneNumber || "600670867"}`,
     "email": config.business.email || "oscarcarregalfontaneria@gmail.com",
     "address": {
