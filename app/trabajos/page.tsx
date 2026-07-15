@@ -2,8 +2,17 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FloatingActions from "../components/FloatingActions";
 import { fetchConfig, fetchAllReformas } from "../lib/data";
+import { Metadata } from "next";
 import TrabajosClient from "./TrabajosClient";
 
+export const metadata: Metadata = {
+  title: "Nuestros Trabajos · Reformas y Fontanería",
+  description:
+    "Explora nuestra galería de proyectos recientes: reformas integrales, instalaciones de fontanería, gas y calefacción en Donostia - San Sebastián.",
+  alternates: {
+    canonical: "/trabajos",
+  },
+};
 
 /* ─────────────────────── HERO BANNER ─────────────────────── */
 

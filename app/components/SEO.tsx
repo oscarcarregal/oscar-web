@@ -97,7 +97,7 @@ export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessData) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessData).replace(/</g, '\\u003c') }}
     />
   );
 }
