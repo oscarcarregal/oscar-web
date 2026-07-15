@@ -165,7 +165,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-16 flex flex-col items-center gap-4 border-t border-white/8 pt-8 sm:flex-row sm:justify-between">
+        <div className="relative mt-16 flex flex-col items-center gap-4 border-t border-white/8 pt-8 sm:flex-row sm:justify-between">
           <p className="text-xs text-white/70 text-center sm:text-left">
             {copyrightLine}
           </p>
@@ -174,7 +174,7 @@ export default function Footer() {
             href="https://www.linkedin.com/in/ander-malo" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center justify-center opacity-60 transition-opacity duration-300 hover:opacity-100"
+            className="flex items-center justify-center opacity-60 transition-opacity duration-300 hover:opacity-100 sm:absolute sm:left-1/2 sm:-translate-x-1/2"
             aria-label="Perfil de LinkedIn de Ander Malo"
           >
             <Image 
