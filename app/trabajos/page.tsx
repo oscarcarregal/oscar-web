@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Explora nuestra galería de proyectos recientes: reformas integrales, instalaciones de fontanería, gas y calefacción en Donostia - San Sebastián.",
   alternates: {
-    canonical: "/trabajos",
+    canonical: "https://www.oscarcarregal.es/trabajos",
   },
 };
 

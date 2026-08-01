@@ -82,7 +82,8 @@ export default function Home() {
   }, [loading]);
 
   /* Fallbacks SEO: datos de negocio siempre presentes en el HTML */
-  const phone = siteConfig?.business?.phoneNumber ?? "600670867";
+  let phone = siteConfig?.business?.phoneNumber;
+  if (!phone || phone === "-" || phone.trim() === "") phone = "600670867";
   const experience = siteConfig?.business?.experience ?? "Más de 15 años";
   const igUrl = siteConfig?.business?.instagram?.url ?? "https://www.instagram.com/oscarcarregal_fontaneria/";
 

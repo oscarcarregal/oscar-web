@@ -10,8 +10,11 @@ export default function Contact({ config }: { config: SiteConfig | null }) {
   const { ref, visible } = useScrollReveal();
 
   /* ── Fallbacks SEO: datos visibles incluso antes del fetch ── */
-  const phone = config?.business?.phoneNumber ?? "600670867";
-  const email = config?.business?.email ?? "oscarcarregalfontaneria@gmail.com";
+  let phone = config?.business?.phoneNumber;
+  if (!phone || phone === "-" || phone.trim() === "") phone = "600670867";
+
+  let email = config?.business?.email;
+  if (!email || email === "<>" || email === "-" || email.trim() === "") email = "oscarcarregalfontaneria@gmail.com";
   const schedule = config?.business?.schedule;
   const phoneHref = `tel:+34${phone}`;
 

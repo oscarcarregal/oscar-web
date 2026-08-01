@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Contacta con Oscar Carregal para reformas, fontanería, gas o calefacción en San Sebastián (Donostia), Gipuzkoa. Trato personalizado y presupuesto sin compromiso.",
   alternates: {
-    canonical: "/presupuesto",
+    canonical: "https://www.oscarcarregal.es/presupuesto",
   },
 };
 

@@ -2,6 +2,12 @@ import React from 'react';
 import type { SiteConfig } from '../lib/data';
 
 export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
+  let phone = config.business.phoneNumber;
+  if (!phone || phone === "-" || phone.trim() === "") phone = "600670867";
+  
+  let email = config.business.email;
+  if (!email || email === "<>" || email === "-" || email.trim() === "") email = "oscarcarregalfontaneria@gmail.com";
+
   const localBusinessData = {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "Plumber", "HomeAndConstructionBusiness"],
@@ -10,8 +16,8 @@ export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
     "image": "https://www.oscarcarregal.es/assets/logo_sin_fondo.png",
     "@id": "https://www.oscarcarregal.es",
     "url": "https://www.oscarcarregal.es",
-    "telephone": `+34${config.business.phoneNumber || "600670867"}`,
-    "email": config.business.email || "oscarcarregalfontaneria@gmail.com",
+    "telephone": `+34${phone}`,
+    "email": email,
     "address": {
       "@type": "PostalAddress",
       "streetAddress": config.storeAddress.street || "Avenida de Tolosa 89",
@@ -37,7 +43,8 @@ export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
       }
     ],
     "sameAs": [
-      "https://www.instagram.com/oscarcarregal_fontaneria/"
+      config.business.instagram?.url || "https://www.instagram.com/oscarcarregal_fontaneria/",
+      config.storeAddress.mapsQuery?.startsWith("http") ? config.storeAddress.mapsQuery : "https://maps.app.goo.gl/6HYDD7UbkvXhBi5L9"
     ],
     "priceRange": "$$",
     "openingHoursSpecification": [
@@ -63,8 +70,9 @@ export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
           "itemOffered": {
             "@type": "Service",
             "name": "Fontanería en San Sebastián",
-            "description": "Instalaciones sanitarias, montantes de agua y bajantes comunitarias en Donostia-San Sebastián"
-          }
+            "description": "Instalaciones sanitarias, reparación de averías, montantes de agua y bajantes comunitarias en Donostia-San Sebastián"
+          },
+          "url": "https://www.oscarcarregal.es/#servicios"
         },
         {
           "@type": "Offer",
@@ -72,23 +80,26 @@ export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
             "@type": "Service",
             "name": "Instalación de gas en Donostia",
             "description": "Empresa autorizada. Instalación de calderas y calentadores de gas, certificados y alta en industria"
-          }
+          },
+          "url": "https://www.oscarcarregal.es/#servicios"
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
             "name": "Calefacción y climatización en Gipuzkoa",
-            "description": "Instalación de radiadores, suelo radiante y aire acondicionado"
-          }
+            "description": "Instalación de radiadores, suelo radiante, sistemas eficientes y aire acondicionado"
+          },
+          "url": "https://www.oscarcarregal.es/#servicios"
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
             "name": "Reformas integrales en San Sebastián",
-            "description": "Reformas de baños, cocinas, pisos y locales en Donostia y alrededores"
-          }
+            "description": "Reformas de baños, cocinas, pisos y locales en Donostia y alrededores con coordinación de gremios"
+          },
+          "url": "https://www.oscarcarregal.es/#servicios"
         }
       ]
     }

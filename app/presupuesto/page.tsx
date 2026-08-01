@@ -395,8 +395,11 @@ function PresupuestoForm() {
 
 function ContactSidebar({ config }: { config: SiteConfig | null }) {
   /* ── Fallbacks SEO: datos visibles incluso sin Redis ── */
-  const phone = config?.business?.phoneNumber ?? "600670867";
-  const email = config?.business?.email ?? "oscarcarregalfontaneria@gmail.com";
+  let phone = config?.business?.phoneNumber;
+  if (!phone || phone === "-" || phone.trim() === "") phone = "600670867";
+
+  let email = config?.business?.email;
+  if (!email || email === "<>" || email === "-" || email.trim() === "") email = "oscarcarregalfontaneria@gmail.com";
   const responseTime = config?.business?.responseTime ?? "Respuesta en menos de 24h";
   const serviceArea = config?.storeAddress?.serviceArea ?? "San Sebastián, Donostia y Gipuzkoa";
   const street = config?.storeAddress?.street ?? "Avenida de Tolosa 89";
@@ -555,7 +558,8 @@ export default function PresupuestoPage() {
     })();
   }, []);
 
-  const phone = siteConfig?.business?.phoneNumber ?? "600670867";
+  let phone = siteConfig?.business?.phoneNumber;
+  if (!phone || phone === "-" || phone.trim() === "") phone = "600670867";
 
   return (
     <>

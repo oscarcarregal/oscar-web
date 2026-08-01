@@ -8,7 +8,8 @@ import { useScrollReveal } from "../hooks/useScrollReveal";
 export default function CTA({ phoneNumber }: { phoneNumber: string }) {
   const { ref, visible } = useScrollReveal();
   /* Fallback SEO: enlace tel: siempre funcional */
-  const phone = phoneNumber || "600670867";
+  let phone = phoneNumber;
+  if (!phone || phone === "-" || phone.trim() === "") phone = "600670867";
   const phoneHref = `tel:+34${phone}`;
 
   return (

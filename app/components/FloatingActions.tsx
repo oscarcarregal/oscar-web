@@ -12,7 +12,8 @@ export default function FloatingActions({ phoneNumber }: FloatingActionsProps) {
   const [showTop, setShowTop] = useState(false);
 
   /* Fallback SEO: botón WhatsApp siempre visible */
-  const effectivePhone = phoneNumber || "600670867";
+  let effectivePhone = phoneNumber;
+  if (!effectivePhone || effectivePhone === "-" || effectivePhone.trim() === "") effectivePhone = "600670867";
   const waNumber = effectivePhone.replace(/\D/g, "");
   
   /* Fallback inicial seguro (SSR) */
@@ -28,8 +29,10 @@ export default function FloatingActions({ phoneNumber }: FloatingActionsProps) {
     
     // Detectar si es móvil para usar el esquema directo
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // wa.me funciona como Universal Link en móviles abriendo la app directamente sin fallos de esquema.
+    // web.whatsapp.com es más estable para escritorio.
     if (isMobile) {
-      setWaUrl(`whatsapp://send?phone=34${waNumber}`);
+      setWaUrl(`https://wa.me/34${waNumber}`);
     } else {
       setWaUrl(`https://web.whatsapp.com/send?phone=34${waNumber}`);
     }

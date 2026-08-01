@@ -23,8 +23,11 @@ export default function Footer() {
   }, []);
 
   /* ── Fallbacks SEO: aseguran que Google siempre ve datos de contacto en el HTML ── */
-  const phone = siteConfig?.business?.phoneNumber ?? "600670867";
-  const email = siteConfig?.business?.email ?? "oscarcarregalfontaneria@gmail.com";
+  let phone = siteConfig?.business?.phoneNumber;
+  if (!phone || phone === "-" || phone.trim() === "") phone = "600670867";
+  
+  let email = siteConfig?.business?.email;
+  if (!email || email === "<>" || email === "-" || email.trim() === "") email = "oscarcarregalfontaneria@gmail.com";
   const brandName = siteConfig?.business?.brandName ?? "Oscar Carregal";
   const igUrl = siteConfig?.business?.instagram?.url ?? "https://www.instagram.com/oscarcarregal_fontaneria/";
   const igHandle = siteConfig?.business?.instagram?.handle ?? "@oscarcarregal_fontaneria";
