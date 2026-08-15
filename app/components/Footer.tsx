@@ -35,9 +35,9 @@ export default function Footer() {
   const copyrightLine = siteConfig?.footer?.copyrightLine ?? `© ${new Date().getFullYear()} Oscar Carregal · Fontanería & Reformas`;
   const copyrightNote = siteConfig?.footer?.copyrightNote ?? "Todos los derechos reservados";
   const storeAddress = siteConfig?.storeAddress;
-  const street = storeAddress?.street ?? "Avenida de Tolosa 89";
+  const street = storeAddress?.street ?? "Avenida de Tolosa, 89, Local 1";
   const postalCode = storeAddress?.postalCode ?? "20018";
-  const city = storeAddress?.city ?? "San Sebastián";
+  const city = storeAddress?.city ?? "Donostia / San Sebastián";
   const phoneHref = `tel:+34${phone}`;
   const mapsLink = storeAddress?.mapsQuery?.startsWith("http") 
     ? storeAddress.mapsQuery 
@@ -148,7 +148,7 @@ export default function Footer() {
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-white/10">
                     <MapPin size={14} className="text-silver transition-colors group-hover:text-white" />
                   </div>
-                  {`${street.toLowerCase().includes("local") ? street : street + ", local 1"}, ${postalCode} ${city}`}
+                  {`${street.toLowerCase().includes("local") ? street : street + ", Local 1"}, ${postalCode} ${city}, Gipuzkoa`}
                 </a>
               </li>
               <li className="flex items-center gap-3">

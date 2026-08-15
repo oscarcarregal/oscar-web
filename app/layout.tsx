@@ -25,11 +25,11 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   title: {
-    default: "Oscar Carregal · Fontanero en San Sebastián · Donostia | Reformas Integrales",
-    template: "%s | Oscar Carregal · Fontanero San Sebastián",
+    default: "Fontanero en Donosti y San Sebastián | Oscar Carregal Fontanería y Reformas",
+    template: "%s | Oscar Carregal · Fontanero en Donosti",
   },
   description:
-    "Fontanero profesional en San Sebastián (Donostia). Servicios de fontanería, gas, calefacción y reformas integrales en Gipuzkoa. Más de 15 años de experiencia. Presupuesto sin compromiso.",
+    "Fontanero en Donosti (San Sebastián) con más de 15 años de experiencia. Fontanería, gas, calefacción y reformas integrales en Gipuzkoa. Presupuesto sin compromiso.",
   icons: {
     icon: "/assets/logo_sin_fondo.png",
     shortcut: "/assets/logo_sin_fondo.png",
@@ -38,18 +38,22 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_ES",
-    siteName: "Oscar Carregal · Fontanería & Reformas en San Sebastián",
+    title: "Fontanero en Donosti y San Sebastián | Oscar Carregal Fontanería y Reformas",
+    description: "Fontanero en Donosti (San Sebastián) con más de 15 años de experiencia. Fontanería, gas, calefacción y reformas integrales en Gipuzkoa. Presupuesto sin compromiso.",
+    siteName: "Oscar Carregal · Fontanería y Reformas en Donosti",
     images: [
       {
         url: "/assets/logo_sin_fondo.png",
         width: 800,
         height: 800,
-        alt: "Oscar Carregal - Fontanero y Reformas en San Sebastián, Donostia",
+        alt: "Oscar Carregal – Fontanero y Reformas en Donosti (San Sebastián)",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
+    title: "Fontanero en Donosti y San Sebastián | Oscar Carregal Fontanería y Reformas",
+    description: "Fontanero en Donosti (San Sebastián) con más de 15 años de experiencia. Fontanería, gas, calefacción y reformas integrales en Gipuzkoa. Presupuesto sin compromiso.",
   },
   verification: {
     google: "RKSxJFzK6Z2x6XJ_0m03zPVqmRK7MHpLa6DvQDya1H4",

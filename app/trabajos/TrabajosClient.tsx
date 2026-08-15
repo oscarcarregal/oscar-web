@@ -169,7 +169,7 @@ function WorkCard({
           <Image
             key={src}
             src={src}
-            alt={`${project.title} - Proyecto de reforma y fontanería - Foto ${i + 1}`}
+            alt={`${project.title} – Reforma y fontanería en Donosti – Foto ${i + 1}`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className={`object-cover transition-all duration-700 ${

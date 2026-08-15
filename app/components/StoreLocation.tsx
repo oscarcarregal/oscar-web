@@ -68,10 +68,10 @@ export default function StoreLocation({ config }: { config: SiteConfig | null })
     };
   }, [viewerOpen, totalPhotos]);
 
-  const cityName = storeAddress?.city?.trim() || "San Sebastian";
+  const cityName = storeAddress?.city?.trim() || "Donostia / San Sebastián";
   const locationTitle = cityName.split(",")[0];
-  const rawStreet = storeAddress?.street?.trim() || "Avenida de Tolosa 89";
-  const streetLine = rawStreet.toLowerCase().includes("local") ? rawStreet : `${rawStreet}, local 1`;
+  const rawStreet = storeAddress?.street?.trim() || "Avenida de Tolosa, 89, Local 1";
+  const streetLine = rawStreet.toLowerCase().includes("local") ? rawStreet : `${rawStreet}, Local 1`;
   const postalCityLine = [storeAddress?.postalCode?.trim(), cityName]
     .filter(Boolean)
     .join(" ");

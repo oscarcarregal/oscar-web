@@ -12,7 +12,7 @@ export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "Plumber", "HomeAndConstructionBusiness"],
     "name": config.business.brandName || "Oscar Carregal",
-    "description": "Fontanero profesional en San Sebastián (Donostia). Servicios de fontanería, gas, calefacción y reformas integrales en Gipuzkoa. Más de 15 años de experiencia.",
+    "description": "Fontanero en Donosti (San Sebastián) con más de 15 años de experiencia. Servicios de fontanería, gas, calefacción y reformas integrales en Gipuzkoa.",
     "image": "https://www.oscarcarregal.es/assets/logo_sin_fondo.png",
     "@id": "https://www.oscarcarregal.es",
     "url": "https://www.oscarcarregal.es",
@@ -20,8 +20,8 @@ export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
     "email": email,
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": config.storeAddress.street || "Avenida de Tolosa 89",
-      "addressLocality": "San Sebastián",
+      "streetAddress": config.storeAddress.street || "Avenida de Tolosa, 89, Local 1",
+      "addressLocality": "Donostia / San Sebastián",
       "postalCode": config.storeAddress.postalCode || "20018",
       "addressRegion": "Gipuzkoa",
       "addressCountry": "ES"
@@ -40,8 +40,10 @@ export function LocalBusinessSEO({ config }: { config: SiteConfig }) {
       {
         "@type": "State",
         "name": "Gipuzkoa"
-      }
+      },
+      "Donosti"
     ],
+    "openingHours": ["Mo-Fr 08:00-19:00", "Sa 09:00-12:00"],
     "sameAs": [
       config.business.instagram?.url || "https://www.instagram.com/oscarcarregal_fontaneria/",
       config.storeAddress.mapsQuery?.startsWith("http") ? config.storeAddress.mapsQuery : "https://maps.app.goo.gl/6HYDD7UbkvXhBi5L9"

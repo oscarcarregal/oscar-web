@@ -13,6 +13,7 @@ const services = [
     iconColor: "text-blue-500",
     iconBg: "bg-blue-500/10 group-hover:bg-blue-500/20",
     gradientClass: "from-blue-500 to-blue-400",
+    altText: "Servicio de fontanería en Donosti",
   },
   {
     icon: Flame,
@@ -22,6 +23,7 @@ const services = [
     iconColor: "text-amber-500",
     iconBg: "bg-amber-500/10 group-hover:bg-amber-500/20",
     gradientClass: "from-amber-500 to-amber-400",
+    altText: "Instalación de gas en Donosti",
   },
   {
     icon: Thermometer,
@@ -31,6 +33,7 @@ const services = [
     iconColor: "text-red-500",
     iconBg: "bg-red-500/10 group-hover:bg-red-500/20",
     gradientClass: "from-red-500 to-red-400",
+    altText: "Calefacción y climatización en Donosti",
   },
   {
     icon: Hammer,
@@ -40,6 +43,7 @@ const services = [
     iconColor: "text-stone-600",
     iconBg: "bg-stone-600/10 group-hover:bg-stone-600/20",
     gradientClass: "from-stone-600 to-stone-500",
+    altText: "Reformas integrales en Donosti",
   },
 ];
 
@@ -87,12 +91,14 @@ export default function Services() {
                 className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${s.gradientClass}`}
               />
               <div
+                aria-label={s.altText}
                 className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl transition-colors duration-300 ${s.iconBg}`}
               >
                 <s.icon
                   className={s.iconColor}
                   size={26}
                 />
+                <span className="sr-only">{s.altText}</span>
               </div>
               <h3 className="text-xl text-carbon">{s.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-silver">
@@ -105,3 +111,4 @@ export default function Services() {
     </section>
   );
 }
+
