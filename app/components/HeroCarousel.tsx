@@ -63,7 +63,7 @@ export default function HeroCarousel({ slides, experience }: HeroCarouselProps) 
         </span>
 
         <h1 className="animate-fade-up delay-1 font-heading max-w-5xl text-[2.75rem] leading-[1.1] tracking-tight drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
-          Fontanero de confianza en Donosti
+          Fontanero en Donosti
           <br />
           <span className="text-gradient-copper">Reformas integrales en San Sebastián</span>
         </h1>
